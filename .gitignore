@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.log
+backend/data/*.sqlite3-wal
+backend/data/*.sqlite3-shm
+.DS_Store
