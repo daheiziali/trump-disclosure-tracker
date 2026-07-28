@@ -174,11 +174,13 @@
     .asset-choice:nth-child(4n)::before { background: var(--gold); }
     .asset-choice:nth-child(5n)::before { background: var(--purple); }
     .asset-choice:hover { border-color: #bfdbfe; transform: translateY(-2px); box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08); }
+    .asset-choice.selected { border-color: #2563eb; box-shadow: 0 14px 32px rgba(37, 99, 235, 0.12); }
     .asset-choice strong { font-size: 15px; line-height: 1.25; }
     .asset-choice span { color: var(--muted); font-size: 12px; }
     .asset-choice-code { position: absolute; left: 14px; top: 15px; width: 24px; height: 24px; border-radius: 99px; display: grid; place-items: center; color: #fff; background: var(--navy); font-size: 10px; font-weight: 800; }
     .asset-choice-meta { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
     .asset-choice-money { color: var(--blue); font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .asset-detail-content { border-top: 1px solid var(--line); padding-top: 20px; }
     .timeline { padding: 0 20px 18px; position: relative; display: grid; gap: 10px; }
     .timeline::before { content: ""; position: absolute; left: 72px; top: 8px; bottom: 24px; width: 2px; background: #dbeafe; }
     .timeline-item { position: relative; border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px 12px 34px; margin-left: 56px; background: #fff; display: grid; grid-template-columns: minmax(180px, 1fr) auto; gap: 12px; align-items: center; }
@@ -234,11 +236,11 @@
         <div><strong>特朗普交易披露追踪</strong></div>
       </div>
       <nav class="nav">
-        <button class="active" data-nav="overview" onclick="showOverview()">总览</button>
-        <button data-nav="inferred" onclick="showInferredDetails()">推算持仓</button>
-        <button data-nav="trades" onclick="showTradeDetails()">交易记录</button>
-        <button data-nav="asset" onclick="showAssetDetails()">资产详情</button>
-        <button data-nav="status" onclick="showParseReport()">数据状态</button>
+        <button class="active" data-nav="topHoldings" onclick="scrollHomeSection('topHoldingsSection', 'topHoldings')">前十大推算持仓</button>
+        <button data-nav="theme" onclick="scrollHomeSection('themeSection', 'theme')">投资主题占比</button>
+        <button data-nav="inferredPreview" onclick="scrollHomeSection('homeInferredPreview', 'inferredPreview')">推算持仓状态</button>
+        <button data-nav="tradesPreview" onclick="scrollHomeSection('transactions', 'tradesPreview')">最新披露交易</button>
+        <button data-nav="asset" onclick="scrollHomeSection('assetDetails', 'asset')">资产详情</button>
         <button onclick="window.open('http://127.0.0.1:8765', '_blank')">复核后台</button>
       </nav>
     </aside>
@@ -252,7 +254,7 @@
         <div class="status" id="connectionStatus"><span class="dot"></span><span>连接后台中</span></div>
       </header>
 
-      <section class="grid hero-grid">
+      <section class="grid hero-grid home-section" id="topHoldingsSection">
         <div class="panel holdings-hero">
           <div class="panel-head">
             <div>
@@ -280,7 +282,7 @@
         </div>
 
         <aside class="side-stack">
-          <div class="panel">
+          <div class="panel" id="themeSection">
             <div class="panel-head">
               <div><h2>投资主题占比</h2><p>按全部推算持仓的净估算金额归类。</p></div>
             </div>
@@ -289,7 +291,20 @@
         </aside>
       </section>
 
-      <section class="panel table-panel hidden" id="allHoldings">
+      <section class="panel table-panel home-section" id="homeInferredPreview">
+        <div class="panel-head">
+          <div><h2>推算持仓状态</h2><p>首页默认展示基准区间估算最高的 10 项，完整列表可进入详情页筛选。</p></div>
+          <button class="btn primary" onclick="showInferredDetails()">查看更多/全部</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>资产</th><th>代码</th><th>主题</th><th class="numeric">基准区间估算</th><th>最近交易</th><th>推算状态</th><th>置信度</th></tr></thead>
+            <tbody id="inferredPreviewRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel table-panel hidden full-section" id="allHoldings">
         <div class="panel-head">
           <div><h2>交易记录</h2><p>默认展示全部公开交易时间线，可按年报交易明细与 2026 年 278-T 披露筛选。</p></div>
           <div class="tools">
@@ -326,7 +341,7 @@
         </div>
       </section>
 
-      <section class="panel table-panel hidden" id="inferredPositions">
+      <section class="panel table-panel hidden full-section" id="inferredPositions">
         <div class="panel-head">
           <div><h2>推算持仓状态</h2><p>基于年度基准快照与后续交易流水，仅表示披露口径下的可识别状态。</p></div>
           <div class="tools">
@@ -370,10 +385,10 @@
         </div>
       </section>
 
-      <section class="panel table-panel" id="transactions">
+      <section class="panel table-panel home-section" id="transactions">
         <div class="panel-head">
-          <div><h2>最新披露交易</h2><p>首页摘要仅展示最近公开的交易，完整时间线请进入“交易记录”。</p></div>
-          <button class="btn primary" onclick="showTradeDetails()">查看完整交易记录</button>
+          <div><h2>最新披露交易</h2><p>首页默认按交易日降序展示最近 10 条交易，完整时间线可进入详情页筛选。</p></div>
+          <button class="btn primary" onclick="showTradeDetails()">查看更多/全部</button>
         </div>
         <div class="table-wrap">
           <table>
@@ -383,7 +398,7 @@
         </div>
       </section>
 
-      <section class="panel table-panel hidden" id="assetDetails">
+      <section class="panel table-panel home-section" id="assetDetails">
         <div class="panel-head">
           <div><h2 id="assetDetailTitle">资产详情</h2><p id="assetDetailSubtitle">从推算持仓或交易记录中点击资产后，可在这里查看该资产完整交易链。</p></div>
           <div class="tools"><span class="pill" id="assetDetailBadge">等待选择资产</span><button class="btn" onclick="hideAssetDetails()">收起</button></div>
@@ -426,6 +441,8 @@
     let allInferredPositions = [];
     let inferredLoadedFull = false;
     let allAnnualTrades = [];
+    let selectedAssetKey = '';
+    let assetPickerQuery = '';
     const HELP_TEXT = {
       baseline: {
         title: '基准区间估算',
@@ -507,6 +524,18 @@
       document.querySelectorAll('.nav button[data-nav]').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.nav === key);
       });
+    }
+    function showHomeSections() {
+      document.querySelectorAll('.home-section').forEach(section => section.classList.remove('hidden'));
+      document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
+    }
+    function hideHomeSections() {
+      document.querySelectorAll('.home-section').forEach(section => section.classList.add('hidden'));
+    }
+    function scrollHomeSection(id, navKey) {
+      showHomeSections();
+      setActiveNav(navKey);
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     function confidenceClass(value) {
       const text = String(value || '');
@@ -667,7 +696,8 @@
     }
 
     function renderTrades(rows) {
-      document.getElementById('tradeRows').innerHTML = rows.length ? rows.map(row => {
+      const previewRows = [...rows].sort(assetTradeSort).slice(0, 10);
+      document.getElementById('tradeRows').innerHTML = previewRows.length ? previewRows.map(row => {
         const kind = String(row.transaction_type || '').toLowerCase();
         const tagClass = kind.includes('sale') ? 'sell' : kind.includes('purchase') ? 'buy' : '';
         return `<tr>
@@ -866,6 +896,23 @@
       `).join('') : '<tr><td colspan="9" class="empty">暂无推算结果。</td></tr>';
     }
 
+    function renderInferredPreview(rows) {
+      const previewRows = [...rows]
+        .sort((a, b) => Number(b.baseline_midpoint || 0) - Number(a.baseline_midpoint || 0) || inferredExposure(b) - inferredExposure(a))
+        .slice(0, 10);
+      document.getElementById('inferredPreviewRows').innerHTML = previewRows.length ? previewRows.map(row => `
+        <tr>
+          <td class="name">${assetLink(row, row.asset_name)}</td>
+          <td>${esc(row.ticker || '—')}</td>
+          <td><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></td>
+          <td class="numeric">${fmtOptionalMoney(row.baseline_midpoint)}</td>
+          <td>${esc(row.last_trade_type ? translateAction(row.last_trade_type) + ' ' + row.last_trade_date : '—')}</td>
+          <td><span class="tag ${statusClass(row.inferred_status)}">${esc(row.inferred_status || '状态不明')}</span></td>
+          <td><span class="tag ${confidenceClass(row.confidence_label)}">${esc(row.confidence_label || '低')}</span></td>
+        </tr>
+      `).join('') : '<tr><td colspan="7" class="empty">暂无推算持仓预览。</td></tr>';
+    }
+
     function inferredRowHtml(row) {
       return `<tr>
         <td class="name">${assetLink(row, row.asset_name)}</td>
@@ -984,6 +1031,7 @@
     }
 
     function renderAssetPicker(filterText = '') {
+      assetPickerQuery = String(filterText || '');
       const query = String(filterText || '').trim().toUpperCase();
       const rows = [...allInferredPositions]
         .filter(row => {
@@ -995,7 +1043,7 @@
         .slice(0, 12);
       document.getElementById('assetDetailTitle').textContent = '资产详情';
       document.getElementById('assetDetailSubtitle').textContent = '选择一个资产，查看该资产的年报基准、后续买入卖出与披露链路。';
-      document.getElementById('assetDetailBadge').textContent = rows.length ? '等待选择资产' : '暂无资产';
+      document.getElementById('assetDetailBadge').textContent = selectedAssetKey ? '已选择资产' : rows.length ? '默认第一项' : '暂无资产';
       document.getElementById('assetDetailBody').innerHTML = `
         <div class="asset-picker">
           <div class="asset-picker-head">
@@ -1007,7 +1055,7 @@
           </div>
           <div class="asset-picker-grid">
             ${rows.length ? rows.map((row, index) => `
-              <button class="asset-choice" ${assetDataAttrs(row)} onclick="selectAssetFromElement(this)">
+              <button class="asset-choice ${detailKey(row) === selectedAssetKey ? 'selected' : ''}" ${assetDataAttrs(row)} onclick="selectAssetFromElement(this)">
                 <span class="asset-choice-code">${esc(row.ticker ? String(row.ticker).slice(0, 2) : String(index + 1).padStart(2, '0'))}</span>
                 <strong>${esc(row.asset_name || '未命名资产')}</strong>
                 <span class="asset-choice-meta">
@@ -1017,6 +1065,9 @@
               </button>
             `).join('') : '<div class="empty">没有匹配资产。可以换一个代码或资产关键词试试。</div>'}
           </div>
+        </div>
+        <div class="asset-detail-content" id="assetDetailContent">
+          <div class="empty">请选择上方资产卡片。</div>
         </div>`;
       const input = document.getElementById('assetPickerSearch');
       if (input) {
@@ -1024,6 +1075,7 @@
         input.setSelectionRange(input.value.length, input.value.length);
         input.addEventListener('input', event => renderAssetPicker(event.target.value));
       }
+      return rows;
     }
 
     function mergeRowsById(rows) {
@@ -1080,6 +1132,7 @@
     }
 
     function renderAssetDetail(position, trades) {
+      selectedAssetKey = detailKey(position);
       const exposure = inferredExposure(position);
       const latest = position.last_trade_type ? `${translateAction(position.last_trade_type)} ${position.last_trade_date || ''}` : '—';
       const sourceText = sourceBreakdown(trades);
@@ -1091,6 +1144,9 @@
         `共 ${fmt(trades.length)} 条交易披露`
       ].filter(Boolean).join(' · ');
       document.getElementById('assetDetailBadge').textContent = position.ticker || position.asset_category || '资产详情';
+      document.querySelectorAll('.asset-choice').forEach(button => {
+        button.classList.toggle('selected', button.dataset.assetKey === selectedAssetKey);
+      });
       const tradeRows = trades.length ? [...trades]
         .sort(assetTradeSort)
         .map(row => {
@@ -1107,7 +1163,8 @@
           </tr>`;
         }).join('')
         : '<tr><td colspan="7" class="empty">暂无匹配交易披露。</td></tr>';
-      document.getElementById('assetDetailBody').innerHTML = `
+      const target = document.getElementById('assetDetailContent') || document.getElementById('assetDetailBody');
+      target.innerHTML = `
         <div class="asset-detail-overview">
           <div class="asset-detail-name">
             <div class="asset-detail-tags">
@@ -1149,15 +1206,17 @@
       `;
     }
 
-    async function openAssetDetails(key, fallbackName = '', fallbackTicker = '') {
+    async function openAssetDetails(key, fallbackName = '', fallbackTicker = '', shouldScroll = true) {
       setActiveNav('asset');
+      showHomeSections();
       const section = document.getElementById('assetDetails');
       section.classList.remove('hidden');
       document.getElementById('assetDetailTitle').textContent = fallbackName || '资产详情';
       document.getElementById('assetDetailSubtitle').textContent = '正在加载该资产的披露链路...';
       document.getElementById('assetDetailBadge').textContent = fallbackTicker || '加载中';
-      document.getElementById('assetDetailBody').innerHTML = '<div class="empty">正在读取交易披露记录...</div>';
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const target = document.getElementById('assetDetailContent') || document.getElementById('assetDetailBody');
+      target.innerHTML = '<div class="empty">正在读取交易披露记录...</div>';
+      if (shouldScroll) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       try {
         const position = findPositionByKey(key, fallbackName, fallbackTicker);
@@ -1166,7 +1225,8 @@
       } catch (err) {
         document.getElementById('assetDetailSubtitle').textContent = '资产详情读取失败';
         document.getElementById('assetDetailBadge').textContent = '加载失败';
-        document.getElementById('assetDetailBody').innerHTML = `<div class="empty">暂时无法读取该资产的交易链路：${esc(err.message || err)}</div>`;
+        const errorTarget = document.getElementById('assetDetailContent') || document.getElementById('assetDetailBody');
+        errorTarget.innerHTML = `<div class="empty">暂时无法读取该资产的交易链路：${esc(err.message || err)}</div>`;
       }
     }
 
@@ -1202,7 +1262,9 @@
     }
 
     async function showAllHoldings() {
-      setActiveNav('trades');
+      setActiveNav('tradesPreview');
+      hideHomeSections();
+      document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
       document.getElementById('allHoldings').classList.remove('hidden');
       await searchHoldings();
       document.getElementById('allHoldings').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1210,16 +1272,19 @@
 
     function hideAllHoldings() {
       document.getElementById('allHoldings').classList.add('hidden');
-      setActiveNav('overview');
+      scrollHomeSection('transactions', 'tradesPreview');
     }
 
     function showOverview() {
-      setActiveNav('overview');
+      showHomeSections();
+      setActiveNav('topHoldings');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     async function showInferredDetails() {
-      setActiveNav('inferred');
+      setActiveNav('inferredPreview');
+      hideHomeSections();
+      document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
       document.getElementById('inferredPositions').classList.remove('hidden');
       if (!inferredLoadedFull) {
         document.getElementById('inferredSummary').textContent = '正在加载完整推算持仓列表...';
@@ -1233,7 +1298,7 @@
 
     function hideInferredDetails() {
       document.getElementById('inferredPositions').classList.add('hidden');
-      setActiveNav('overview');
+      scrollHomeSection('homeInferredPreview', 'inferredPreview');
     }
 
     function showTradeDetails() {
@@ -1242,18 +1307,21 @@
 
     function showAssetDetails() {
       setActiveNav('asset');
+      showHomeSections();
       document.getElementById('assetDetails').classList.remove('hidden');
-      renderAssetPicker();
+      const rows = renderAssetPicker(assetPickerQuery);
+      const first = rows.find(row => detailKey(row) === selectedAssetKey) || rows[0];
+      if (first) openAssetDetails(detailKey(first), first.asset_name, first.ticker, false);
       document.getElementById('assetDetails').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function hideAssetDetails() {
-      document.getElementById('assetDetails').classList.add('hidden');
-      setActiveNav('overview');
+      scrollHomeSection('assetDetails', 'asset');
     }
 
     async function showParseReport() {
-      setActiveNav('status');
+      setActiveNav('');
+      hideHomeSections();
       document.getElementById('parseReport').classList.remove('hidden');
       await loadParseReport();
       document.getElementById('parseReport').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1261,7 +1329,7 @@
 
     function hideParseReport() {
       document.getElementById('parseReport').classList.add('hidden');
-      setActiveNav('overview');
+      showOverview();
     }
 
     async function init() {
@@ -1275,11 +1343,17 @@
         inferredLoadedFull = false;
         renderConceptSummary(allInferredPositions);
         renderTopHoldings(allInferredPositions);
+        renderInferredPreview(allInferredPositions);
         populateInferredFilters(allInferredPositions);
         document.getElementById('inferredSummary').textContent = '点击“查看全部推算持仓”后加载完整列表。';
         document.getElementById('inferredRows').innerHTML = '<tr><td colspan="9" class="empty">完整推算持仓列表暂未展开。</td></tr>';
         allTrades = data.recent_transactions || [];
         renderTrades(allTrades);
+        const assetRows = renderAssetPicker();
+        if (assetRows.length) {
+          const first = assetRows[0];
+          openAssetDetails(detailKey(first), first.asset_name, first.ticker, false);
+        }
       } catch (err) {
         setStatus(false, '后台未连接');
         document.getElementById('topHoldings').innerHTML = `<div class="empty">${esc(err.message)}</div>`;
