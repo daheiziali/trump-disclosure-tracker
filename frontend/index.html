@@ -238,7 +238,6 @@
       <nav class="nav">
         <button class="active" data-nav="topHoldings" onclick="scrollHomeSection('topHoldingsSection', 'topHoldings')">前十大推算持仓</button>
         <button data-nav="theme" onclick="scrollHomeSection('themeSection', 'theme')">投资主题占比</button>
-        <button data-nav="inferredPreview" onclick="scrollHomeSection('homeInferredPreview', 'inferredPreview')">推算持仓状态</button>
         <button data-nav="tradesPreview" onclick="scrollHomeSection('transactions', 'tradesPreview')">最新披露交易</button>
         <button data-nav="asset" onclick="scrollHomeSection('assetDetails', 'asset')">资产详情</button>
       </nav>
@@ -287,21 +286,6 @@
             <div class="theme-chart" id="conceptSummary"></div>
           </div>
         </aside>
-      </section>
-
-      <section class="panel table-panel home-section" id="homeInferredPreview">
-        <div class="panel-head">
-          <div><h2>推算持仓状态</h2><p>首页默认展示基准区间估算最高的 10 项，完整列表可进入详情页筛选。</p></div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>资产</th><th>代码</th><th>主题</th><th class="numeric">基准区间估算</th><th>最近交易</th><th>推算状态</th><th>置信度</th></tr></thead>
-            <tbody id="inferredPreviewRows"></tbody>
-          </table>
-        </div>
-        <div class="section-actions">
-          <button class="btn primary" onclick="showInferredDetails()">查看更多</button>
-        </div>
       </section>
 
       <section class="panel table-panel hidden full-section" id="allHoldings">
@@ -898,23 +882,6 @@
       `).join('') : '<tr><td colspan="9" class="empty">暂无推算结果。</td></tr>';
     }
 
-    function renderInferredPreview(rows) {
-      const previewRows = [...rows]
-        .sort((a, b) => Number(b.baseline_midpoint || 0) - Number(a.baseline_midpoint || 0) || inferredExposure(b) - inferredExposure(a))
-        .slice(0, 10);
-      document.getElementById('inferredPreviewRows').innerHTML = previewRows.length ? previewRows.map(row => `
-        <tr>
-          <td class="name">${assetLink(row, row.asset_name)}</td>
-          <td>${esc(row.ticker || '—')}</td>
-          <td><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></td>
-          <td class="numeric">${fmtOptionalMoney(row.baseline_midpoint)}</td>
-          <td>${esc(row.last_trade_type ? translateAction(row.last_trade_type) + ' ' + row.last_trade_date : '—')}</td>
-          <td><span class="tag ${statusClass(row.inferred_status)}">${esc(row.inferred_status || '状态不明')}</span></td>
-          <td><span class="tag ${confidenceClass(row.confidence_label)}">${esc(row.confidence_label || '低')}</span></td>
-        </tr>
-      `).join('') : '<tr><td colspan="7" class="empty">暂无推算持仓预览。</td></tr>';
-    }
-
     function inferredRowHtml(row) {
       return `<tr>
         <td class="name">${assetLink(row, row.asset_name)}</td>
@@ -1285,7 +1252,7 @@
     }
 
     async function showInferredDetails() {
-      setActiveNav('inferredPreview');
+      setActiveNav('topHoldings');
       hideHomeSections();
       document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
       document.getElementById('inferredPositions').classList.remove('hidden');
@@ -1301,7 +1268,7 @@
 
     function hideInferredDetails() {
       document.getElementById('inferredPositions').classList.add('hidden');
-      scrollHomeSection('homeInferredPreview', 'inferredPreview');
+      scrollHomeSection('topHoldingsSection', 'topHoldings');
     }
 
     function showTradeDetails() {
@@ -1346,7 +1313,6 @@
         inferredLoadedFull = false;
         renderConceptSummary(allInferredPositions);
         renderTopHoldings(allInferredPositions);
-        renderInferredPreview(allInferredPositions);
         populateInferredFilters(allInferredPositions);
         document.getElementById('inferredSummary').textContent = '点击“查看更多”后加载完整列表。';
         document.getElementById('inferredRows').innerHTML = '<tr><td colspan="9" class="empty">完整推算持仓列表暂未展开。</td></tr>';
