@@ -127,8 +127,8 @@
     .hint { display: inline-flex; width: 16px; height: 16px; border-radius: 99px; align-items: center; justify-content: center; margin-left: 4px; border: 1px solid var(--line-strong); color: var(--muted); font-size: 11px; cursor: help; background: white; }
     .numeric { text-align: right; font-variant-numeric: tabular-nums; }
     .table-note { color: var(--muted); font-size: 12px; padding: 10px 20px; border-bottom: 1px solid var(--line); background: #fff; }
-    .home-actions { display: flex; flex-direction: column; align-items: stretch; gap: 10px; min-width: 176px; }
-    .home-actions .btn { width: 100%; justify-content: center; text-align: center; }
+    .section-actions { display: flex; justify-content: flex-end; padding: 14px 18px 18px; border-top: 1px solid var(--line); background: #fff; }
+    .section-actions .btn { min-width: 118px; justify-content: center; }
     .compact-table table { min-width: 900px; }
     .detail-grid { padding: 20px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; border-bottom: 1px solid var(--line); background: #f8fafc; }
     .detail-card { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: #fff; min-height: 76px; }
@@ -222,7 +222,7 @@
       .asset-chain-head { flex-direction: column; align-items: flex-start; }
       .timeline::before { left: 30px; }
       .timeline-item { grid-template-columns: 1fr; align-items: start; margin-left: 24px; }
-      .home-actions { min-width: 0; }
+      .section-actions { padding: 12px 14px 16px; }
       .tools { justify-content: stretch; }
       .search, .select, .btn { width: 100%; }
     }
@@ -260,10 +260,6 @@
               <h2>Donald J. Trump 披露跟踪</h2>
               <p>以 2025 年度资产披露为基准，并纳入 2026 年迄今 278-T 增量交易，展示交易轨迹与披露口径推算状态。</p>
             </div>
-            <div class="home-actions">
-              <button class="btn primary" onclick="showInferredDetails()">查看全部推算持仓</button>
-              <button class="btn" onclick="showTradeDetails()">查看交易记录</button>
-            </div>
           </div>
           <div class="top-holdings">
             <div class="profile-medal">
@@ -277,6 +273,9 @@
               </div>
             </div>
             <div class="holding-cards" id="topHoldings"></div>
+          </div>
+          <div class="section-actions">
+            <button class="btn primary" onclick="showInferredDetails()">查看更多</button>
           </div>
         </div>
 
@@ -293,13 +292,15 @@
       <section class="panel table-panel home-section" id="homeInferredPreview">
         <div class="panel-head">
           <div><h2>推算持仓状态</h2><p>首页默认展示基准区间估算最高的 10 项，完整列表可进入详情页筛选。</p></div>
-          <button class="btn primary" onclick="showInferredDetails()">查看更多/全部</button>
         </div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>资产</th><th>代码</th><th>主题</th><th class="numeric">基准区间估算</th><th>最近交易</th><th>推算状态</th><th>置信度</th></tr></thead>
             <tbody id="inferredPreviewRows"></tbody>
           </table>
+        </div>
+        <div class="section-actions">
+          <button class="btn primary" onclick="showInferredDetails()">查看更多</button>
         </div>
       </section>
 
@@ -387,13 +388,15 @@
       <section class="panel table-panel home-section" id="transactions">
         <div class="panel-head">
           <div><h2>最新披露交易</h2><p>首页默认按交易日降序展示最近 10 条交易，完整时间线可进入详情页筛选。</p></div>
-          <button class="btn primary" onclick="showTradeDetails()">查看更多/全部</button>
         </div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>资产</th><th>代码</th><th>主题</th><th>动作</th><th>交易日</th><th>金额区间（美元）</th><th>披露日</th></tr></thead>
             <tbody id="tradeRows"></tbody>
           </table>
+        </div>
+        <div class="section-actions">
+          <button class="btn primary" onclick="showTradeDetails()">查看更多</button>
         </div>
       </section>
 
@@ -1344,7 +1347,7 @@
         renderTopHoldings(allInferredPositions);
         renderInferredPreview(allInferredPositions);
         populateInferredFilters(allInferredPositions);
-        document.getElementById('inferredSummary').textContent = '点击“查看全部推算持仓”后加载完整列表。';
+        document.getElementById('inferredSummary').textContent = '点击“查看更多”后加载完整列表。';
         document.getElementById('inferredRows').innerHTML = '<tr><td colspan="9" class="empty">完整推算持仓列表暂未展开。</td></tr>';
         allTrades = data.recent_transactions || [];
         renderTrades(allTrades);
