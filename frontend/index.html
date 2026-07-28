@@ -402,7 +402,7 @@
 
       <section class="panel table-panel home-section" id="assetDetails">
         <div class="panel-head">
-          <div><h2 id="assetDetailTitle">资产详情</h2><p id="assetDetailSubtitle">从推算持仓或交易记录中点击资产后，可在这里查看该资产完整交易链。</p></div>
+          <div><h2 id="assetDetailTitle">资产交易详情</h2><p id="assetDetailSubtitle">默认展示首个资产，可搜索或点击卡片切换交易披露链。</p></div>
           <div class="tools"><span class="pill" id="assetDetailBadge">等待选择资产</span><button class="btn" onclick="hideAssetDetails()">收起</button></div>
         </div>
         <div id="assetDetailBody" class="empty">请点击首页持仓卡片、推算持仓表或交易记录中的资产名称。</div>
@@ -1043,8 +1043,8 @@
         })
         .sort((a, b) => inferredExposure(b) - inferredExposure(a))
         .slice(0, 12);
-      document.getElementById('assetDetailTitle').textContent = '资产详情';
-      document.getElementById('assetDetailSubtitle').textContent = '选择一个资产，查看该资产的年报基准、后续买入卖出与披露链路。';
+      document.getElementById('assetDetailTitle').textContent = '资产交易详情';
+      document.getElementById('assetDetailSubtitle').textContent = '默认展示首个资产，可搜索或点击卡片切换交易披露链。';
       document.getElementById('assetDetailBadge').textContent = selectedAssetKey ? '已选择资产' : rows.length ? '默认第一项' : '暂无资产';
       document.getElementById('assetDetailBody').innerHTML = `
         <div class="asset-picker">
@@ -1139,8 +1139,9 @@
       const latest = position.last_trade_type ? `${translateAction(position.last_trade_type)} ${position.last_trade_date || ''}` : '—';
       const sourceText = sourceBreakdown(trades);
       const detailId = `assetTradeTable_${Math.random().toString(36).slice(2)}`;
-      document.getElementById('assetDetailTitle').textContent = position.asset_name || '资产详情';
+      document.getElementById('assetDetailTitle').textContent = '资产交易详情';
       document.getElementById('assetDetailSubtitle').textContent = [
+        `当前资产：${position.asset_name || '未命名资产'}`,
         position.ticker || '',
         position.concept || position.asset_category || '',
         `共 ${fmt(trades.length)} 条交易披露`
@@ -1213,8 +1214,8 @@
       showHomeSections();
       const section = document.getElementById('assetDetails');
       section.classList.remove('hidden');
-      document.getElementById('assetDetailTitle').textContent = fallbackName || '资产详情';
-      document.getElementById('assetDetailSubtitle').textContent = '正在加载该资产的披露链路...';
+      document.getElementById('assetDetailTitle').textContent = '资产交易详情';
+      document.getElementById('assetDetailSubtitle').textContent = fallbackName ? `正在加载 ${fallbackName} 的披露链路...` : '正在加载该资产的披露链路...';
       document.getElementById('assetDetailBadge').textContent = fallbackTicker || '加载中';
       const target = document.getElementById('assetDetailContent') || document.getElementById('assetDetailBody');
       target.innerHTML = '<div class="empty">正在读取交易披露记录...</div>';
@@ -1225,7 +1226,7 @@
         const trades = await fetchAssetTrades(position, fallbackName, fallbackTicker);
         renderAssetDetail(position, trades);
       } catch (err) {
-        document.getElementById('assetDetailSubtitle').textContent = '资产详情读取失败';
+        document.getElementById('assetDetailSubtitle').textContent = '资产交易详情读取失败';
         document.getElementById('assetDetailBadge').textContent = '加载失败';
         const errorTarget = document.getElementById('assetDetailContent') || document.getElementById('assetDetailBody');
         errorTarget.innerHTML = `<div class="empty">暂时无法读取该资产的交易链路：${esc(err.message || err)}</div>`;
