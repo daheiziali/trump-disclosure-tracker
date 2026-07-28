@@ -348,6 +348,7 @@
               <option value="recent_desc">最近交易 ↓</option>
               <option value="asset_asc">资产名称 A-Z</option>
             </select>
+            <button class="btn" onclick="hideInferredDetails()">收起</button>
           </div>
         </div>
         <div class="table-note" id="inferredSummary">加载推算持仓数据中...</div>
@@ -385,7 +386,7 @@
       <section class="panel table-panel hidden" id="assetDetails">
         <div class="panel-head">
           <div><h2 id="assetDetailTitle">资产详情</h2><p id="assetDetailSubtitle">从推算持仓或交易记录中点击资产后，可在这里查看该资产完整交易链。</p></div>
-          <span class="pill" id="assetDetailBadge">等待选择资产</span>
+          <div class="tools"><span class="pill" id="assetDetailBadge">等待选择资产</span><button class="btn" onclick="hideAssetDetails()">收起</button></div>
         </div>
         <div id="assetDetailBody" class="empty">请点击首页持仓卡片、推算持仓表或交易记录中的资产名称。</div>
       </section>
@@ -393,7 +394,7 @@
       <section class="panel table-panel hidden" id="parseReport">
         <div class="panel-head">
           <div><h2>数据状态</h2><p>本地文件与数据库 SHA256 对账；0 记录文件会标记待检查。</p></div>
-          <button class="btn" onclick="loadParseReport()">刷新报告</button>
+          <div class="tools"><button class="btn" onclick="loadParseReport()">刷新报告</button><button class="btn" onclick="hideParseReport()">收起</button></div>
         </div>
         <div class="table-wrap">
           <table>
@@ -423,6 +424,7 @@
     const API_BASE = 'http://127.0.0.1:8765';
     let allTrades = [];
     let allInferredPositions = [];
+    let inferredLoadedFull = false;
     let allAnnualTrades = [];
     const HELP_TEXT = {
       baseline: {
@@ -1208,6 +1210,7 @@
 
     function hideAllHoldings() {
       document.getElementById('allHoldings').classList.add('hidden');
+      setActiveNav('overview');
     }
 
     function showOverview() {
@@ -1215,11 +1218,22 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function showInferredDetails() {
+    async function showInferredDetails() {
       setActiveNav('inferred');
       document.getElementById('inferredPositions').classList.remove('hidden');
+      if (!inferredLoadedFull) {
+        document.getElementById('inferredSummary').textContent = '正在加载完整推算持仓列表...';
+        allInferredPositions = await api('/api/inferred-positions?limit=5000');
+        inferredLoadedFull = true;
+        populateInferredFilters(allInferredPositions);
+      }
       applyInferredFilters();
       document.getElementById('inferredPositions').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function hideInferredDetails() {
+      document.getElementById('inferredPositions').classList.add('hidden');
+      setActiveNav('overview');
     }
 
     function showTradeDetails() {
@@ -1233,11 +1247,21 @@
       document.getElementById('assetDetails').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    function hideAssetDetails() {
+      document.getElementById('assetDetails').classList.add('hidden');
+      setActiveNav('overview');
+    }
+
     async function showParseReport() {
       setActiveNav('status');
       document.getElementById('parseReport').classList.remove('hidden');
       await loadParseReport();
       document.getElementById('parseReport').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function hideParseReport() {
+      document.getElementById('parseReport').classList.add('hidden');
+      setActiveNav('overview');
     }
 
     async function init() {
@@ -1248,6 +1272,7 @@
         ]);
         setStatus(true, '后台已连接');
         allInferredPositions = positions;
+        inferredLoadedFull = false;
         renderConceptSummary(allInferredPositions);
         renderTopHoldings(allInferredPositions);
         populateInferredFilters(allInferredPositions);
