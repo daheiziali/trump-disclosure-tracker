@@ -32,7 +32,8 @@
     .page { min-height: 100vh; display: grid; grid-template-columns: 240px 1fr; }
     .sidebar { background: #ffffff; border-right: 1px solid var(--line); padding: 28px 20px; position: sticky; top: 0; height: 100vh; }
     .brand { display: flex; gap: 12px; align-items: center; padding: 0 0 24px; border-bottom: 1px solid var(--line); }
-    .mark { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; background: var(--navy); color: white; font-weight: 800; box-shadow: var(--shadow-soft); }
+    .mark { width: 42px; height: 42px; border-radius: 12px; overflow: hidden; background: var(--navy); box-shadow: var(--shadow-soft); flex: 0 0 auto; }
+    .mark img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center top; }
     .brand strong { display: block; font-size: 16px; letter-spacing: -0.02em; }
     .brand span { display: block; color: var(--muted); font-size: 12px; margin-top: 1px; }
     .nav { margin-top: 20px; display: grid; gap: 4px; }
@@ -231,7 +232,7 @@
   <div class="page">
     <aside class="sidebar">
       <div class="brand">
-        <div class="mark">FD</div>
+        <div class="mark"><img src="trump-portrait.jpg" alt="Donald J. Trump"></div>
         <div><strong>特朗普交易披露追踪</strong></div>
       </div>
       <nav class="nav">
