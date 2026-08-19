@@ -999,10 +999,9 @@
       return Object.entries(counts).map(([label, count]) => `${label} ${fmt(count)} 条`).join(' · ') || '暂无匹配披露';
     }
 
-    function renderAssetPicker(filterText = '') {
-      assetPickerQuery = String(filterText || '');
+    function assetPickerRows(filterText = '') {
       const query = String(filterText || '').trim().toUpperCase();
-      const rows = [...allInferredPositions]
+      return [...allInferredPositions]
         .filter(row => {
           if (!query) return true;
           const haystack = [row.asset_name, row.ticker, row.concept, row.asset_category, row.inferred_status].join(' ').toUpperCase();
@@ -1010,6 +1009,32 @@
         })
         .sort((a, b) => inferredExposure(b) - inferredExposure(a))
         .slice(0, 12);
+    }
+
+    function assetChoiceHtml(row, index) {
+      return `
+        <button class="asset-choice" ${assetDataAttrs(row)} onclick="selectAssetFromElement(this)">
+          <span class="asset-choice-code">${esc(row.ticker ? String(row.ticker).slice(0, 2) : String(index + 1).padStart(2, '0'))}</span>
+          <strong>${esc(row.asset_name || '未命名资产')}</strong>
+          <span class="asset-choice-meta">
+            <span>${esc([row.ticker || row.asset_category || '', row.inferred_status || ''].filter(Boolean).join(' · '))}</span>
+            <span class="asset-choice-money">${esc(fmtMoney(inferredExposure(row)))}</span>
+          </span>
+        </button>`;
+    }
+
+    function renderAssetChoiceGrid(rows) {
+      const visibleRows = selectedAssetKey ? rows.filter(row => detailKey(row) !== selectedAssetKey) : rows;
+      const grid = document.querySelector('.asset-picker-grid');
+      if (!grid) return;
+      grid.innerHTML = visibleRows.length
+        ? visibleRows.map(assetChoiceHtml).join('')
+        : '<div class="empty">没有更多匹配资产。可以换一个代码或资产关键词试试。</div>';
+    }
+
+    function renderAssetPicker(filterText = '') {
+      assetPickerQuery = String(filterText || '');
+      const rows = assetPickerRows(filterText);
       const visibleRows = selectedAssetKey ? rows.filter(row => detailKey(row) !== selectedAssetKey) : rows;
       document.getElementById('assetDetailTitle').textContent = '资产交易详情';
       document.getElementById('assetDetailSubtitle').textContent = '默认展示首个资产，可搜索或点击卡片切换交易披露链。';
@@ -1025,16 +1050,7 @@
           </div>
           <div class="asset-featured-slot" id="assetFeaturedSlot"></div>
           <div class="asset-picker-grid">
-            ${visibleRows.length ? visibleRows.map((row, index) => `
-              <button class="asset-choice" ${assetDataAttrs(row)} onclick="selectAssetFromElement(this)">
-                <span class="asset-choice-code">${esc(row.ticker ? String(row.ticker).slice(0, 2) : String(index + 1).padStart(2, '0'))}</span>
-                <strong>${esc(row.asset_name || '未命名资产')}</strong>
-                <span class="asset-choice-meta">
-                  <span>${esc([row.ticker || row.asset_category || '', row.inferred_status || ''].filter(Boolean).join(' · '))}</span>
-                  <span class="asset-choice-money">${esc(fmtMoney(inferredExposure(row)))}</span>
-                </span>
-              </button>
-            `).join('') : '<div class="empty">没有更多匹配资产。可以换一个代码或资产关键词试试。</div>'}
+            ${visibleRows.length ? visibleRows.map(assetChoiceHtml).join('') : '<div class="empty">没有更多匹配资产。可以换一个代码或资产关键词试试。</div>'}
           </div>
         </div>
         <div class="asset-detail-content" id="assetDetailContent">
@@ -1144,11 +1160,7 @@
         `共 ${fmt(trades.length)} 条交易披露`
       ].filter(Boolean).join(' · ');
       document.getElementById('assetDetailBadge').textContent = position.ticker || position.asset_category || '资产详情';
-      document.querySelectorAll('.asset-choice').forEach(button => {
-        if (button.dataset.assetKey === selectedAssetKey) {
-          button.remove();
-        }
-      });
+      renderAssetChoiceGrid(assetPickerRows(assetPickerQuery));
       const tradeRows = trades.length ? [...trades]
         .sort(assetTradeSort)
         .map(row => {
