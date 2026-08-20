@@ -1,0 +1,1373 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>特朗普交易披露追踪</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --soft: #f1f5f9;
+      --line: #e2e8f0;
+      --line-strong: #cbd5e1;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --navy: #0f172a;
+      --red: #dc2626;
+      --gold: #d97706;
+      --green: #059669;
+      --teal: #0ea5e9;
+      --purple: #7c3aed;
+      --blue: #2563eb;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      --shadow-soft: 0 4px 12px rgba(15, 23, 42, 0.04);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%); color: var(--ink); font-size: 14px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+    button, input { font: inherit; }
+
+    .page { min-height: 100vh; display: grid; grid-template-columns: 240px 1fr; }
+    .sidebar { background: #ffffff; border-right: 1px solid var(--line); padding: 28px 20px; position: sticky; top: 0; height: 100vh; }
+    .brand { display: flex; gap: 12px; align-items: center; padding: 0 0 24px; border-bottom: 1px solid var(--line); }
+    .mark { width: 42px; height: 42px; border-radius: 12px; overflow: hidden; background: var(--navy); box-shadow: var(--shadow-soft); flex: 0 0 auto; }
+    .mark img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center top; }
+    .brand strong { display: block; font-size: 16px; letter-spacing: -0.02em; }
+    .brand span { display: block; color: var(--muted); font-size: 12px; margin-top: 1px; }
+    .nav { margin-top: 20px; display: grid; gap: 4px; }
+    .nav button { border: 0; background: transparent; border-radius: 10px; padding: 12px 14px; text-align: left; color: var(--muted); cursor: pointer; font-weight: 500; transition: background .2s ease, color .2s ease; }
+    .nav button.active { background: #eff6ff; font-weight: 700; color: var(--blue); }
+
+    main { padding: 36px 40px 40px; min-width: 0; max-width: 1480px; width: 100%; margin: 0 auto; }
+    .topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 28px; }
+    h1 { margin: 0; font-size: 28px; line-height: 1.1; letter-spacing: -0.04em; }
+    .subtitle { color: var(--muted); margin-top: 5px; }
+    .status { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; background: var(--surface); color: var(--muted); white-space: nowrap; font-weight: 600; }
+    .dot { width: 8px; height: 8px; border-radius: 99px; background: #94a3b8; }
+    .dot.ok { background: var(--green); box-shadow: 0 0 8px rgba(5, 150, 105, 0.35); }
+    .dot.bad { background: var(--red); }
+
+    .grid { display: grid; gap: 14px; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+
+    .hero-grid { grid-template-columns: minmax(0, 1.15fr) minmax(340px, .85fr); align-items: stretch; }
+    .holdings-hero { overflow: hidden; }
+    .panel-head { padding: 20px 24px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; }
+    .panel-head h2 { margin: 0; font-size: 18px; font-weight: 700; }
+    .panel-head p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+    .btn { border: 1px solid var(--line); background: white; color: var(--ink); border-radius: 10px; padding: 9px 14px; cursor: pointer; font-weight: 600; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-soft); }
+    .btn.primary { background: var(--navy); color: white; border-color: var(--navy); }
+
+    .top-holdings { padding: 16px; display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .profile-medal { position: relative; min-height: 188px; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, #0f172a 0%, #172554 58%, #1d4ed8 100%); display: grid; align-items: center; text-align: left; box-shadow: inset 0 1px 0 rgba(255,255,255,.06); }
+    .profile-medal::before { content: ""; position: absolute; width: 340px; height: 340px; right: -120px; top: -140px; border-radius: 999px; background: rgba(255,255,255,.08); }
+    .profile-medal::after { content: ""; position: absolute; width: 240px; height: 240px; right: 120px; bottom: -140px; border-radius: 999px; background: rgba(59,130,246,.22); }
+    .profile-copy { position: relative; z-index: 1; }
+    .profile-copy { padding: 30px 32px; display: flex; gap: 18px; align-items: center; }
+    .portrait { width: 92px; height: 92px; flex: 0 0 auto; border-radius: 99px; border: 3px solid rgba(255,255,255,.12); box-shadow: var(--shadow-soft); overflow: hidden; background: #111827; }
+    .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center 18%; display: block; }
+    .profile-medal h3 { margin: 0; font-size: 30px; line-height: 1.05; max-width: 420px; color: #fff; letter-spacing: -0.03em; }
+    .profile-medal span { display: block; color: rgba(255,255,255,.76); margin-top: 8px; font-size: 13px; max-width: 480px; }
+    .profile-kicker { color: #93c5fd; font-size: 11px; font-weight: 800; letter-spacing: .18em; margin-bottom: 7px; }
+
+    .holding-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; padding: 0; }
+    .holding-card { position: relative; min-height: 106px; border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 16px 54px; background: #fff; overflow: hidden; box-shadow: var(--shadow-soft); cursor: pointer; transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease; }
+    .holding-card:hover { transform: translateY(-2px); border-color: #bfdbfe; box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08); }
+    .holding-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: var(--navy); }
+    .holding-card:nth-child(2n)::before { background: var(--red); }
+    .holding-card:nth-child(3n)::before { background: var(--teal); }
+    .holding-card:nth-child(4n)::before { background: var(--gold); }
+    .holding-card:nth-child(5n)::before { background: var(--purple); }
+    .rank { position: absolute; left: 14px; top: 14px; width: 24px; height: 24px; border-radius: 99px; display: grid; place-items: center; color: white; background: var(--navy); font-size: 11px; font-weight: 800; }
+    .holding-card strong { display: block; font-size: 14px; line-height: 1.3; max-height: 36px; overflow: hidden; letter-spacing: -0.01em; }
+    .holding-meta { margin-top: 8px; display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 12px; }
+    .range { color: var(--blue); font-weight: 700; font-variant-numeric: tabular-nums; }
+    .bar { margin-top: 10px; height: 6px; border-radius: 99px; background: #e2e8f0; overflow: hidden; }
+    .bar span { display: block; height: 100%; background: linear-gradient(90deg, #0f172a 0%, #2563eb 100%); border-radius: inherit; }
+    .asset-link { appearance: none; border: 0; background: transparent; padding: 0; color: inherit; font: inherit; font-weight: 700; text-align: left; cursor: pointer; }
+    .asset-link:hover { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+
+    .side-stack { display: grid; gap: 14px; }
+    .source-list, .note-list { padding: 12px 16px 16px; display: grid; gap: 10px; }
+    .source-row { display: grid; grid-template-columns: 90px 1fr; gap: 8px; align-items: start; }
+    .source-row strong { font-size: 13px; }
+    .source-row span { color: var(--muted); font-size: 12px; }
+    .theme-chart { padding: 20px 24px 22px; display: grid; gap: 14px; }
+    .donut-wrap { min-height: 314px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: #f8fafc; border: 1px solid var(--line); border-radius: 14px; }
+    .donut-chart { width: min(100%, 238px); height: 238px; overflow: visible; }
+    .donut-chart path { stroke: #fffefb; stroke-width: 1.8; stroke-linejoin: round; }
+    .donut-total { text-align: center; color: var(--muted); font-size: 12px; line-height: 1.2; }
+    .donut-total strong { display: block; color: var(--ink); font-size: 22px; line-height: 1.05; margin-bottom: 3px; font-weight: 800; }
+    .theme-legend { display: grid; gap: 9px; }
+    .legend-row { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: center; gap: 9px; font-size: 12px; }
+    .legend-dot { width: 9px; height: 9px; border-radius: 99px; }
+    .legend-row strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+    .legend-row span { color: var(--muted); font-variant-numeric: tabular-nums; }
+    .pill { display: inline-flex; border: 1px solid var(--line); background: #f8fafc; border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--muted); }
+
+    .table-panel { margin-top: 14px; }
+    .tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .search { min-width: 260px; border: 1px solid var(--line); background: white; border-radius: 10px; padding: 10px 12px; outline: 0; }
+    .select { border: 1px solid var(--line); background: white; border-radius: 10px; padding: 10px 12px; outline: 0; min-height: 40px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; min-width: 980px; border-collapse: collapse; }
+    th, td { padding: 14px 18px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; white-space: nowrap; }
+    th { color: var(--muted); font-size: 11px; text-transform: uppercase; background: #f8fafc; }
+    th.sortable { cursor: pointer; user-select: none; }
+    th.sortable::after { content: " ↕"; color: #a39d90; }
+    td.name { white-space: normal; min-width: 260px; }
+    .tag { display: inline-flex; align-items: center; border-radius: 999px; padding: 3px 8px; font-size: 12px; border: 1px solid var(--line); background: #f8fafc; }
+    .tag.buy { color: var(--green); border-color: #a7f3d0; background: #ecfdf5; }
+    .tag.sell { color: var(--red); border-color: #fecaca; background: #fef2f2; }
+    .tag.status-high { color: #15513f; border-color: #b9d7ca; background: #edf7f2; }
+    .tag.status-mid { color: #8a5a0f; border-color: #e4c895; background: #fff7e8; }
+    .tag.status-low { color: #9b2f25; border-color: #dfbbb6; background: #fbefed; }
+    .hint { display: inline-flex; width: 16px; height: 16px; border-radius: 99px; align-items: center; justify-content: center; margin-left: 4px; border: 1px solid var(--line-strong); color: var(--muted); font-size: 11px; cursor: help; background: white; }
+    .numeric { text-align: right; font-variant-numeric: tabular-nums; }
+    .table-note { color: var(--muted); font-size: 12px; padding: 10px 20px; border-bottom: 1px solid var(--line); background: #fff; }
+    .section-actions { display: flex; justify-content: flex-end; padding: 14px 18px 18px; border-top: 1px solid var(--line); background: #fff; }
+    .section-actions .btn { min-width: 118px; justify-content: center; }
+    .compact-table table { min-width: 900px; }
+    .detail-grid { padding: 20px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; border-bottom: 1px solid var(--line); background: #f8fafc; }
+    .detail-card { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: #fff; min-height: 76px; }
+    .detail-card span { display: block; color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+    .detail-card strong { display: block; font-size: 18px; line-height: 1.15; }
+    .detail-subhead { padding: 12px 16px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    .asset-detail-overview { display: grid; }
+    .asset-detail-name { position: relative; min-height: 184px; display: grid; align-content: end; gap: 14px; padding: 24px; overflow: hidden; border-radius: 16px; background: linear-gradient(135deg, #0f172a 0%, #172554 58%, #1d4ed8 100%); color: #fff; box-shadow: var(--shadow-soft); }
+    .asset-detail-name::before { content: ""; position: absolute; width: 260px; height: 260px; right: -96px; top: -104px; border-radius: 999px; background: rgba(255,255,255,.08); }
+    .asset-detail-name::after { content: ""; position: absolute; width: 180px; height: 180px; right: 88px; bottom: -108px; border-radius: 999px; background: rgba(59,130,246,.22); }
+    .asset-detail-name > * { position: relative; z-index: 1; }
+    .asset-detail-name h3 { margin: 0; font-size: 28px; line-height: 1.08; letter-spacing: -0.03em; color: #fff; }
+    .selected-asset-card { grid-template-columns: minmax(240px, .72fr) minmax(440px, 1.28fr); align-items: end; align-content: stretch; gap: 22px; }
+    .selected-asset-main { display: grid; align-content: end; gap: 14px; min-width: 0; }
+    .asset-detail-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .asset-detail-note { color: var(--muted); font-size: 13px; line-height: 1.65; max-width: 680px; }
+    .asset-detail-name .tag { color: #e0f2fe; border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.08); }
+    .asset-detail-name .tag.status-high { color: #bbf7d0; border-color: rgba(187,247,208,.28); background: rgba(22,163,74,.16); }
+    .asset-detail-name .tag.status-mid { color: #fde68a; border-color: rgba(253,230,138,.3); background: rgba(217,119,6,.18); }
+    .asset-detail-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .asset-kpi { border: 1px solid rgba(255,255,255,.18); border-radius: 14px; padding: 12px 14px; background: rgba(255,255,255,.08); backdrop-filter: blur(6px); }
+    .asset-kpi span { display: block; color: #bfdbfe; font-size: 11px; margin-bottom: 5px; }
+    .asset-kpi strong { display: block; font-size: 16px; line-height: 1.12; color: #fff; font-variant-numeric: tabular-nums; }
+    .asset-chain-head { padding: 16px 20px 10px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+    .asset-chain-head h3 { margin: 0; font-size: 15px; }
+    .asset-chain-head p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+    .asset-chain-counts { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .asset-chain-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    .detail-toggle { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 999px; padding: 7px 12px; cursor: pointer; font-weight: 700; font-size: 12px; }
+    .detail-toggle:hover { border-color: #bfdbfe; color: var(--blue); }
+    .asset-picker { padding: 22px 24px 26px; display: grid; gap: 14px; }
+    .asset-featured-slot:empty { display: none; }
+    .asset-featured-slot { padding-bottom: 2px; }
+    .asset-picker-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 14px; flex-wrap: wrap; }
+    .asset-picker-head h3 { margin: 0; font-size: 18px; }
+    .asset-picker-head p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .asset-picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+    .asset-choice { position: relative; min-height: 96px; border: 1px solid var(--line); border-radius: 14px; padding: 16px 16px 14px 48px; background: #fff; text-align: left; cursor: pointer; display: grid; align-content: center; gap: 8px; overflow: hidden; box-shadow: var(--shadow-soft); transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease; }
+    .asset-choice::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 9px; background: var(--navy); }
+    .asset-choice:nth-child(2n)::before { background: var(--red); }
+    .asset-choice:nth-child(3n)::before { background: var(--teal); }
+    .asset-choice:nth-child(4n)::before { background: var(--gold); }
+    .asset-choice:nth-child(5n)::before { background: var(--purple); }
+    .asset-choice:hover { border-color: #bfdbfe; transform: translateY(-2px); box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08); }
+    .asset-choice.selected { border-color: #2563eb; box-shadow: 0 14px 32px rgba(37, 99, 235, 0.12); }
+    .asset-choice strong { font-size: 15px; line-height: 1.25; }
+    .asset-choice span { color: var(--muted); font-size: 12px; }
+    .asset-choice-code { position: absolute; left: 14px; top: 15px; width: 24px; height: 24px; border-radius: 99px; display: grid; place-items: center; color: #fff; background: var(--navy); font-size: 10px; font-weight: 800; }
+    .asset-choice-meta { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .asset-choice-money { color: var(--blue); font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .asset-detail-content { border-top: 1px solid var(--line); padding-top: 20px; }
+    .timeline { padding: 0 20px 18px; position: relative; display: grid; gap: 10px; }
+    .timeline::before { content: ""; position: absolute; left: 72px; top: 8px; bottom: 24px; width: 2px; background: #dbeafe; }
+    .timeline-item { position: relative; border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px 12px 34px; margin-left: 56px; background: #fff; display: grid; grid-template-columns: minmax(180px, 1fr) auto; gap: 12px; align-items: center; }
+    .timeline-dot { position: absolute; left: -31px; top: 18px; width: 13px; height: 13px; border-radius: 99px; border: 3px solid #fff; background: var(--green); box-shadow: 0 0 0 1px #a7f3d0; }
+    .timeline-dot.sell { background: var(--red); box-shadow: 0 0 0 1px #fecaca; }
+    .timeline-date { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+    .timeline-main strong { display: block; font-size: 13px; }
+    .timeline-main span { color: var(--muted); font-size: 12px; }
+    .no-chain { margin: 0 20px 18px; border: 1px dashed var(--line-strong); border-radius: 14px; padding: 18px; background: #f8fafc; color: var(--muted); line-height: 1.7; }
+    .help-modal { position: fixed; inset: 0; z-index: 60; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(15, 23, 42, 0.42); }
+    .help-modal.open { display: flex; }
+    .help-dialog { width: min(100%, 460px); background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18); overflow: hidden; }
+    .help-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+    .help-head h3 { margin: 0; font-size: 18px; letter-spacing: -0.02em; }
+    .help-close { border: 1px solid var(--line); background: #fff; color: var(--muted); border-radius: 10px; width: 34px; height: 34px; cursor: pointer; }
+    .help-body { padding: 18px 20px 22px; color: var(--muted); line-height: 1.7; white-space: normal; }
+    .footnote { margin-top: 18px; color: var(--muted); font-size: 12px; line-height: 1.65; border-top: 1px solid var(--line); padding-top: 12px; }
+    .hidden { display: none; }
+    .empty { padding: 20px; color: var(--muted); }
+
+    @media (max-width: 1180px) {
+      .page { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+      .nav { grid-template-columns: repeat(4, max-content); overflow-x: auto; }
+      .hero-grid, .top-holdings, .profile-medal { grid-template-columns: 1fr; }
+      .profile-medal { min-height: auto; }
+    }
+    @media (max-width: 720px) {
+      main { padding: 16px; }
+      .topbar, .panel-head { flex-direction: column; align-items: stretch; }
+      .holding-cards { grid-template-columns: 1fr; }
+      .profile-copy { align-items: flex-start; padding: 18px; }
+      .profile-medal h3 { font-size: 22px; }
+      .donut-chart { width: 220px; height: 220px; }
+      .donut-wrap { min-height: 292px; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .selected-asset-card { grid-template-columns: 1fr; }
+      .asset-detail-kpis { grid-template-columns: 1fr; }
+      .asset-chain-head { flex-direction: column; align-items: flex-start; }
+      .timeline::before { left: 30px; }
+      .timeline-item { grid-template-columns: 1fr; align-items: start; margin-left: 24px; }
+      .section-actions { padding: 12px 14px 16px; }
+      .tools { justify-content: stretch; }
+      .search, .select, .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="mark"><img src="trump-portrait.jpg" alt="Donald J. Trump"></div>
+        <div><strong>特朗普交易披露追踪</strong></div>
+      </div>
+      <nav class="nav">
+        <button class="active" data-nav="topHoldings" onclick="scrollHomeSection('topHoldingsSection', 'topHoldings')">前十大推算持仓</button>
+        <button data-nav="theme" onclick="scrollHomeSection('themeSection', 'theme')">投资主题占比</button>
+        <button data-nav="tradesPreview" onclick="scrollHomeSection('transactions', 'tradesPreview')">最新披露交易</button>
+        <button data-nav="asset" onclick="scrollHomeSection('assetDetails', 'asset')">资产详情</button>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <h1>特朗普交易披露追踪</h1>
+          <div class="subtitle">真实读取本地 OGE / SEC 采集库，仅展示个股、ETF、基金，金额保留官方披露区间。</div>
+        </div>
+        <div class="status" id="connectionStatus"><span class="dot"></span><span>连接后台中</span></div>
+      </header>
+
+      <section class="grid hero-grid home-section" id="topHoldingsSection">
+        <div class="panel holdings-hero">
+          <div class="panel-head">
+            <div>
+              <h2>Donald J. Trump 披露跟踪</h2>
+              <p>以 2025 年度资产披露为基准，并纳入 2026 年迄今 278-T 增量交易，展示交易轨迹与披露口径推算状态。</p>
+            </div>
+          </div>
+          <div class="top-holdings">
+            <div class="profile-medal">
+              <div class="profile-copy">
+                <div class="portrait"><img src="trump-portrait.jpg" alt="Donald J. Trump"></div>
+                <div>
+                  <div class="profile-kicker">DISCLOSURE TRACKER</div>
+                  <h3>前十大推算持仓</h3>
+                  <span>基于 OGE 官方披露区间，按披露价值区间估算排序。</span>
+                </div>
+              </div>
+            </div>
+            <div class="holding-cards" id="topHoldings"></div>
+          </div>
+          <div class="section-actions">
+            <button class="btn primary" onclick="showInferredDetails()">查看更多</button>
+          </div>
+        </div>
+
+        <aside class="side-stack">
+          <div class="panel" id="themeSection">
+            <div class="panel-head">
+              <div><h2>投资主题占比</h2><p>按全部推算持仓的净估算金额归类。</p></div>
+            </div>
+            <div class="theme-chart" id="conceptSummary"></div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="panel table-panel hidden full-section" id="allHoldings">
+        <div class="panel-head">
+          <div><h2>交易记录</h2><p>默认展示全部公开交易时间线，可按年报交易明细与 2026 年 278-T 披露筛选。</p></div>
+          <div class="tools">
+            <input class="search" id="holdingSearch" placeholder="搜索 Intel、SPDR、TSLA、AMZN...">
+            <select class="select" id="holdingSource" onchange="applyHoldingFilters()">
+              <option value="">全部来源</option>
+              <option value="annual">年报交易明细</option>
+              <option value="t2026">2026 278-T 披露</option>
+            </select>
+            <select class="select" id="holdingConcept" onchange="applyHoldingFilters()">
+              <option value="">全部主题</option>
+            </select>
+            <select class="select" id="holdingAction" onchange="applyHoldingFilters()">
+              <option value="">全部动作</option>
+              <option value="买入">买入</option>
+              <option value="卖出">卖出</option>
+            </select>
+            <select class="select" id="holdingSort" onchange="applyHoldingFilters()">
+              <option value="date_desc">交易日 ↓</option>
+              <option value="date_asc">交易日 ↑</option>
+              <option value="amount_desc">金额估算 ↓</option>
+              <option value="amount_asc">金额估算 ↑</option>
+              <option value="asset_asc">资产名称 A-Z</option>
+            </select>
+            <button class="btn" onclick="searchHoldings()">搜索</button>
+            <button class="btn" onclick="hideAllHoldings()">收起</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>来源</th><th class="sortable" onclick="setHoldingSort('asset_asc')">资产</th><th>代码</th><th>主题</th><th>动作</th><th class="sortable" onclick="toggleHoldingDateSort()">交易日</th><th class="sortable" onclick="toggleHoldingAmountSort()">金额区间（美元）</th><th>披露日</th></tr></thead>
+            <tbody id="holdingRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel table-panel hidden full-section" id="inferredPositions">
+        <div class="panel-head">
+          <div><h2>推算持仓状态</h2><p>基于年度基准快照与后续交易流水，仅表示披露口径下的可识别状态。</p></div>
+          <div class="tools">
+            <input class="search" id="inferredSearch" placeholder="搜索资产、代码或主题">
+            <select class="select" id="inferredConcept" onchange="applyInferredFilters()">
+              <option value="">全部主题</option>
+            </select>
+            <select class="select" id="inferredStatus" onchange="applyInferredFilters()">
+              <option value="">全部状态</option>
+            </select>
+            <select class="select" id="inferredConfidence" onchange="applyInferredFilters()">
+              <option value="">全部置信度</option>
+            </select>
+            <select class="select" id="inferredSort" onchange="applyInferredFilters()">
+              <option value="exposure_desc">披露规模 ↓</option>
+              <option value="baseline_desc">基准估算 ↓</option>
+              <option value="purchase_desc">买入估算 ↓</option>
+              <option value="sale_desc">卖出估算 ↓</option>
+              <option value="recent_desc">最近交易 ↓</option>
+              <option value="asset_asc">资产名称 A-Z</option>
+            </select>
+            <button class="btn" onclick="hideInferredDetails()">收起</button>
+          </div>
+        </div>
+        <div class="table-note" id="inferredSummary">加载推算持仓数据中...</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th class="sortable" onclick="setInferredSort('asset_asc')">资产</th>
+              <th>代码</th>
+              <th>主题</th>
+              <th class="sortable numeric" onclick="setInferredSort('baseline_desc')">基准区间估算 <span class="hint" onclick="event.stopPropagation(); openHelp('baseline')">?</span></th>
+              <th class="sortable numeric" onclick="setInferredSort('purchase_desc')">买入区间估算 <span class="hint" onclick="event.stopPropagation(); openHelp('purchase')">?</span></th>
+              <th class="sortable numeric" onclick="setInferredSort('sale_desc')">卖出区间估算 <span class="hint" onclick="event.stopPropagation(); openHelp('sale')">?</span></th>
+              <th class="sortable" onclick="setInferredSort('recent_desc')">最近交易</th>
+              <th>推算状态 <span class="hint" onclick="event.stopPropagation(); openHelp('status')">?</span></th>
+              <th>置信度 <span class="hint" onclick="event.stopPropagation(); openHelp('confidence')">?</span></th>
+            </tr></thead>
+            <tbody id="inferredRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel table-panel home-section" id="transactions">
+        <div class="panel-head">
+          <div><h2>最新披露交易</h2><p>首页默认按交易日降序展示最近 10 条交易，完整时间线可进入详情页筛选。</p></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>资产</th><th>代码</th><th>主题</th><th>动作</th><th>交易日</th><th>金额区间（美元）</th><th>披露日</th></tr></thead>
+            <tbody id="tradeRows"></tbody>
+          </table>
+        </div>
+        <div class="section-actions">
+          <button class="btn primary" onclick="showTradeDetails()">查看更多</button>
+        </div>
+      </section>
+
+      <section class="panel table-panel home-section" id="assetDetails">
+        <div class="panel-head">
+          <div><h2 id="assetDetailTitle">资产交易详情</h2><p id="assetDetailSubtitle">默认展示首个资产，可搜索或点击卡片切换交易披露链。</p></div>
+          <div class="tools"><span class="pill" id="assetDetailBadge">等待选择资产</span><button class="btn" onclick="hideAssetDetails()">收起</button></div>
+        </div>
+        <div id="assetDetailBody" class="empty">请点击首页持仓卡片、推算持仓表或交易记录中的资产名称。</div>
+      </section>
+
+      <section class="panel table-panel hidden" id="parseReport">
+        <div class="panel-head">
+          <div><h2>数据状态</h2><p>本地文件与数据库 SHA256 对账；0 记录文件会标记待检查。</p></div>
+          <div class="tools"><button class="btn" onclick="loadParseReport()">刷新报告</button><button class="btn" onclick="hideParseReport()">收起</button></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>文件类型</th><th>发布日期</th><th>交易记录</th><th>持仓记录</th><th>状态</th><th>本地匹配</th></tr></thead>
+            <tbody id="parseRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="help-modal" id="helpModal" onclick="closeHelp(event)">
+        <div class="help-dialog" onclick="event.stopPropagation()">
+          <div class="help-head">
+            <h3 id="helpTitle">字段说明</h3>
+            <button class="help-close" onclick="closeHelp()">×</button>
+          </div>
+          <div class="help-body" id="helpBody"></div>
+        </div>
+      </div>
+
+      <footer class="footnote">
+        数据说明：本产品基于 OGE 公开披露文件整理，交易披露存在制度性延迟；金额为官方披露区间，不代表精确持仓金额、股数或成交价。页面面向投资用户，仅在主视图展示个股、ETF、基金；市政债、票据、现金、房地产和私人项目默认不进入主列表。低置信度 OCR 记录进入复核后台，不作为确认数据展示。
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const API_BASE = 'http://127.0.0.1:8765';
+    let allTrades = [];
+    let allInferredPositions = [];
+    let inferredLoadedFull = false;
+    let allAnnualTrades = [];
+    let selectedAssetKey = '';
+    let assetPickerQuery = '';
+    const HELP_TEXT = {
+      baseline: {
+        title: '基准区间估算',
+        body: '来自年度 278e 披露中的资产价值区间。页面将每条区间取中点后，按同一资产或代码合并汇总，用于表示该资产的年报基准规模，不代表真实账户金额。'
+      },
+      purchase: {
+        title: '买入区间估算',
+        body: '来自后续交易披露中标记为买入的金额区间。页面将这些区间取中点后汇总，用于表示后续披露中的累计买入规模，不代表精确成交金额或股数。'
+      },
+      sale: {
+        title: '卖出区间估算',
+        body: '来自后续交易披露中标记为卖出的金额区间。页面将这些区间取中点后汇总，用于表示后续披露中的累计卖出规模，不代表精确成交金额或剩余持仓。'
+      },
+      status: {
+        title: '推算状态',
+        body: '根据年度基准、后续买入和卖出之间的关系生成的披露口径结论，例如“可能持有”“增持或仍持有”“减持或清仓不确定”。它不是券商账户里的实时持仓状态。'
+      },
+      confidence: {
+        title: '置信度',
+        body: '表示当前推算状态的可靠程度，不代表投资收益或胜率。买卖区间重叠越多、信息越不完整，置信度通常越低。'
+      }
+    };
+
+    function fmt(n) { return new Intl.NumberFormat('en-US').format(n || 0); }
+    function fmtMoney(value) {
+      const amount = Number(value || 0);
+      if (!Number.isFinite(amount)) return '0 美元';
+      if (Math.abs(amount) >= 100000000) return `${(amount / 100000000).toFixed(2)} 亿美元`;
+      if (Math.abs(amount) >= 10000) return `${(amount / 10000).toFixed(2)} 万美元`;
+      return `${fmt(Math.round(amount))} 美元`;
+    }
+    function fmtOptionalMoney(value) {
+      const amount = Number(value || 0);
+      if (!Number.isFinite(amount) || amount <= 0) return '—';
+      return fmtMoney(amount);
+    }
+    function fmtMoneyRange(value) {
+      const text = String(value || '').trim();
+      if (!text) return '';
+      const normalized = text.replace(/,/g, '');
+      const nums = [...normalized.matchAll(/\$?\s*(\d+)/g)].map(match => Number(match[1]));
+      if (!nums.length) return text;
+      if (/^over\b/i.test(normalized) && nums[0]) {
+        return `超过 ${fmt(nums[0])}`;
+      }
+      if (nums.length >= 2) {
+        return `${fmt(nums[0])} - ${fmt(nums[1])}`;
+      }
+      return fmt(nums[0]);
+    }
+    function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function jsArg(s) { return JSON.stringify(String(s ?? '')).replace(/</g, '\\u003c'); }
+    function shortName(name, max = 58) { const s = String(name || ''); return s.length > max ? s.slice(0, max - 1) + '…' : s; }
+    function cleanTradeAsset(name) {
+      return String(name || '')
+        .replace(/\s+\b(IPurchaso|lourchase|lourchaso|ourchase|ourchaso|nurchasc|Purchasc|Purchaso|purchase|sale|salo|purc|pur|our|lour)\b$/i, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+    function setStatus(ok, text) {
+      const el = document.getElementById('connectionStatus');
+      el.innerHTML = `<span class="dot ${ok ? 'ok' : 'bad'}"></span><span>${esc(text)}</span>`;
+    }
+    function translateAction(value) {
+      const text = String(value || '').toLowerCase();
+      if (text.includes('sale') || text.includes('sell')) return '卖出';
+      if (text.includes('purchase') || text.includes('buy')) return '买入';
+      if (text.includes('exchange')) return '换入/换出';
+      return '待确认';
+    }
+    function translateState(value) {
+      const text = String(value || '').toLowerCase();
+      if (text === 'parsed') return '已解析';
+      if (text === 'approved') return '已复核';
+      if (text === 'needs_review') return '待复核';
+      return value || '';
+    }
+    function setActiveNav(key) {
+      document.querySelectorAll('.nav button[data-nav]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.nav === key);
+      });
+    }
+    function showHomeSections() {
+      document.querySelectorAll('.home-section').forEach(section => section.classList.remove('hidden'));
+      document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
+    }
+    function hideHomeSections() {
+      document.querySelectorAll('.home-section').forEach(section => section.classList.add('hidden'));
+    }
+    function scrollHomeSection(id, navKey) {
+      showHomeSections();
+      setActiveNav(navKey);
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    function confidenceClass(value) {
+      const text = String(value || '');
+      if (text.includes('高')) return 'status-high';
+      if (text.includes('中')) return 'status-mid';
+      return 'status-low';
+    }
+    function statusClass(value) {
+      const text = String(value || '');
+      if (text.includes('确认') || text.includes('增持') || text.includes('可能持有')) return 'status-high';
+      if (text.includes('减持') || text.includes('不确定') || text.includes('状态不明')) return 'status-mid';
+      return 'status-low';
+    }
+
+    function openHelp(key) {
+      const item = HELP_TEXT[key];
+      if (!item) return;
+      document.getElementById('helpTitle').textContent = item.title;
+      document.getElementById('helpBody').textContent = item.body;
+      document.getElementById('helpModal').classList.add('open');
+    }
+
+    function closeHelp() {
+      document.getElementById('helpModal').classList.remove('open');
+    }
+
+    function normalizedAssetName(value) {
+      return cleanTradeAsset(value).toUpperCase().replace(/[^A-Z0-9]+/g, ' ').trim();
+    }
+
+    function detailKey(row) {
+      if (row.asset_key) return row.asset_key;
+      if (row.ticker) return `TICKER:${String(row.ticker).toUpperCase()}`;
+      return `NAME:${normalizedAssetName(row.asset_name)}`;
+    }
+
+    function assetDataAttrs(row) {
+      return [
+        `data-asset-key="${esc(detailKey(row))}"`,
+        `data-asset-name="${esc(cleanTradeAsset(row.asset_name))}"`,
+        `data-asset-ticker="${esc(row.ticker || '')}"`
+      ].join(' ');
+    }
+
+    function selectAssetFromElement(element) {
+      openAssetDetails(
+        element.dataset.assetKey || '',
+        element.dataset.assetName || '',
+        element.dataset.assetTicker || ''
+      );
+    }
+
+    function assetLink(row, label) {
+      return `<button class="asset-link" ${assetDataAttrs(row)} onclick="event.stopPropagation(); selectAssetFromElement(this)">${esc(label || cleanTradeAsset(row.asset_name))}</button>`;
+    }
+
+    async function api(path) {
+      const res = await fetch(API_BASE + path);
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      return res.json();
+    }
+
+    function renderTopHoldings(rows) {
+      const topRows = [...rows]
+        .sort((a, b) => inferredExposure(b) - inferredExposure(a))
+        .slice(0, 10);
+      const totalTopExposure = topRows.reduce((sum, row) => sum + inferredExposure(row), 0) || 1;
+      if (!topRows.length) {
+        document.getElementById('topHoldings').innerHTML = '<div class="empty">暂无推算持仓数据。</div>';
+        return;
+      }
+      document.getElementById('topHoldings').innerHTML = topRows.map((row, index) => {
+        const exposure = inferredExposure(row);
+        const share = exposure / totalTopExposure * 100;
+        const subtitle = [
+          row.ticker || row.asset_category || '—',
+          row.inferred_status || ''
+        ].filter(Boolean).join(' · ');
+        return `
+        <article class="holding-card" role="button" tabindex="0" ${assetDataAttrs(row)} onclick="selectAssetFromElement(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); selectAssetFromElement(this);}">
+          <div class="rank">${String(index + 1).padStart(2, '0')}</div>
+          <strong title="${esc(row.asset_name)}">${assetLink(row, shortName(row.asset_name))}</strong>
+          <div class="holding-meta"><span>${esc(subtitle)}</span><span class="range">${fmtMoney(exposure)}</span></div>
+          <div class="bar"><span style="width:${Math.max(8, Math.min(100, share))}%"></span></div>
+        </article>
+      `;
+      }).join('');
+    }
+
+    function renderConceptSummary(positions) {
+      const target = document.getElementById('conceptSummary');
+      if (!positions.length) {
+        target.innerHTML = '<div class="empty">暂无可聚合主题。</div>';
+        return;
+      }
+      const conceptTotals = new Map();
+      positions.forEach(row => {
+        const concept = row.concept || '其他主题';
+        const exposure = inferredExposure(row);
+        if (exposure <= 0) return;
+        conceptTotals.set(concept, (conceptTotals.get(concept) || 0) + exposure);
+      });
+      const rows = [...conceptTotals.entries()]
+        .map(([concept, midpoint_volume]) => ({ concept, midpoint_volume }))
+        .sort((a, b) => b.midpoint_volume - a.midpoint_volume);
+      const palette = ['#2f6df6', '#19b98f', '#f4a21c', '#ee5353', '#7357f6', '#10a7c9', '#6fba2c', '#8b887f'];
+      const visible = rows.slice(0, 7).map((row, index) => ({
+        label: row.concept,
+        value: Number(row.midpoint_volume || 0),
+        color: palette[index % palette.length]
+      })).filter(row => row.value > 0);
+      const rest = rows.slice(7).reduce((sum, row) => sum + Number(row.midpoint_volume || 0), 0);
+      if (rest > 0) visible.push({ label: '其他主题', value: rest, color: '#9a958a' });
+      const total = visible.reduce((sum, row) => sum + row.value, 0) || 1;
+      const cx = 120;
+      const cy = 120;
+      const radius = 104;
+      let angle = -90;
+      const segments = visible.map((row, index) => {
+        const span = Math.max(3, row.value / total * 360);
+        const start = angle;
+        const end = index === visible.length - 1 ? 270 : Math.min(270, angle + span);
+        angle = end;
+        return `<path d="${pieSegment(cx, cy, radius, start, end)}" fill="${row.color}"></path>`;
+      }).join('');
+      const legend = visible.map(row => {
+        const pct = Math.round(row.value / total * 100);
+        return `<div class="legend-row">
+          <i class="legend-dot" style="background:${row.color}"></i>
+          <strong title="${esc(row.label)}">${esc(row.label)}</strong>
+          <span>${pct}% · ${fmtMoney(row.value)}</span>
+        </div>`;
+      }).join('');
+      target.innerHTML = `
+        <div class="donut-wrap">
+          <svg class="donut-chart" viewBox="0 0 240 240" aria-label="投资主题占比">
+            ${segments}
+          </svg>
+          <div class="donut-total"><strong>${fmtMoney(total)}</strong>估算合计</div>
+        </div>
+        <div class="theme-legend">${legend}</div>
+      `;
+    }
+
+    function polarPoint(cx, cy, radius, angle) {
+      const radians = angle * Math.PI / 180;
+      return [cx + radius * Math.cos(radians), cy + radius * Math.sin(radians)];
+    }
+
+    function pieSegment(cx, cy, radius, startAngle, endAngle) {
+      const gap = .8;
+      const start = startAngle + gap / 2;
+      const end = Math.max(start + .5, endAngle - gap / 2);
+      const largeArc = end - start > 180 ? 1 : 0;
+      const [x1, y1] = polarPoint(cx, cy, radius, start);
+      const [x2, y2] = polarPoint(cx, cy, radius, end);
+      return `M ${cx} ${cy} L ${x1.toFixed(2)} ${y1.toFixed(2)} A ${radius} ${radius} 0 ${largeArc} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z`;
+    }
+
+    function renderTrades(rows) {
+      const previewRows = [...rows].sort(assetTradeSort).slice(0, 10);
+      document.getElementById('tradeRows').innerHTML = previewRows.length ? previewRows.map(row => {
+        const kind = String(row.transaction_type || '').toLowerCase();
+        const tagClass = kind.includes('sale') ? 'sell' : kind.includes('purchase') ? 'buy' : '';
+        return `<tr>
+          <td class="name">${assetLink(row, cleanTradeAsset(row.asset_name))}</td>
+          <td>${esc(row.ticker || '—')}</td>
+          <td><span class="tag">${esc(row.concept || '其他')}</span></td>
+          <td><span class="tag ${tagClass}">${esc(translateAction(row.transaction_type))}</span></td>
+          <td>${esc(row.transaction_date || '')}</td>
+          <td>${esc(fmtMoneyRange(row.amount_range || ''))}</td>
+          <td>${esc(String(row.filed_date || '').slice(0, 10))}</td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="7" class="empty">没有匹配交易。</td></tr>';
+    }
+
+    function tradeSourceLabel(row) {
+      if (Number(row.source_document_id) === 5) return '年报交易明细';
+      if (String(row.filed_date || '').startsWith('2026')) return '2026 278-T 披露';
+      return '其他披露';
+    }
+
+    function tradeSourceKey(row) {
+      if (Number(row.source_document_id) === 5) return 'annual';
+      if (String(row.filed_date || '').startsWith('2026')) return 't2026';
+      return 'other';
+    }
+
+    function amountMid(row) {
+      return Number(row.amount_midpoint || 0);
+    }
+
+    function dateValue(row) {
+      const parts = String(row.transaction_date || '').split('/');
+      if (parts.length === 3) {
+        const [m, d, y] = parts.map(Number);
+        return new Date(y, m - 1, d).getTime();
+      }
+      return Date.parse(row.transaction_date || '') || 0;
+    }
+
+    function filedDateValue(row) {
+      return Date.parse(String(row.filed_date || '').slice(0, 10)) || 0;
+    }
+
+    function assetTradeSort(a, b) {
+      return dateValue(b) - dateValue(a) || filedDateValue(b) - filedDateValue(a);
+    }
+
+    function inferredDateValue(row) {
+      const parts = String(row.last_trade_date || '').split('/');
+      if (parts.length === 3) {
+        const [m, d, y] = parts.map(Number);
+        return new Date(y, m - 1, d).getTime();
+      }
+      return Date.parse(row.last_trade_date || '') || 0;
+    }
+
+    function inferredExposure(row) {
+      const exposure = row.net_midpoint != null
+        ? Number(row.net_midpoint)
+        : Number(row.baseline_midpoint || 0) + Number(row.purchase_midpoint || 0) - Number(row.sale_midpoint || 0);
+      return Math.max(0, exposure);
+    }
+
+    function populateTradeFilters(rows) {
+      const select = document.getElementById('tradeConcept');
+      const current = select.value;
+      const concepts = [...new Set(rows.map(row => row.concept || '其他'))].sort((a, b) => a.localeCompare(b, 'zh-Hans-CN'));
+      select.innerHTML = '<option value="">全部主题</option>' + concepts.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
+      select.value = concepts.includes(current) ? current : '';
+    }
+
+    function populateHoldingFilters(rows) {
+      const select = document.getElementById('holdingConcept');
+      const current = select.value;
+      const concepts = [...new Set(rows.map(row => row.concept || row.asset_category || '其他'))].sort((a, b) => a.localeCompare(b, 'zh-Hans-CN'));
+      select.innerHTML = '<option value="">全部主题</option>' + concepts.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
+      select.value = concepts.includes(current) ? current : '';
+    }
+
+    function setHoldingSort(value) {
+      document.getElementById('holdingSort').value = value;
+      applyHoldingFilters();
+    }
+
+    function toggleHoldingDateSort() {
+      const select = document.getElementById('holdingSort');
+      select.value = select.value === 'date_desc' ? 'date_asc' : 'date_desc';
+      applyHoldingFilters();
+    }
+
+    function toggleHoldingAmountSort() {
+      const select = document.getElementById('holdingSort');
+      select.value = select.value === 'amount_desc' ? 'amount_asc' : 'amount_desc';
+      applyHoldingFilters();
+    }
+
+    function setTradeSort(value) {
+      document.getElementById('tradeSort').value = value;
+      applyTradeFilters();
+    }
+
+    function toggleDateSort() {
+      const select = document.getElementById('tradeSort');
+      select.value = select.value === 'date_desc' ? 'date_asc' : 'date_desc';
+      applyTradeFilters();
+    }
+
+    function toggleFiledSort() {
+      const select = document.getElementById('tradeSort');
+      select.value = select.value === 'filed_desc' ? 'filed_asc' : 'filed_desc';
+      applyTradeFilters();
+    }
+
+    function toggleAmountSort() {
+      const select = document.getElementById('tradeSort');
+      select.value = select.value === 'amount_desc' ? 'amount_asc' : 'amount_desc';
+      applyTradeFilters();
+    }
+
+    function applyTradeFilters() {
+      const concept = document.getElementById('tradeConcept').value;
+      const action = document.getElementById('tradeAction').value;
+      const sort = document.getElementById('tradeSort').value;
+      let rows = allTrades.filter(row => {
+        if (concept && (row.concept || '其他') !== concept) return false;
+        if (action && translateAction(row.transaction_type) !== action) return false;
+        return true;
+      });
+      rows.sort((a, b) => {
+        if (sort === 'filed_asc') return filedDateValue(a) - filedDateValue(b) || dateValue(b) - dateValue(a);
+        if (sort === 'filed_desc') return filedDateValue(b) - filedDateValue(a) || dateValue(b) - dateValue(a);
+        if (sort === 'date_asc') return dateValue(a) - dateValue(b);
+        if (sort === 'amount_desc') return amountMid(b) - amountMid(a);
+        if (sort === 'amount_asc') return amountMid(a) - amountMid(b);
+        if (sort === 'asset_asc') return cleanTradeAsset(a.asset_name).localeCompare(cleanTradeAsset(b.asset_name), 'zh-Hans-CN');
+        return filedDateValue(b) - filedDateValue(a) || dateValue(b) - dateValue(a);
+      });
+      renderTrades(rows);
+    }
+
+    function renderHoldings(rows) {
+      document.getElementById('holdingRows').innerHTML = rows.length ? rows.map(row => {
+        const kind = String(row.transaction_type || '').toLowerCase();
+        const tagClass = kind.includes('sale') ? 'sell' : kind.includes('purchase') ? 'buy' : '';
+        return `<tr>
+          <td><span class="tag">${esc(tradeSourceLabel(row))}</span></td>
+          <td class="name">${assetLink(row, cleanTradeAsset(row.asset_name))}</td>
+          <td>${esc(row.ticker || '—')}</td>
+          <td><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></td>
+          <td><span class="tag ${tagClass}">${esc(translateAction(row.transaction_type))}</span></td>
+          <td>${esc(row.transaction_date || '')}</td>
+          <td>${esc(fmtMoneyRange(row.amount_range || ''))}</td>
+          <td>${esc(String(row.filed_date || '').slice(0, 10))}</td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="8" class="empty">没有匹配交易。</td></tr>';
+    }
+
+    function applyHoldingFilters() {
+      const source = document.getElementById('holdingSource').value;
+      const concept = document.getElementById('holdingConcept').value;
+      const action = document.getElementById('holdingAction').value;
+      const sort = document.getElementById('holdingSort').value;
+      let rows = allAnnualTrades.filter(row => {
+        if (source && tradeSourceKey(row) !== source) return false;
+        if (concept && (row.concept || row.asset_category || '其他') !== concept) return false;
+        if (action && translateAction(row.transaction_type) !== action) return false;
+        return true;
+      });
+      rows.sort((a, b) => {
+        if (sort === 'date_asc') return dateValue(a) - dateValue(b);
+        if (sort === 'amount_desc') return amountMid(b) - amountMid(a);
+        if (sort === 'amount_asc') return amountMid(a) - amountMid(b);
+        if (sort === 'asset_asc') return cleanTradeAsset(a.asset_name).localeCompare(cleanTradeAsset(b.asset_name), 'zh-Hans-CN');
+        return dateValue(b) - dateValue(a);
+      });
+      renderHoldings(rows);
+    }
+
+    function renderInferredPositions(rows) {
+      const total = allInferredPositions.length;
+      document.getElementById('inferredSummary').textContent = rows.length
+        ? `当前显示 ${fmt(rows.length)} / ${fmt(total)} 项。估算金额均为官方披露区间中点汇总，不代表真实持仓金额或股数。`
+        : `当前筛选无匹配结果。总计 ${fmt(total)} 项推算资产。`;
+      document.getElementById('inferredRows').innerHTML = rows.length ? rows.map(row => `
+        <tr>
+          <td class="name">${assetLink(row, row.asset_name)}</td>
+          <td>${esc(row.ticker || '—')}</td>
+          <td><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></td>
+          <td class="numeric">${fmtOptionalMoney(row.baseline_midpoint)}</td>
+          <td class="numeric">${fmtOptionalMoney(row.purchase_midpoint)}</td>
+          <td class="numeric">${fmtOptionalMoney(row.sale_midpoint)}</td>
+          <td>${esc(row.last_trade_type ? translateAction(row.last_trade_type) + ' ' + row.last_trade_date : '—')}</td>
+          <td><span class="tag ${statusClass(row.inferred_status)}" title="披露口径推算状态，不等于实际账户持仓。">${esc(row.inferred_status)}</span></td>
+          <td><span class="tag ${confidenceClass(row.confidence_label)}" title="判断可靠程度，不代表投资胜率。">${esc(row.confidence_label)}</span></td>
+        </tr>
+      `).join('') : '<tr><td colspan="9" class="empty">暂无推算结果。</td></tr>';
+    }
+
+    function inferredRowHtml(row) {
+      return `<tr>
+        <td class="name">${assetLink(row, row.asset_name)}</td>
+        <td>${esc(row.ticker || '—')}</td>
+        <td><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></td>
+        <td class="numeric">${fmtOptionalMoney(row.baseline_midpoint)}</td>
+        <td class="numeric">${fmtOptionalMoney(row.purchase_midpoint)}</td>
+        <td class="numeric">${fmtOptionalMoney(row.sale_midpoint)}</td>
+        <td>${esc(row.last_trade_type ? translateAction(row.last_trade_type) + ' ' + row.last_trade_date : '—')}</td>
+        <td><span class="tag ${statusClass(row.inferred_status)}" title="披露口径推算状态，不等于实际账户持仓。">${esc(row.inferred_status)}</span></td>
+        <td><span class="tag ${confidenceClass(row.confidence_label)}" title="判断可靠程度，不代表投资胜率。">${esc(row.confidence_label)}</span></td>
+      </tr>`;
+    }
+
+    function populateInferredFilters(rows) {
+      const conceptSelect = document.getElementById('inferredConcept');
+      const statusSelect = document.getElementById('inferredStatus');
+      const confidenceSelect = document.getElementById('inferredConfidence');
+      const currentConcept = conceptSelect.value;
+      const currentStatus = statusSelect.value;
+      const currentConfidence = confidenceSelect.value;
+      const concepts = [...new Set(rows.map(row => row.concept || row.asset_category || '其他'))].sort((a, b) => a.localeCompare(b, 'zh-Hans-CN'));
+      const statuses = [...new Set(rows.map(row => row.inferred_status || '状态不明'))];
+      const confidences = [...new Set(rows.map(row => row.confidence_label || '低'))];
+      conceptSelect.innerHTML = '<option value="">全部主题</option>' + concepts.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
+      statusSelect.innerHTML = '<option value="">全部状态</option>' + statuses.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
+      confidenceSelect.innerHTML = '<option value="">全部置信度</option>' + confidences.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
+      conceptSelect.value = concepts.includes(currentConcept) ? currentConcept : '';
+      statusSelect.value = statuses.includes(currentStatus) ? currentStatus : '';
+      confidenceSelect.value = confidences.includes(currentConfidence) ? currentConfidence : '';
+    }
+
+    function setInferredSort(value) {
+      const select = document.getElementById('inferredSort');
+      select.value = value;
+      applyInferredFilters();
+    }
+
+    function applyInferredFilters() {
+      const query = document.getElementById('inferredSearch').value.trim().toUpperCase();
+      const concept = document.getElementById('inferredConcept').value;
+      const status = document.getElementById('inferredStatus').value;
+      const confidence = document.getElementById('inferredConfidence').value;
+      const sort = document.getElementById('inferredSort').value;
+      let rows = allInferredPositions.filter(row => {
+        const rowConcept = row.concept || row.asset_category || '其他';
+        if (concept && rowConcept !== concept) return false;
+        if (status && (row.inferred_status || '状态不明') !== status) return false;
+        if (confidence && (row.confidence_label || '低') !== confidence) return false;
+        if (query) {
+          const haystack = [row.asset_name, row.ticker, rowConcept, row.inferred_status, row.confidence_label].join(' ').toUpperCase();
+          if (!haystack.includes(query)) return false;
+        }
+        return true;
+      });
+      rows.sort((a, b) => {
+        if (sort === 'baseline_desc') return Number(b.baseline_midpoint || 0) - Number(a.baseline_midpoint || 0);
+        if (sort === 'purchase_desc') return Number(b.purchase_midpoint || 0) - Number(a.purchase_midpoint || 0);
+        if (sort === 'sale_desc') return Number(b.sale_midpoint || 0) - Number(a.sale_midpoint || 0);
+        if (sort === 'recent_desc') return inferredDateValue(b) - inferredDateValue(a);
+        if (sort === 'asset_asc') return String(a.asset_name || '').localeCompare(String(b.asset_name || ''), 'zh-Hans-CN');
+        return inferredExposure(b) - inferredExposure(a);
+      });
+      renderInferredPositions(rows);
+    }
+
+    function findPositionByKey(key, fallbackName, fallbackTicker) {
+      const normalizedFallback = normalizedAssetName(fallbackName);
+      return allInferredPositions.find(row => detailKey(row) === key)
+        || allInferredPositions.find(row => fallbackTicker && String(row.ticker || '').toUpperCase() === String(fallbackTicker).toUpperCase())
+        || allInferredPositions.find(row => normalizedAssetName(row.asset_name) === normalizedFallback)
+        || {
+          asset_key: key,
+          asset_name: fallbackName || key.replace(/^NAME:|^TICKER:/, ''),
+          ticker: fallbackTicker || (key.startsWith('TICKER:') ? key.replace('TICKER:', '') : ''),
+          concept: '待确认',
+          asset_category: '待确认',
+          baseline_midpoint: 0,
+          purchase_midpoint: 0,
+          sale_midpoint: 0,
+          last_trade_type: '',
+          last_trade_date: '',
+          inferred_status: '状态不明',
+          confidence_label: '低'
+        };
+    }
+
+    function isSameAssetTrade(trade, position) {
+      const ticker = String(position.ticker || '').toUpperCase();
+      if (ticker && String(trade.ticker || '').toUpperCase() === ticker) return true;
+      const tradeName = normalizedAssetName(trade.asset_name);
+      const positionName = normalizedAssetName(position.asset_name);
+      return Boolean(tradeName && positionName && (tradeName === positionName || tradeName.includes(positionName) || positionName.includes(tradeName)));
+    }
+
+    function summarizeAssetAction(position, trades) {
+      const buys = Number(position.purchase_midpoint || 0);
+      const sells = Number(position.sale_midpoint || 0);
+      const latest = position.last_trade_type ? `${translateAction(position.last_trade_type)} ${position.last_trade_date || ''}` : '';
+      const parts = [];
+      if (Number(position.baseline_midpoint || 0) > 0) parts.push(`年报基准估算 ${fmtMoney(position.baseline_midpoint)}`);
+      if (buys > 0) parts.push(`后续买入估算 ${fmtMoney(buys)}`);
+      if (sells > 0) parts.push(`后续卖出估算 ${fmtMoney(sells)}`);
+      if (latest) parts.push(`最近交易为${latest}`);
+      if (!parts.length && trades.length) parts.push(`已匹配 ${fmt(trades.length)} 条交易披露`);
+      return parts.length ? parts.join('，') + '。' : '暂无可用于推算的披露链路。';
+    }
+
+    function sourceBreakdown(trades) {
+      const counts = trades.reduce((acc, row) => {
+        const label = tradeSourceLabel(row);
+        acc[label] = (acc[label] || 0) + 1;
+        return acc;
+      }, {});
+      return Object.entries(counts).map(([label, count]) => `${label} ${fmt(count)} 条`).join(' · ') || '暂无匹配披露';
+    }
+
+    function assetPickerRows(filterText = '') {
+      const query = String(filterText || '').trim().toUpperCase();
+      return [...allInferredPositions]
+        .filter(row => {
+          if (!query) return true;
+          const haystack = [row.asset_name, row.ticker, row.concept, row.asset_category, row.inferred_status].join(' ').toUpperCase();
+          return haystack.includes(query);
+        })
+        .sort((a, b) => inferredExposure(b) - inferredExposure(a))
+        .slice(0, 12);
+    }
+
+    function assetChoiceHtml(row, index) {
+      return `
+        <button class="asset-choice" ${assetDataAttrs(row)} onclick="selectAssetFromElement(this)">
+          <span class="asset-choice-code">${esc(row.ticker ? String(row.ticker).slice(0, 2) : String(index + 1).padStart(2, '0'))}</span>
+          <strong>${esc(row.asset_name || '未命名资产')}</strong>
+          <span class="asset-choice-meta">
+            <span>${esc([row.ticker || row.asset_category || '', row.inferred_status || ''].filter(Boolean).join(' · '))}</span>
+            <span class="asset-choice-money">${esc(fmtMoney(inferredExposure(row)))}</span>
+          </span>
+        </button>`;
+    }
+
+    function renderAssetChoiceGrid(rows) {
+      const visibleRows = selectedAssetKey ? rows.filter(row => detailKey(row) !== selectedAssetKey) : rows;
+      const grid = document.querySelector('.asset-picker-grid');
+      if (!grid) return;
+      grid.innerHTML = visibleRows.length
+        ? visibleRows.map(assetChoiceHtml).join('')
+        : '<div class="empty">没有更多匹配资产。可以换一个代码或资产关键词试试。</div>';
+    }
+
+    function renderAssetPicker(filterText = '') {
+      assetPickerQuery = String(filterText || '');
+      const rows = assetPickerRows(filterText);
+      const visibleRows = selectedAssetKey ? rows.filter(row => detailKey(row) !== selectedAssetKey) : rows;
+      document.getElementById('assetDetailTitle').textContent = '资产交易详情';
+      document.getElementById('assetDetailSubtitle').textContent = '默认展示首个资产，可搜索或点击卡片切换交易披露链。';
+      document.getElementById('assetDetailBadge').textContent = selectedAssetKey ? '已选择资产' : rows.length ? '默认第一项' : '暂无资产';
+      document.getElementById('assetDetailBody').innerHTML = `
+        <div class="asset-picker">
+          <div class="asset-picker-head">
+            <div>
+              <h3>选择资产</h3>
+              <p>默认展示推算披露规模最高的 12 项，也可以从首页卡片、推算持仓表或交易记录中点击任意资产名称。</p>
+            </div>
+            <input class="search" id="assetPickerSearch" placeholder="搜索资产名称或代码" value="${esc(filterText)}">
+          </div>
+          <div class="asset-featured-slot" id="assetFeaturedSlot"></div>
+          <div class="asset-picker-grid">
+            ${visibleRows.length ? visibleRows.map(assetChoiceHtml).join('') : '<div class="empty">没有更多匹配资产。可以换一个代码或资产关键词试试。</div>'}
+          </div>
+        </div>
+        <div class="asset-detail-content" id="assetDetailContent">
+          <div class="empty">请选择上方资产卡片。</div>
+        </div>`;
+      const input = document.getElementById('assetPickerSearch');
+      if (input) {
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+        input.addEventListener('input', event => renderAssetPicker(event.target.value));
+      }
+      return rows;
+    }
+
+    function selectedAssetOverviewHtml(position, trades, detailId) {
+      const exposure = inferredExposure(position);
+      const latest = position.last_trade_type ? `${translateAction(position.last_trade_type)} ${position.last_trade_date || ''}` : '—';
+      return `
+        <div class="asset-detail-overview">
+          <div class="asset-detail-name selected-asset-card">
+            <div class="selected-asset-main">
+              <div class="asset-detail-tags">
+                <span class="tag">${esc(position.ticker || '暂无代码')}</span>
+                <span class="tag">${esc(position.asset_category || '资产')}</span>
+                <span class="tag">${esc(position.concept || '其他主题')}</span>
+                <span class="tag ${statusClass(position.inferred_status)}">${esc(position.inferred_status || '状态不明')}</span>
+                <span class="tag ${confidenceClass(position.confidence_label)}">置信度 ${esc(position.confidence_label || '低')}</span>
+              </div>
+              <h3>${esc(position.asset_name || '资产详情')}</h3>
+            </div>
+            <div class="asset-detail-kpis">
+              <div class="asset-kpi"><span>推算披露规模</span><strong>${fmtMoney(exposure)}</strong></div>
+              <div class="asset-kpi"><span>年报基准估算</span><strong>${fmtOptionalMoney(position.baseline_midpoint)}</strong></div>
+              <div class="asset-kpi"><span>买入区间估算</span><strong>${fmtOptionalMoney(position.purchase_midpoint)}</strong></div>
+              <div class="asset-kpi"><span>卖出区间估算</span><strong>${fmtOptionalMoney(position.sale_midpoint)}</strong></div>
+              <div class="asset-kpi"><span>最近交易</span><strong>${esc(latest)}</strong></div>
+              <div class="asset-kpi"><span>匹配披露</span><strong>${fmt(trades.length)} 条</strong></div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function mergeRowsById(rows) {
+      const map = new Map();
+      rows.forEach(row => {
+        const key = row.id || [row.asset_name, row.transaction_date, row.amount_range, row.filed_date].join('|');
+        map.set(key, row);
+      });
+      return [...map.values()];
+    }
+
+    async function fetchAssetTrades(position, fallbackName, fallbackTicker) {
+      const queries = [
+        position.ticker,
+        fallbackTicker,
+        position.asset_name,
+        fallbackName
+      ].map(value => String(value || '').trim()).filter(Boolean);
+      const uniqueQueries = [...new Set(queries)];
+      const results = [];
+      for (const query of uniqueQueries.slice(0, 3)) {
+        const rows = await api(`/api/transactions?limit=5000&state=parsed&public=1&q=${encodeURIComponent(query)}`);
+        results.push(...rows);
+      }
+      return mergeRowsById(results).filter(row => isSameAssetTrade(row, position));
+    }
+
+    function timelineHtml(trades) {
+      if (!trades.length) {
+        return '<div class="no-chain">当前资产有推算持仓信息，但没有匹配到可展示交易链。常见原因包括：该资产只出现在年度持仓披露中、基金代码未出现在交易流水字段中，或原始披露名称与标准化名称差异较大。</div>';
+      }
+      return `<div class="timeline">${[...trades].sort(assetTradeSort).slice(0, 8).map(row => {
+        const kind = String(row.transaction_type || '').toLowerCase();
+        const tagClass = kind.includes('sale') ? 'sell' : kind.includes('purchase') ? 'buy' : '';
+        return `
+          <div class="timeline-item">
+            <span class="timeline-dot ${tagClass}"></span>
+            <div class="timeline-main">
+              <strong>${esc(translateAction(row.transaction_type))} · ${esc(row.transaction_date || '交易日未披露')}</strong>
+              <span>${esc(cleanTradeAsset(row.asset_name))} · 披露日 ${esc(String(row.filed_date || '').slice(0, 10) || '未披露')}</span>
+            </div>
+            <span class="tag ${tagClass}">${esc(fmtMoneyRange(row.amount_range || ''))}</span>
+          </div>`;
+      }).join('')}</div>`;
+    }
+
+    function toggleAssetTradeTable(button) {
+      const id = button?.dataset?.targetTable || '';
+      const table = document.getElementById(id);
+      if (!table) return;
+      const nextHidden = !table.classList.contains('hidden');
+      table.classList.toggle('hidden', nextHidden);
+      button.textContent = nextHidden ? '查看全部交易明细 >>' : '收起交易明细';
+    }
+
+    function renderAssetDetail(position, trades) {
+      selectedAssetKey = detailKey(position);
+      const exposure = inferredExposure(position);
+      const latest = position.last_trade_type ? `${translateAction(position.last_trade_type)} ${position.last_trade_date || ''}` : '—';
+      const sourceText = sourceBreakdown(trades);
+      const detailId = `assetTradeTable_${Math.random().toString(36).slice(2)}`;
+      document.getElementById('assetDetailTitle').textContent = '资产交易详情';
+      document.getElementById('assetDetailSubtitle').textContent = [
+        `当前资产：${position.asset_name || '未命名资产'}`,
+        position.ticker || '',
+        position.concept || position.asset_category || '',
+        `共 ${fmt(trades.length)} 条交易披露`
+      ].filter(Boolean).join(' · ');
+      document.getElementById('assetDetailBadge').textContent = position.ticker || position.asset_category || '资产详情';
+      renderAssetChoiceGrid(assetPickerRows(assetPickerQuery));
+      const tradeRows = trades.length ? [...trades]
+        .sort(assetTradeSort)
+        .map(row => {
+          const kind = String(row.transaction_type || '').toLowerCase();
+          const tagClass = kind.includes('sale') ? 'sell' : kind.includes('purchase') ? 'buy' : '';
+          return `<tr>
+            <td><span class="tag">${esc(tradeSourceLabel(row))}</span></td>
+            <td class="name">${assetLink(position, position.asset_name)}</td>
+            <td><span class="tag ${tagClass}">${esc(translateAction(row.transaction_type))}</span></td>
+            <td>${esc(row.transaction_date || '')}</td>
+            <td>${esc(fmtMoneyRange(row.amount_range || ''))}</td>
+            <td>${esc(String(row.filed_date || '').slice(0, 10))}</td>
+            <td><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></td>
+          </tr>`;
+        }).join('')
+        : '<tr><td colspan="7" class="empty">暂无匹配交易披露。</td></tr>';
+      const target = document.getElementById('assetDetailContent') || document.getElementById('assetDetailBody');
+      const featuredSlot = document.getElementById('assetFeaturedSlot');
+      if (featuredSlot) {
+        featuredSlot.innerHTML = selectedAssetOverviewHtml(position, trades, detailId);
+      }
+      target.innerHTML = `
+        ${featuredSlot ? '' : selectedAssetOverviewHtml(position, trades, detailId)}
+        <div class="detail-subhead">
+          <span>${esc(sourceText)}</span>
+        </div>
+        <div class="asset-chain-head">
+          <div><h3>交易披露链</h3><p>默认按交易日降序，其次按披露日降序展示。</p></div>
+          <div class="asset-chain-actions">
+            <span class="asset-chain-counts">${esc(sourceText)}</span>
+            ${trades.length ? `<button class="detail-toggle" data-target-table="${esc(detailId)}" onclick="toggleAssetTradeTable(this)">查看全部交易明细 &gt;&gt;</button>` : ''}
+          </div>
+        </div>
+        ${timelineHtml(trades)}
+        <div class="table-wrap hidden" id="${esc(detailId)}">
+          <div class="detail-subhead"><span>全部交易明细：按交易日降序，其次按披露日降序。</span></div>
+          <table>
+            <thead><tr><th>来源</th><th>资产</th><th>动作</th><th>交易日</th><th>金额区间（美元）</th><th>披露日</th><th>主题</th></tr></thead>
+            <tbody>${tradeRows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    async function openAssetDetails(key, fallbackName = '', fallbackTicker = '', shouldScroll = true) {
+      setActiveNav('asset');
+      showHomeSections();
+      const section = document.getElementById('assetDetails');
+      section.classList.remove('hidden');
+      document.getElementById('assetDetailTitle').textContent = '资产交易详情';
+      document.getElementById('assetDetailSubtitle').textContent = fallbackName ? `正在加载 ${fallbackName} 的披露链路...` : '正在加载该资产的披露链路...';
+      document.getElementById('assetDetailBadge').textContent = fallbackTicker || '加载中';
+      const target = document.getElementById('assetDetailContent') || document.getElementById('assetDetailBody');
+      target.innerHTML = '<div class="empty">正在读取交易披露记录...</div>';
+      if (shouldScroll) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      try {
+        const position = findPositionByKey(key, fallbackName, fallbackTicker);
+        const trades = await fetchAssetTrades(position, fallbackName, fallbackTicker);
+        renderAssetDetail(position, trades);
+      } catch (err) {
+        document.getElementById('assetDetailSubtitle').textContent = '资产交易详情读取失败';
+        document.getElementById('assetDetailBadge').textContent = '加载失败';
+        const errorTarget = document.getElementById('assetDetailContent') || document.getElementById('assetDetailBody');
+        errorTarget.innerHTML = `<div class="empty">暂时无法读取该资产的交易链路：${esc(err.message || err)}</div>`;
+      }
+    }
+
+    function renderParseReport(data) {
+      const rows = data.documents || [];
+      document.getElementById('parseRows').innerHTML = rows.length ? rows.map(row => `
+        <tr>
+          <td>${esc(row.filing_type || '')}</td>
+          <td>${esc(String(row.published_at || '').slice(0, 10))}</td>
+          <td>${fmt(row.transaction_rows || 0)}</td>
+          <td>${fmt(row.holding_rows || 0)}</td>
+          <td><span class="tag">${row.parse_status === 'ok' ? '已解析' : '待检查'}</span></td>
+          <td class="name">${esc(row.local_match ? row.local_match.split('/').pop() : '—')}</td>
+        </tr>
+      `).join('') : '<tr><td colspan="6" class="empty">暂无解析报告。</td></tr>';
+    }
+
+    async function loadParseReport() {
+      renderParseReport(await api('/api/parse-report'));
+    }
+
+    async function searchTrades() {
+      const q = encodeURIComponent(document.getElementById('tradeSearch').value.trim());
+      allTrades = await api(`/api/transactions?limit=300&state=parsed&public=1${q ? '&q=' + q : ''}`);
+      renderTrades(allTrades);
+    }
+
+    async function searchHoldings() {
+      const q = encodeURIComponent(document.getElementById('holdingSearch').value.trim());
+      allAnnualTrades = await api(`/api/transactions?limit=2000&state=parsed&public=1${q ? '&q=' + q : ''}`);
+      populateHoldingFilters(allAnnualTrades);
+      applyHoldingFilters();
+    }
+
+    async function showAllHoldings() {
+      setActiveNav('tradesPreview');
+      hideHomeSections();
+      document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
+      document.getElementById('allHoldings').classList.remove('hidden');
+      await searchHoldings();
+      document.getElementById('allHoldings').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function hideAllHoldings() {
+      document.getElementById('allHoldings').classList.add('hidden');
+      scrollHomeSection('transactions', 'tradesPreview');
+    }
+
+    function showOverview() {
+      showHomeSections();
+      setActiveNav('topHoldings');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function showInferredDetails() {
+      setActiveNav('topHoldings');
+      hideHomeSections();
+      document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
+      document.getElementById('inferredPositions').classList.remove('hidden');
+      if (!inferredLoadedFull) {
+        document.getElementById('inferredSummary').textContent = '正在加载完整推算持仓列表...';
+        allInferredPositions = await api('/api/inferred-positions?limit=5000');
+        inferredLoadedFull = true;
+        populateInferredFilters(allInferredPositions);
+      }
+      applyInferredFilters();
+      document.getElementById('inferredPositions').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function hideInferredDetails() {
+      document.getElementById('inferredPositions').classList.add('hidden');
+      scrollHomeSection('topHoldingsSection', 'topHoldings');
+    }
+
+    function showTradeDetails() {
+      showAllHoldings();
+    }
+
+    function showAssetDetails() {
+      setActiveNav('asset');
+      showHomeSections();
+      document.getElementById('assetDetails').classList.remove('hidden');
+      const rows = renderAssetPicker(assetPickerQuery);
+      const first = rows.find(row => detailKey(row) === selectedAssetKey) || rows[0];
+      if (first) openAssetDetails(detailKey(first), first.asset_name, first.ticker, false);
+      document.getElementById('assetDetails').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function hideAssetDetails() {
+      scrollHomeSection('assetDetails', 'asset');
+    }
+
+    async function showParseReport() {
+      setActiveNav('');
+      hideHomeSections();
+      document.getElementById('parseReport').classList.remove('hidden');
+      await loadParseReport();
+      document.getElementById('parseReport').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function hideParseReport() {
+      document.getElementById('parseReport').classList.add('hidden');
+      showOverview();
+    }
+
+    async function init() {
+      try {
+        const [data, positions] = await Promise.all([
+          api('/api/dashboard'),
+          api('/api/inferred-positions?limit=50')
+        ]);
+        setStatus(true, '后台已连接');
+        allInferredPositions = positions;
+        inferredLoadedFull = false;
+        renderConceptSummary(allInferredPositions);
+        renderTopHoldings(allInferredPositions);
+        populateInferredFilters(allInferredPositions);
+        document.getElementById('inferredSummary').textContent = '点击“查看更多”后加载完整列表。';
+        document.getElementById('inferredRows').innerHTML = '<tr><td colspan="9" class="empty">完整推算持仓列表暂未展开。</td></tr>';
+        allTrades = data.recent_transactions || [];
+        renderTrades(allTrades);
+        const assetRows = renderAssetPicker();
+        if (assetRows.length) {
+          const first = assetRows[0];
+          openAssetDetails(detailKey(first), first.asset_name, first.ticker, false);
+        }
+      } catch (err) {
+        setStatus(false, '后台未连接');
+        document.getElementById('topHoldings').innerHTML = `<div class="empty">${esc(err.message)}</div>`;
+      }
+    }
+
+    document.getElementById('holdingSearch').addEventListener('keydown', e => { if (e.key === 'Enter') searchHoldings(); });
+    document.getElementById('holdingSearch').addEventListener('input', () => {
+      if (!document.getElementById('holdingSearch').value.trim()) searchHoldings();
+    });
+    document.getElementById('inferredSearch').addEventListener('input', applyInferredFilters);
+    document.getElementById('inferredSearch').addEventListener('keydown', e => { if (e.key === 'Enter') applyInferredFilters(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeHelp();
+    });
+    init();
+  </script>
+</body>
+</html>
