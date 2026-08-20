@@ -96,6 +96,6 @@ http://127.0.0.1:8765
 - OGE 278-T 扫描件 OCR 质量不稳定，解析器会把低置信度记录放入复核队列。
 - 如果有 278-T Excel 转换结果，优先用 `transaction_excel_parser.py` 替换对应 PDF OCR 行；解析结果在 `raw_text` 中保留 Excel 文件名、sheet、行号。
 - Annual 278e PDF 解析可作为兜底；如果有 Excel 表格版，优先用 `annual_excel_parser.py` 解析 Part 6 和 Part 7，并保留来源 sheet/行号在 `raw_text` 中。
-- 投资用户主视图应过滤为个股、ETF、加密资产；市政债、票据、现金、房地产和私营企业资产保留在后台数据中，不进入主列表。
+- 投资用户主视图应过滤为个股、ETF、基金；市政债、票据、现金、房地产和私营企业资产保留在后台数据中，不进入主列表。
 - SEC 当前默认监控 TMTG/DJT 的 CIK，可在 `config.py` 的 `SEC_COMPANIES` 扩展。
 - OGE 目标人物可在 `config.py` 的 `OGE_TARGETS` 扩展。

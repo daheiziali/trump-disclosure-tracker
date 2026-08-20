@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import json
 import re
 import sqlite3
@@ -135,7 +133,7 @@ CONCEPTS = {
         "BLACK BELT ENERGY",
         "GAS",
     ],
-    "金融/加密": [
+    "金融服务": [
         "JPMORGAN",
         "GOLDMAN",
         "BANK OF AMERICA",
@@ -859,9 +857,22 @@ CRYPTO_TERMS = (
     "BITCOIN",
     "ETHEREUM",
     "CRYPTO",
-    "COINBASE",
-    "MICROSTRATEGY",
-    "STRATEGY INC",
+    "CRYPTOCURRENCY",
+    "DIGITAL ASSET",
+    "VIRTUAL CURRENCY",
+    "TOKEN",
+    "NFT",
+    "MEME COIN",
+    "SOLANA",
+    "DOGECOIN",
+    "TETHER",
+    "USDC",
+    "USDT",
+    "XRP",
+    "LITECOIN",
+    "CARDANO",
+    "WORLD LIBERTY",
+    "WLFI",
     "BTC",
     "ETH",
 )
@@ -1160,6 +1171,8 @@ def _is_crypto_asset(asset: str) -> bool:
 def asset_category(asset_name: str | None, ticker: str | None = None) -> str:
     asset = f" {clean_asset_name(asset_name).upper()} "
     ticker_value = str(ticker or "").strip().upper()
+    if _is_crypto_asset(asset):
+        return "排除资产"
     if any(term in asset for term in ETF_TERMS):
         return "ETF"
     if ticker_value in {"MAFOX"} or any(term in asset for term in FUND_TERMS):
@@ -1170,8 +1183,6 @@ def asset_category(asset_name: str | None, ticker: str | None = None) -> str:
         return "债券/票据"
     if ticker_value and ticker_value not in {"CASH", "N/A", "NA", "-"}:
         return "个股"
-    if _is_crypto_asset(asset):
-        return "加密资产"
     if any(term in asset for term in STOCK_TERMS):
         return "个股"
     if any(term in asset for term in CASH_OR_PRIVATE_TERMS):
@@ -1181,7 +1192,7 @@ def asset_category(asset_name: str | None, ticker: str | None = None) -> str:
 
 def is_public_investable_asset(asset_name: str | None, ticker: str | None = None) -> bool:
     category = asset_category(asset_name, ticker)
-    return category in {"个股", "ETF", "基金", "加密资产"}
+    return category in {"个股", "ETF", "基金"}
 
 
 def parse_amount_range(value: str | None) -> dict:
@@ -1209,7 +1220,7 @@ def parse_amount_range(value: str | None) -> dict:
 
 def classify_concept(asset_name: str | None) -> str:
     category = asset_category(asset_name)
-    if category in {"ETF", "加密资产"}:
+    if category == "ETF":
         return category
     haystack = f" {clean_asset_name(asset_name).upper()} "
     for label, terms in CONCEPTS.items():

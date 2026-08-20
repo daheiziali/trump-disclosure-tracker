@@ -227,7 +227,7 @@ HTML = """<!doctype html>
     <section class="card guide">
       <h2>复核后台用于决定“这条解析结果是否能进入产品数据”</h2>
       <div class="guide-grid">
-        <div class="guide-item"><strong>确认纳入</strong><span>适用于个股、ETF、基金、加密资产等投资用户关注的公开资产。修正名称、代码、交易动作、日期、金额后点击“确认”。</span></div>
+        <div class="guide-item"><strong>确认纳入</strong><span>适用于个股、ETF、基金等投资用户关注的公开证券。修正名称、代码、交易动作、日期、金额后点击“确认”。代币、NFT、数字资产一律排除。</span></div>
         <div class="guide-item"><strong>排除</strong><span>适用于市政债、企业债、票据、现金账户、房产/公司权益、解析碎片或明显不相关记录。排除后不会进入前台产品展示。</span></div>
         <div class="guide-item"><strong>回查/修改</strong><span>确认和排除都不是删除数据；记录会进入对应列表，后续仍可重新修改并再次确认或排除。</span></div>
       </div>
@@ -263,7 +263,7 @@ HTML = """<!doctype html>
         <label><span>资产原始名称</span><input id="tickerAssetName" required placeholder="例如 CLEAR SECURE INC CLASS A"></label>
         <label><span>Ticker</span><input id="tickerSymbol" required placeholder="YOU"></label>
         <label><span>标准展示名</span><input id="tickerDisplayName" placeholder="Clear Secure Inc Class A"></label>
-        <label><span>类型</span><select id="tickerAssetType"><option>个股</option><option>ETF</option><option>基金</option><option>加密资产</option></select></label>
+        <label><span>类型</span><select id="tickerAssetType"><option>个股</option><option>ETF</option><option>基金</option></select></label>
         <label><span>备注</span><input id="tickerNote" placeholder="来源/说明"></label>
         <button type="submit">保存代码</button>
       </form>
@@ -720,7 +720,7 @@ def _dashboard_payload():
         )]
         stats["public_transactions"] = public_transaction_count
         stats["public_holdings"] = len(holding_rows)
-        stats["asset_scope"] = "个股、ETF、加密资产"
+        stats["asset_scope"] = "个股、ETF、基金"
     return {
         "stats": stats,
         "top_holdings": top_holdings,

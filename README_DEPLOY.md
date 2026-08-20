@@ -73,7 +73,7 @@ frontend/index.html
 ## 当前数据口径
 
 - 数据来自本地 SQLite：`backend/data/disclosures.sqlite3`
-- 前台仅展示投资用户关注的个股、ETF、基金、加密资产。
+- 前台仅展示投资用户关注的个股、ETF、基金。
 - 市政债、企业债、票据、现金、房产/私营企业权益等可在后台保留，但不进入产品主展示。
 - 金额为 OGE 披露区间的中点估算，不代表真实账户金额、持股数或实时市值。
 - 人工补充的 ticker 保存在 `ticker_overrides` 表中，会优先覆盖自动识别结果。
