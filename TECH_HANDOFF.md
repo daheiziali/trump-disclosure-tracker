@@ -18,6 +18,10 @@ frontend/
   index.html                # 产品前端单页
   trump-portrait.jpg        # 首页头像图
 
+demo/
+  index.html                # GitHub Pages 静态演示版，内嵌数据快照
+  trump-portrait.jpg
+
 backend/
   review_server.py          # 本地 API 与复核后台服务
   analytics.py              # 资产清洗、ticker 映射、主题分类

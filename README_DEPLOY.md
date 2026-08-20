@@ -69,6 +69,32 @@ frontend/index.html
 
 - 产品前台：`http://127.0.0.1:8080`
 - 复核后台：`http://127.0.0.1:8765`
+- 静态演示页：`demo/index.html`
+
+## GitHub Pages 静态演示
+
+如果只想让技术人员或合作方直接看到页面效果，可以使用 `demo/index.html`。
+
+这个 demo 已内嵌当前数据快照，不依赖 Python 后端和 SQLite，因此适合 GitHub Pages 预览。但它不是正式动态产品，数据不会自动更新。
+
+GitHub Pages 设置方式：
+
+1. 将项目 push 到 GitHub。
+2. 打开仓库 `Settings`。
+3. 进入 `Pages`。
+4. Source 选择 `Deploy from a branch`。
+5. Branch 选择 `main`，目录选择 `/root`。
+6. 保存后访问：
+
+```text
+https://<你的 GitHub 用户名>.github.io/trump-disclosure-tracker/demo/
+```
+
+例如：
+
+```text
+https://daheiziali.github.io/trump-disclosure-tracker/demo/
+```
 
 ## 当前数据口径
 
