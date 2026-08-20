@@ -30,7 +30,7 @@ backend/
 start_backend.sh            # 启动本地 API 服务
 start_frontend.sh           # 启动静态前端服务
 README_DEPLOY.md            # 部署/运行说明
-disclosure-product-architecture.md
+FUTURE_ARCHITECTURE_NOTES.md      # 远期架构设想，当前 MVP 以 PRODUCT_REQUIREMENTS.md 为准
 trump-disclosure-product-redesign.md
 ```
 
