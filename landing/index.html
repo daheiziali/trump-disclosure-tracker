@@ -250,12 +250,12 @@
       border: 1px solid var(--line);
       border-radius: 24px;
       overflow: hidden;
-      background: #f8fafc;
+      background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
       box-shadow: var(--shadow);
     }
     .preview-top {
-      padding: 16px;
-      background: #0f172a;
+      padding: 18px 18px 14px;
+      background: linear-gradient(135deg, #0f172a 0%, #172554 58%, #2563eb 100%);
       color: #fff;
     }
     .preview-top small {
@@ -268,40 +268,104 @@
       font-size: 25px;
       letter-spacing: -0.04em;
     }
-    .holding-mini {
-      display: grid;
-      gap: 10px;
-      padding: 12px;
+    .preview-top p {
+      margin: 8px 0 0;
+      color: rgba(255, 255, 255, 0.74);
+      font-size: 12px;
     }
-    .mini-card {
-      display: grid;
-      grid-template-columns: 32px 1fr auto;
-      gap: 10px;
-      align-items: center;
-      padding: 13px;
+    .holding-shot {
+      margin: 14px;
+      padding: 14px;
       border: 1px solid var(--line);
-      border-radius: 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+    }
+    .shot-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .shot-head strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.15;
+      letter-spacing: -0.035em;
+    }
+    .shot-head span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .shot-total {
+      text-align: right;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .holding-bars {
+      display: grid;
+      gap: 9px;
+    }
+    .holding-row {
+      position: relative;
+      padding: 11px 12px 10px 42px;
+      border: 1px solid #dbe4ef;
+      border-radius: 15px;
       background: #fff;
     }
+    .holding-row::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      border-radius: 15px 0 0 15px;
+      background: #0f172a;
+    }
+    .holding-row:nth-child(2)::before { background: var(--red); }
+    .holding-row:nth-child(3)::before { background: var(--blue); }
+    .holding-row:nth-child(4)::before { background: var(--gold); }
+    .holding-row:nth-child(5)::before { background: var(--green); }
     .rank {
-      width: 28px;
-      height: 28px;
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      width: 22px;
+      height: 22px;
       border-radius: 999px;
       display: grid;
       place-items: center;
       background: #0f172a;
       color: #fff;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 900;
     }
-    .mini-card strong {
+    .holding-row-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .holding-row-title strong {
       display: block;
       font-size: 13px;
       line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-    .mini-card span {
-      display: block;
-      margin-top: 3px;
+    .holding-row-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 5px;
       color: var(--muted);
       font-size: 12px;
     }
@@ -310,6 +374,19 @@
       font-weight: 900;
       font-size: 12px;
       white-space: nowrap;
+    }
+    .mini-bar {
+      height: 5px;
+      margin-top: 9px;
+      border-radius: 99px;
+      background: #e2e8f0;
+      overflow: hidden;
+    }
+    .mini-bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #0f172a 0%, #2563eb 100%);
     }
 
     .timeline {
@@ -580,23 +657,48 @@
       <div class="preview-frame">
         <div class="preview-top">
           <small>PRODUCT PREVIEW</small>
-          <h3>打开即看重点</h3>
+          <h3>前十大持仓样例</h3>
+          <p>重仓资产、代码、主题与披露金额区间，一屏快速看懂。</p>
         </div>
-        <div class="holding-mini">
-          <div class="mini-card">
-            <span class="rank">01</span>
-            <div><strong>Apple Inc</strong><span>AAPL · 增持或仍持有</span></div>
-            <span class="money">5042.05 万美元</span>
+        <div class="holding-shot" aria-label="前十大持仓样例图">
+          <div class="shot-head">
+            <div>
+              <strong>特朗普真实持仓</strong>
+              <span>按披露口径估算规模排序</span>
+            </div>
+            <div class="shot-total">TOP 10</div>
           </div>
-          <div class="mini-card">
-            <span class="rank">02</span>
-            <div><strong>NVIDIA Corp</strong><span>NVDA · AI/半导体</span></div>
-            <span class="money">3959.30 万美元</span>
-          </div>
-          <div class="mini-card">
-            <span class="rank">03</span>
-            <div><strong>Alphabet Inc Class A</strong><span>GOOGL · 大型科技</span></div>
-            <span class="money">3810.15 万美元</span>
+          <div class="holding-bars">
+            <div class="holding-row">
+              <span class="rank">01</span>
+              <div class="holding-row-title"><strong>Apple Inc</strong><span class="money">5042.05 万美元</span></div>
+              <div class="holding-row-meta"><span>AAPL · 大型科技</span><span>增持或仍持有</span></div>
+              <div class="mini-bar"><span style="width:100%"></span></div>
+            </div>
+            <div class="holding-row">
+              <span class="rank">02</span>
+              <div class="holding-row-title"><strong>NVIDIA Corp</strong><span class="money">3959.30 万美元</span></div>
+              <div class="holding-row-meta"><span>NVDA · AI/半导体</span><span>增持或仍持有</span></div>
+              <div class="mini-bar"><span style="width:78%"></span></div>
+            </div>
+            <div class="holding-row">
+              <span class="rank">03</span>
+              <div class="holding-row-title"><strong>Alphabet Inc Class A</strong><span class="money">3810.15 万美元</span></div>
+              <div class="holding-row-meta"><span>GOOGL · 大型科技</span><span>增持或仍持有</span></div>
+              <div class="mini-bar"><span style="width:75%"></span></div>
+            </div>
+            <div class="holding-row">
+              <span class="rank">04</span>
+              <div class="holding-row-title"><strong>Broadcom Inc</strong><span class="money">3761.75 万美元</span></div>
+              <div class="holding-row-meta"><span>AVGO · AI/半导体</span><span>重仓跟踪</span></div>
+              <div class="mini-bar"><span style="width:74%"></span></div>
+            </div>
+            <div class="holding-row">
+              <span class="rank">05</span>
+              <div class="holding-row-title"><strong>Amazon.com Inc</strong><span class="money">3690.30 万美元</span></div>
+              <div class="holding-row-meta"><span>AMZN · 大型科技</span><span>交易链完整</span></div>
+              <div class="mini-bar"><span style="width:73%"></span></div>
+            </div>
           </div>
         </div>
       </div>
