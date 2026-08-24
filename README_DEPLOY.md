@@ -69,6 +69,7 @@ frontend/index.html
 
 - 产品前台：`http://127.0.0.1:8080`
 - 复核后台：`http://127.0.0.1:8765`
+- 付费介绍 H5：`landing/index.html`
 - 静态演示页：`demo/index.html`
 
 ## GitHub Pages 静态演示
@@ -94,6 +95,12 @@ https://<你的 GitHub 用户名>.github.io/trump-disclosure-tracker/demo/
 
 ```text
 https://daheiziali.github.io/trump-disclosure-tracker/demo/
+```
+
+未付费用户的产品介绍 H5 地址为：
+
+```text
+https://daheiziali.github.io/trump-disclosure-tracker/landing/
 ```
 
 ## 当前数据口径
