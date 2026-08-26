@@ -340,10 +340,7 @@
               <option value="">全部置信度</option>
             </select>
             <select class="select" id="inferredSort" onchange="applyInferredFilters()">
-              <option value="exposure_desc">披露规模 ↓</option>
-              <option value="baseline_desc">基准估算 ↓</option>
-              <option value="purchase_desc">买入估算 ↓</option>
-              <option value="sale_desc">卖出估算 ↓</option>
+              <option value="exposure_desc">披露规模估算 ↓</option>
               <option value="recent_desc">最近交易 ↓</option>
               <option value="asset_asc">资产名称 A-Z</option>
             </select>
@@ -357,9 +354,7 @@
               <th class="sortable" onclick="setInferredSort('asset_asc')">资产</th>
               <th>代码</th>
               <th>主题</th>
-              <th class="sortable numeric" onclick="setInferredSort('baseline_desc')">基准区间估算 <span class="hint" onclick="event.stopPropagation(); openHelp('baseline')">?</span></th>
-              <th class="sortable numeric" onclick="setInferredSort('purchase_desc')">买入区间估算 <span class="hint" onclick="event.stopPropagation(); openHelp('purchase')">?</span></th>
-              <th class="sortable numeric" onclick="setInferredSort('sale_desc')">卖出区间估算 <span class="hint" onclick="event.stopPropagation(); openHelp('sale')">?</span></th>
+              <th class="sortable numeric" onclick="setInferredSort('exposure_desc')">披露规模估算 <span class="hint" onclick="event.stopPropagation(); openHelp('exposure')">?</span></th>
               <th class="sortable" onclick="setInferredSort('recent_desc')">最近交易</th>
               <th>推算状态 <span class="hint" onclick="event.stopPropagation(); openHelp('status')">?</span></th>
               <th>置信度 <span class="hint" onclick="event.stopPropagation(); openHelp('confidence')">?</span></th>
@@ -430,6 +425,10 @@
     let selectedAssetKey = '';
     let assetPickerQuery = '';
     const HELP_TEXT = {
+      exposure: {
+        title: '披露规模估算',
+        body: '基于 OGE 年度披露区间与后续交易披露区间，按区间中点估算出的披露口径规模。它不代表真实账户金额、持股数量或实时市值。'
+      },
       baseline: {
         title: '基准区间估算',
         body: '来自年度 278e 披露中的资产价值区间。页面将每条区间取中点后，按同一资产或代码合并汇总，用于表示该资产的年报基准规模，不代表真实账户金额。'
@@ -872,14 +871,12 @@
           <td class="name">${assetLink(row, row.asset_name)}</td>
           <td>${esc(row.ticker || '—')}</td>
           <td><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></td>
-          <td class="numeric">${fmtOptionalMoney(row.baseline_midpoint)}</td>
-          <td class="numeric">${fmtOptionalMoney(row.purchase_midpoint)}</td>
-          <td class="numeric">${fmtOptionalMoney(row.sale_midpoint)}</td>
+          <td class="numeric strong-money">${fmtMoney(inferredExposure(row))}</td>
           <td>${esc(row.last_trade_type ? translateAction(row.last_trade_type) + ' ' + row.last_trade_date : '—')}</td>
           <td><span class="tag ${statusClass(row.inferred_status)}" title="披露口径推算状态，不等于实际账户持仓。">${esc(row.inferred_status)}</span></td>
           <td><span class="tag ${confidenceClass(row.confidence_label)}" title="判断可靠程度，不代表投资胜率。">${esc(row.confidence_label)}</span></td>
         </tr>
-      `).join('') : '<tr><td colspan="9" class="empty">暂无推算结果。</td></tr>';
+      `).join('') : '<tr><td colspan="7" class="empty">暂无推算结果。</td></tr>';
     }
 
     function inferredRowHtml(row) {
@@ -887,9 +884,7 @@
         <td class="name">${assetLink(row, row.asset_name)}</td>
         <td>${esc(row.ticker || '—')}</td>
         <td><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></td>
-        <td class="numeric">${fmtOptionalMoney(row.baseline_midpoint)}</td>
-        <td class="numeric">${fmtOptionalMoney(row.purchase_midpoint)}</td>
-        <td class="numeric">${fmtOptionalMoney(row.sale_midpoint)}</td>
+        <td class="numeric strong-money">${fmtMoney(inferredExposure(row))}</td>
         <td>${esc(row.last_trade_type ? translateAction(row.last_trade_type) + ' ' + row.last_trade_date : '—')}</td>
         <td><span class="tag ${statusClass(row.inferred_status)}" title="披露口径推算状态，不等于实际账户持仓。">${esc(row.inferred_status)}</span></td>
         <td><span class="tag ${confidenceClass(row.confidence_label)}" title="判断可靠程度，不代表投资胜率。">${esc(row.confidence_label)}</span></td>
@@ -938,9 +933,6 @@
         return true;
       });
       rows.sort((a, b) => {
-        if (sort === 'baseline_desc') return Number(b.baseline_midpoint || 0) - Number(a.baseline_midpoint || 0);
-        if (sort === 'purchase_desc') return Number(b.purchase_midpoint || 0) - Number(a.purchase_midpoint || 0);
-        if (sort === 'sale_desc') return Number(b.sale_midpoint || 0) - Number(a.sale_midpoint || 0);
         if (sort === 'recent_desc') return inferredDateValue(b) - inferredDateValue(a);
         if (sort === 'asset_asc') return String(a.asset_name || '').localeCompare(String(b.asset_name || ''), 'zh-Hans-CN');
         return inferredExposure(b) - inferredExposure(a);
@@ -1044,7 +1036,7 @@
           <div class="asset-picker-head">
             <div>
               <h3>选择资产</h3>
-              <p>默认展示推算披露规模最高的 12 项，也可以从首页卡片、推算持仓表或交易记录中点击任意资产名称。</p>
+              <p>默认展示披露规模估算最高的 12 项，也可以从首页卡片、推算持仓表或交易记录中点击任意资产名称。</p>
             </div>
             <input class="search" id="assetPickerSearch" placeholder="搜索资产名称或代码" value="${esc(filterText)}">
           </div>
@@ -1082,7 +1074,7 @@
               <h3>${esc(position.asset_name || '资产详情')}</h3>
             </div>
             <div class="asset-detail-kpis">
-              <div class="asset-kpi"><span>推算披露规模</span><strong>${fmtMoney(exposure)}</strong></div>
+              <div class="asset-kpi"><span>披露规模估算</span><strong>${fmtMoney(exposure)}</strong></div>
               <div class="asset-kpi"><span>年报基准估算</span><strong>${fmtOptionalMoney(position.baseline_midpoint)}</strong></div>
               <div class="asset-kpi"><span>买入区间估算</span><strong>${fmtOptionalMoney(position.purchase_midpoint)}</strong></div>
               <div class="asset-kpi"><span>卖出区间估算</span><strong>${fmtOptionalMoney(position.sale_midpoint)}</strong></div>
@@ -1344,7 +1336,7 @@
         renderTopHoldings(allInferredPositions);
         populateInferredFilters(allInferredPositions);
         document.getElementById('inferredSummary').textContent = '点击“查看更多”后加载完整列表。';
-        document.getElementById('inferredRows').innerHTML = '<tr><td colspan="9" class="empty">完整推算持仓列表暂未展开。</td></tr>';
+        document.getElementById('inferredRows').innerHTML = '<tr><td colspan="7" class="empty">完整推算持仓列表暂未展开。</td></tr>';
         allTrades = data.recent_transactions || [];
         renderTrades(allTrades);
         const assetRows = renderAssetPicker();
