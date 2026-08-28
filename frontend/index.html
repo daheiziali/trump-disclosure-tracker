@@ -6,27 +6,27 @@
   <title>特朗普交易披露追踪</title>
   <style>
     :root {
-      --bg: #f8fafc;
+      --bg: #fff8e8;
       --surface: #ffffff;
-      --soft: #f1f5f9;
-      --line: #e2e8f0;
-      --line-strong: #cbd5e1;
-      --ink: #0f172a;
-      --muted: #64748b;
-      --navy: #0f172a;
-      --red: #dc2626;
-      --gold: #d97706;
-      --green: #059669;
-      --teal: #0ea5e9;
-      --purple: #7c3aed;
-      --blue: #2563eb;
-      --shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-      --shadow-soft: 0 4px 12px rgba(15, 23, 42, 0.04);
+      --soft: #fffbf3;
+      --line: rgba(138, 93, 38, 0.14);
+      --line-strong: rgba(138, 93, 38, 0.24);
+      --ink: rgba(0, 0, 0, 0.9);
+      --muted: rgba(0, 0, 0, 0.62);
+      --navy: #7c5422;
+      --red: #e14454;
+      --gold: #f4ca81;
+      --green: #49aa76;
+      --teal: #7bd4cf;
+      --purple: #506f99;
+      --blue: #8a5d26;
+      --shadow: 0 10px 30px rgba(138, 93, 38, 0.08);
+      --shadow-soft: 0 4px 12px rgba(138, 93, 38, 0.06);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     * { box-sizing: border-box; }
-    body { margin: 0; background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%); color: var(--ink); font-size: 14px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+    body { margin: 0; background: linear-gradient(180deg, #fff8e8 0%, #fffaf3 48%, #fdf4d7 100%); color: var(--ink); font-size: 14px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
     button, input { font: inherit; }
 
     .page { min-height: 100vh; display: grid; grid-template-columns: 240px 1fr; }
@@ -38,7 +38,7 @@
     .brand span { display: block; color: var(--muted); font-size: 12px; margin-top: 1px; }
     .nav { margin-top: 20px; display: grid; gap: 4px; }
     .nav button { border: 0; background: transparent; border-radius: 10px; padding: 12px 14px; text-align: left; color: var(--muted); cursor: pointer; font-weight: 500; transition: background .2s ease, color .2s ease; }
-    .nav button.active { background: #eff6ff; font-weight: 700; color: var(--blue); }
+    .nav button.active { background: #fff8e8; font-weight: 700; color: var(--blue); }
 
     main { padding: 36px 40px 40px; min-width: 0; max-width: 1480px; width: 100%; margin: 0 auto; }
     .topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 28px; }
@@ -62,7 +62,7 @@
     .btn.primary { background: var(--navy); color: white; border-color: var(--navy); }
 
     .top-holdings { padding: 16px; display: grid; grid-template-columns: 1fr; gap: 16px; }
-    .profile-medal { position: relative; min-height: 188px; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, #0f172a 0%, #172554 58%, #1d4ed8 100%); display: grid; align-items: center; text-align: left; box-shadow: inset 0 1px 0 rgba(255,255,255,.06); }
+    .profile-medal { position: relative; min-height: 188px; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, #8a5d26 0%, #9f6b41 58%, #f4ca81 100%); display: grid; align-items: center; text-align: left; box-shadow: inset 0 1px 0 rgba(255,255,255,.18); }
     .profile-medal::before { content: ""; position: absolute; width: 340px; height: 340px; right: -120px; top: -140px; border-radius: 999px; background: rgba(255,255,255,.08); }
     .profile-medal::after { content: ""; position: absolute; width: 240px; height: 240px; right: 120px; bottom: -140px; border-radius: 999px; background: rgba(59,130,246,.22); }
     .profile-copy { position: relative; z-index: 1; }
@@ -71,11 +71,11 @@
     .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center 18%; display: block; }
     .profile-medal h3 { margin: 0; font-size: 30px; line-height: 1.05; max-width: 420px; color: #fff; letter-spacing: -0.03em; }
     .profile-medal span { display: block; color: rgba(255,255,255,.76); margin-top: 8px; font-size: 13px; max-width: 480px; }
-    .profile-kicker { color: #93c5fd; font-size: 11px; font-weight: 800; letter-spacing: .18em; margin-bottom: 7px; }
+    .profile-kicker { color: #ffe395; font-size: 11px; font-weight: 800; letter-spacing: .18em; margin-bottom: 7px; }
 
     .holding-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; padding: 0; }
     .holding-card { position: relative; min-height: 106px; border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 16px 54px; background: #fff; overflow: hidden; box-shadow: var(--shadow-soft); cursor: pointer; transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease; }
-    .holding-card:hover { transform: translateY(-2px); border-color: #bfdbfe; box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08); }
+    .holding-card:hover { transform: translateY(-2px); border-color: rgba(138, 93, 38, 0.32); box-shadow: 0 14px 32px rgba(138, 93, 38, 0.08); }
     .holding-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: var(--navy); }
     .holding-card:nth-child(2n)::before { background: var(--red); }
     .holding-card:nth-child(3n)::before { background: var(--teal); }
@@ -86,7 +86,7 @@
     .holding-meta { margin-top: 8px; display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 12px; }
     .range { color: var(--blue); font-weight: 700; font-variant-numeric: tabular-nums; }
     .bar { margin-top: 10px; height: 6px; border-radius: 99px; background: #e2e8f0; overflow: hidden; }
-    .bar span { display: block; height: 100%; background: linear-gradient(90deg, #0f172a 0%, #2563eb 100%); border-radius: inherit; }
+    .bar span { display: block; height: 100%; background: linear-gradient(270deg, #9f6b41 0%, #f4ca81 100%); border-radius: inherit; }
     .asset-link { appearance: none; border: 0; background: transparent; padding: 0; color: inherit; font: inherit; font-weight: 700; text-align: left; cursor: pointer; }
     .asset-link:hover { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
 
@@ -112,7 +112,8 @@
     .tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
     .search { min-width: 260px; border: 1px solid var(--line); background: white; border-radius: 10px; padding: 10px 12px; outline: 0; }
     .select { border: 1px solid var(--line); background: white; border-radius: 10px; padding: 10px 12px; outline: 0; min-height: 40px; }
-    .table-wrap { overflow-x: auto; }
+    .table-wrap { overflow-x: auto; scrollbar-width: none; }
+    .table-wrap::-webkit-scrollbar { display: none; }
     table { width: 100%; min-width: 980px; border-collapse: collapse; }
     th, td { padding: 14px 18px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; white-space: nowrap; }
     th { color: var(--muted); font-size: 11px; text-transform: uppercase; background: #f8fafc; }
@@ -120,8 +121,8 @@
     th.sortable::after { content: " ↕"; color: #a39d90; }
     td.name { white-space: normal; min-width: 260px; }
     .tag { display: inline-flex; align-items: center; border-radius: 999px; padding: 3px 8px; font-size: 12px; border: 1px solid var(--line); background: #f8fafc; }
-    .tag.buy { color: var(--green); border-color: #a7f3d0; background: #ecfdf5; }
-    .tag.sell { color: var(--red); border-color: #fecaca; background: #fef2f2; }
+    .tag.buy { color: var(--red); border-color: #fecaca; background: #fef2f2; }
+    .tag.sell { color: var(--green); border-color: #a7f3d0; background: #ecfdf5; }
     .tag.status-high { color: #15513f; border-color: #b9d7ca; background: #edf7f2; }
     .tag.status-mid { color: #8a5a0f; border-color: #e4c895; background: #fff7e8; }
     .tag.status-low { color: #9b2f25; border-color: #dfbbb6; background: #fbefed; }
@@ -131,35 +132,19 @@
     .section-actions { display: flex; justify-content: flex-end; padding: 14px 18px 18px; border-top: 1px solid var(--line); background: #fff; }
     .section-actions .btn { min-width: 118px; justify-content: center; }
     .compact-table table { min-width: 900px; }
-    .detail-grid { padding: 20px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; border-bottom: 1px solid var(--line); background: #f8fafc; }
-    .detail-card { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: #fff; min-height: 76px; }
-    .detail-card span { display: block; color: var(--muted); font-size: 12px; margin-bottom: 8px; }
-    .detail-card strong { display: block; font-size: 18px; line-height: 1.15; }
-    .detail-subhead { padding: 12px 16px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
     .asset-detail-overview { display: grid; }
-    .asset-detail-name { position: relative; min-height: 184px; display: grid; align-content: end; gap: 14px; padding: 24px; overflow: hidden; border-radius: 16px; background: linear-gradient(135deg, #0f172a 0%, #172554 58%, #1d4ed8 100%); color: #fff; box-shadow: var(--shadow-soft); }
-    .asset-detail-name::before { content: ""; position: absolute; width: 260px; height: 260px; right: -96px; top: -104px; border-radius: 999px; background: rgba(255,255,255,.08); }
-    .asset-detail-name::after { content: ""; position: absolute; width: 180px; height: 180px; right: 88px; bottom: -108px; border-radius: 999px; background: rgba(59,130,246,.22); }
-    .asset-detail-name > * { position: relative; z-index: 1; }
-    .asset-detail-name h3 { margin: 0; font-size: 28px; line-height: 1.08; letter-spacing: -0.03em; color: #fff; }
-    .selected-asset-card { grid-template-columns: minmax(240px, .72fr) minmax(440px, 1.28fr); align-items: end; align-content: stretch; gap: 22px; }
     .selected-asset-main { display: grid; align-content: end; gap: 14px; min-width: 0; }
-    .asset-detail-tags { display: flex; flex-wrap: wrap; gap: 8px; }
     .asset-detail-note { color: var(--muted); font-size: 13px; line-height: 1.65; max-width: 680px; }
-    .asset-detail-name .tag { color: #e0f2fe; border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.08); }
-    .asset-detail-name .tag.status-high { color: #bbf7d0; border-color: rgba(187,247,208,.28); background: rgba(22,163,74,.16); }
-    .asset-detail-name .tag.status-mid { color: #fde68a; border-color: rgba(253,230,138,.3); background: rgba(217,119,6,.18); }
     .asset-detail-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
     .asset-kpi { border: 1px solid rgba(255,255,255,.18); border-radius: 14px; padding: 12px 14px; background: rgba(255,255,255,.08); backdrop-filter: blur(6px); }
-    .asset-kpi span { display: block; color: #bfdbfe; font-size: 11px; margin-bottom: 5px; }
+    .asset-kpi span { display: block; color: #fff8e8; font-size: 11px; margin-bottom: 5px; }
     .asset-kpi strong { display: block; font-size: 16px; line-height: 1.12; color: #fff; font-variant-numeric: tabular-nums; }
     .asset-chain-head { padding: 16px 20px 10px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
     .asset-chain-head h3 { margin: 0; font-size: 15px; }
     .asset-chain-head p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
-    .asset-chain-counts { color: var(--muted); font-size: 12px; white-space: nowrap; }
     .asset-chain-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
     .detail-toggle { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 999px; padding: 7px 12px; cursor: pointer; font-weight: 700; font-size: 12px; }
-    .detail-toggle:hover { border-color: #bfdbfe; color: var(--blue); }
+    .detail-toggle:hover { border-color: rgba(138, 93, 38, 0.32); color: var(--blue); }
     .asset-picker { padding: 22px 24px 26px; display: grid; gap: 14px; }
     .asset-featured-slot:empty { display: none; }
     .asset-featured-slot { padding-bottom: 2px; }
@@ -173,8 +158,8 @@
     .asset-choice:nth-child(3n)::before { background: var(--teal); }
     .asset-choice:nth-child(4n)::before { background: var(--gold); }
     .asset-choice:nth-child(5n)::before { background: var(--purple); }
-    .asset-choice:hover { border-color: #bfdbfe; transform: translateY(-2px); box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08); }
-    .asset-choice.selected { border-color: #2563eb; box-shadow: 0 14px 32px rgba(37, 99, 235, 0.12); }
+    .asset-choice:hover { border-color: rgba(138, 93, 38, 0.32); transform: translateY(-2px); box-shadow: 0 14px 32px rgba(138, 93, 38, 0.08); }
+    .asset-choice.selected { border-color: #8a5d26; box-shadow: 0 14px 32px rgba(138, 93, 38, 0.12); }
     .asset-choice strong { font-size: 15px; line-height: 1.25; }
     .asset-choice span { color: var(--muted); font-size: 12px; }
     .asset-choice-code { position: absolute; left: 14px; top: 15px; width: 24px; height: 24px; border-radius: 99px; display: grid; place-items: center; color: #fff; background: var(--navy); font-size: 10px; font-weight: 800; }
@@ -182,7 +167,7 @@
     .asset-choice-money { color: var(--blue); font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
     .asset-detail-content { border-top: 1px solid var(--line); padding-top: 20px; }
     .timeline { padding: 0 20px 18px; position: relative; display: grid; gap: 10px; }
-    .timeline::before { content: ""; position: absolute; left: 72px; top: 8px; bottom: 24px; width: 2px; background: #dbeafe; }
+    .timeline::before { content: ""; position: absolute; left: 72px; top: 8px; bottom: 24px; width: 2px; background: rgba(244, 202, 129, 0.32); }
     .timeline-item { position: relative; border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px 12px 34px; margin-left: 56px; background: #fff; display: grid; grid-template-columns: minmax(180px, 1fr) auto; gap: 12px; align-items: center; }
     .timeline-dot { position: absolute; left: -31px; top: 18px; width: 13px; height: 13px; border-radius: 99px; border: 3px solid #fff; background: var(--green); box-shadow: 0 0 0 1px #a7f3d0; }
     .timeline-dot.sell { background: var(--red); box-shadow: 0 0 0 1px #fecaca; }
@@ -216,8 +201,6 @@
       .profile-medal h3 { font-size: 22px; }
       .donut-chart { width: 220px; height: 220px; }
       .donut-wrap { min-height: 292px; }
-      .detail-grid { grid-template-columns: 1fr; }
-      .selected-asset-card { grid-template-columns: 1fr; }
       .asset-detail-kpis { grid-template-columns: 1fr; }
       .asset-chain-head { flex-direction: column; align-items: flex-start; }
       .timeline::before { left: 30px; }
@@ -226,66 +209,3115 @@
       .tools { justify-content: stretch; }
       .search, .select, .btn { width: 100%; }
     }
+
+    /* J-Design-System remodel for the H5 data tool */
+    :root {
+      --j-page-bg: #fff8e8;
+      --j-card-bg: #ffffff;
+      --j-section-bg: #f3f3f3;
+      --j-text-strong: rgba(0, 0, 0, 0.9);
+      --j-text-secondary: rgba(0, 0, 0, 0.62);
+      --j-text-muted: rgba(0, 0, 0, 0.42);
+      --j-blue: #8a5d26;
+      --j-blue-soft: #fff8e8;
+      --j-vip-gold: #f4ca81;
+      --j-vip-brown: #9f6b41;
+      --j-vip-orange: #d87213;
+      --j-vip-deep: #7c5422;
+      --j-vip-soft: #fff8e8;
+      --j-vip-grad: linear-gradient(90deg, #f4ca81 0%, #9f6b41 100%);
+      --j-vip-grad-reverse: linear-gradient(270deg, #9f6b41 0%, #f4ca81 100%);
+      --j-vip-grad-light: linear-gradient(180deg, #ffffff 0%, #fffaf3 100%);
+      --j-red: #e14454;
+      --j-red-soft: #fff4f5;
+      --j-green: #49aa76;
+      --j-green-soft: #ebf9f2;
+      --j-amber: #edaa2d;
+      --j-amber-soft: #fdf4e9;
+      --j-border: rgba(138, 93, 38, 0.14);
+      --j-chart-border: rgba(138, 93, 38, 0.2);
+      --font-display: "Source Han Serif CN", "Source Han Serif SC", "Noto Serif SC", "Songti SC", serif;
+      --font-number: "D-DIN-PRO", "D-DIN", "DIN Pro", "DIN Alternate", "Arial Narrow", sans-serif;
+      --font-ui: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-family: var(--font-ui);
+    }
+
+    body {
+      background: linear-gradient(180deg, #fff8e8 0%, #fffaf3 48%, #fdf4d7 100%);
+      color: var(--j-text-strong);
+      font-family: var(--font-ui);
+      letter-spacing: 0;
+    }
+
+    .page {
+      grid-template-columns: 224px minmax(0, 1fr);
+      background: linear-gradient(180deg, #fffaf3 0%, #fff 256px);
+    }
+
+    .sidebar {
+      border-right: 0.5px solid var(--j-border);
+      background: #fff;
+      padding: 24px 18px;
+    }
+
+    .brand {
+      border-bottom: 0.5px solid var(--j-border);
+      padding-bottom: 18px;
+    }
+
+    .mark,
+    .portrait {
+      border-radius: 2px;
+      box-shadow: none;
+    }
+
+    .mark {
+      border: 0.5px solid var(--j-border);
+      background: #fff;
+    }
+
+    .brand strong {
+      color: var(--j-text-strong);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    main {
+      max-width: 1360px;
+      padding: 28px 32px 36px;
+      background: transparent;
+    }
+
+    .topbar {
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .vip-hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 132px;
+      min-height: 146px;
+      align-items: center;
+      gap: 2px;
+      overflow: hidden;
+      border-bottom: 0.5px solid rgba(138, 93, 38, 0.16);
+      background:
+        radial-gradient(circle at 88% 30%, rgba(255, 227, 149, 0.52) 0%, rgba(255, 227, 149, 0) 48%),
+        linear-gradient(100deg, #ffffff 0%, #fffaf3 54%, #fff8e8 100%);
+    }
+
+    .vip-hero-copy {
+      position: relative;
+      z-index: 1;
+      min-width: 0;
+      align-self: center;
+    }
+
+    .vip-hero-art {
+      position: relative;
+      z-index: 0;
+      width: 150px;
+      height: 132px;
+      margin: 0 -14px 0 -4px;
+      align-self: center;
+      overflow: visible;
+      border-radius: 2px;
+    }
+
+    .vip-hero-art__item {
+      display: block;
+      position: absolute;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .vip-hero-art__profile {
+      right: 22px;
+      bottom: -8px;
+      z-index: 1;
+      width: auto;
+      height: 132px;
+      filter: drop-shadow(0 12px 16px rgba(159, 107, 65, 0.16));
+    }
+
+    .vip-hero-art__kline {
+      left: -2px;
+      bottom: 36px;
+      z-index: 2;
+      width: 46px;
+      height: auto;
+      animation: vipHeroFloatKline 4.2s ease-in-out infinite;
+      filter: drop-shadow(0 8px 10px rgba(159, 107, 65, 0.14));
+    }
+
+    .vip-hero-art__bars {
+      right: -4px;
+      top: 34px;
+      z-index: 3;
+      width: 42px;
+      height: auto;
+      animation: vipHeroFloatBars 3.8s ease-in-out infinite;
+      filter: drop-shadow(0 8px 10px rgba(159, 107, 65, 0.15));
+    }
+
+    @keyframes vipHeroFloatKline {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(0, -4px, 0); }
+    }
+
+    @keyframes vipHeroFloatBars {
+      0%, 100% { transform: translate3d(0, -2px, 0); }
+      50% { transform: translate3d(0, 3px, 0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .vip-hero-art__kline,
+      .vip-hero-art__bars {
+        animation: none;
+      }
+    }
+
+    .vip-hero h1 {
+      font-size: 23px;
+      white-space: nowrap;
+    }
+
+    .section-switch {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: center;
+      gap: 0;
+      width: 100%;
+      height: 52px;
+      margin: 0 0 22px;
+      padding: 2px;
+      overflow: hidden;
+      border: 0.5px solid rgba(138, 93, 38, 0.22);
+      border-radius: 8px;
+      background: #fff8e8;
+    }
+
+    .section-switch button {
+      position: relative;
+      height: 48px;
+      min-width: 0;
+      border: 0;
+      border-radius: 8px;
+      padding: 0 8px;
+      background: transparent;
+      color: rgba(138, 93, 38, 0.76);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      white-space: nowrap;
+    }
+
+    .section-switch button.is-active {
+      background: linear-gradient(270deg, #ffe395 0%, #ffffff 100%);
+      color: #8a5d26;
+      box-shadow: 0 8px 18px rgba(138, 93, 38, 0.14);
+    }
+
+    h1,
+    .profile-medal h3 {
+      color: var(--j-text-strong);
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 32px;
+      letter-spacing: normal;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      margin-top: 6px;
+      color: var(--j-text-secondary);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .j-breadcrumb {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      height: 24px;
+      gap: 6px;
+      margin-top: 8px;
+      color: var(--j-text-secondary);
+      font-size: 16px;
+      line-height: 24px;
+      white-space: nowrap;
+    }
+
+    .j-breadcrumb__item {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .j-breadcrumb__separator,
+    .j-search-icon {
+      flex: 0 0 auto;
+      color: #a6a6a6;
+    }
+
+    .j-search-icon {
+      position: relative;
+      width: 18px;
+      height: 18px;
+    }
+
+    .j-search-icon::before {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 3px;
+      width: 9px;
+      height: 9px;
+      border: 1.6px solid currentColor;
+      border-radius: 50%;
+    }
+
+    .j-search-icon::after {
+      content: "";
+      position: absolute;
+      right: 3px;
+      bottom: 3px;
+      width: 6px;
+      height: 1.6px;
+      border-radius: 2px;
+      background: currentColor;
+      transform: rotate(45deg);
+      transform-origin: center;
+    }
+
+    .hero-updated {
+      margin-top: 4px;
+      color: var(--j-text-secondary);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .status {
+      min-height: 32px;
+      border: 0.5px solid var(--j-border);
+      border-radius: 2px;
+      padding: 0 12px;
+      background: #fff;
+      color: var(--j-text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .dot {
+      display: none;
+    }
+
+    .connection-badge {
+      color: var(--j-text-secondary);
+    }
+
+    .connection-badge--ok {
+      color: #17895f;
+    }
+
+    .connection-badge--bad {
+      color: var(--j-red);
+    }
+
+    .grid {
+      gap: 12px;
+    }
+
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
+      align-items: start;
+    }
+
+    .panel {
+      border: 0.5px solid rgba(138, 93, 38, 0.18);
+      border-radius: 2px;
+      background: var(--j-card-bg);
+      box-shadow: none;
+    }
+
+    .panel-head {
+      border-bottom: 0.5px solid rgba(138, 93, 38, 0.14);
+      padding: 16px 18px;
+      background: var(--j-vip-grad-light);
+    }
+
+    .panel-head h2,
+    .asset-picker-head h3,
+    .asset-chain-head h3 {
+      color: var(--j-text-strong);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 28px;
+      letter-spacing: 0;
+    }
+
+    .home-section[data-home-view="holdings"] + .home-section[data-home-view="holdings"],
+    .home-section[data-home-view="asset"] + .home-section[data-home-view="asset"] {
+      margin-top: 12px;
+    }
+
+    .panel-head p,
+    .asset-picker-head p,
+    .asset-chain-head p {
+      color: var(--j-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .top-holdings {
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .profile-medal {
+      min-height: 190px;
+      border: 0.5px solid var(--j-border);
+      border-radius: 2px;
+      background: #fffaf3;
+      box-shadow: none;
+    }
+
+    .profile-medal::before,
+    .profile-medal::after {
+      display: none;
+    }
+
+    .profile-copy {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 126px;
+      gap: 18px;
+      align-items: center;
+      padding: 20px 22px;
+    }
+
+    .portrait {
+      order: 2;
+      width: 126px;
+      height: 126px;
+      border: 0.5px solid var(--j-border);
+      background: #fff;
+    }
+
+    .profile-kicker {
+      margin-bottom: 6px;
+      color: var(--j-blue);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .profile-medal span {
+      max-width: 470px;
+      color: var(--j-text-secondary);
+      font-size: 14px;
+      line-height: 21px;
+    }
+
+    .hero-selectors {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .j-selector {
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 0;
+      border-radius: 2px;
+      padding: 0 12px;
+      background: var(--j-blue-soft);
+      color: var(--j-blue);
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 21px;
+    }
+
+    .holding-cards {
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 10px;
+    }
+
+    .holding-card,
+    .asset-choice,
+    .asset-kpi,
+    .donut-wrap,
+    .tag,
+    .pill,
+    .btn,
+    .search,
+    .select,
+    .detail-toggle,
+    .help-close,
+    .no-chain {
+      border-radius: 2px;
+    }
+
+    .holding-card,
+    .asset-choice {
+      min-height: 96px;
+      border: 0.5px solid var(--j-border);
+      box-shadow: none;
+    }
+
+    .holding-card:hover,
+    .asset-choice:hover {
+      border-color: rgba(138, 93, 38, 0.32);
+      box-shadow: none;
+      transform: none;
+    }
+
+    .holding-card::before,
+    .asset-choice::before {
+      width: 3px;
+      background: var(--j-blue);
+    }
+
+    .holding-card:nth-child(2n)::before,
+    .asset-choice:nth-child(2n)::before {
+      background: var(--j-red);
+    }
+
+    .holding-card:nth-child(3n)::before,
+    .asset-choice:nth-child(3n)::before {
+      background: var(--j-green);
+    }
+
+    .holding-card:nth-child(4n)::before,
+    .asset-choice:nth-child(4n)::before {
+      background: var(--j-amber);
+    }
+
+    .rank,
+    .asset-choice-code {
+      border-radius: 2px;
+      background: var(--j-blue-soft);
+      color: var(--j-blue);
+      font-family: var(--font-number);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .holding-card strong,
+    .asset-choice strong,
+    .timeline-main strong {
+      color: var(--j-text-strong);
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .holding-meta,
+    .asset-choice span,
+    .timeline-main span,
+    .table-note,
+    .footnote,
+    .empty {
+      color: var(--j-text-secondary);
+    }
+
+    .bar {
+      height: 4px;
+      border-radius: 2px;
+      background: var(--j-section-bg);
+    }
+
+    .bar span {
+      border-radius: 2px;
+      background: var(--j-blue);
+    }
+
+    .range,
+    .numeric,
+    .donut-total strong,
+    .asset-choice-money,
+    .asset-kpi strong,
+    .j-finance-number {
+      font-family: var(--font-number);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .j-finance-unit {
+      margin-left: 2px;
+      font-family: var(--font-ui);
+    }
+
+    .theme-chart {
+      padding: 16px 18px 18px;
+    }
+
+    .theme-section {
+      margin-top: 18px;
+      background: transparent;
+    }
+
+    .theme-section-divider {
+      height: 8px;
+      margin: 0 0 18px;
+      background: var(--j-section-bg);
+    }
+
+    .theme-section-title {
+      padding: 0 0 10px;
+    }
+
+    .theme-section-title h2 {
+      margin: 0;
+      color: var(--j-text-strong);
+      font-family: var(--font-ui);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 28px;
+      letter-spacing: 0;
+    }
+
+    .theme-section .theme-chart {
+      padding: 0;
+    }
+
+    .donut-wrap {
+      min-height: 276px;
+      border: 0;
+      background: transparent;
+    }
+
+    .donut-visual {
+      position: relative;
+      width: 286px;
+      height: 286px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto;
+    }
+
+    .donut-chart--ring {
+      position: relative;
+      z-index: 2;
+      width: 286px;
+      height: 286px;
+    }
+
+    .donut-ring-bg {
+      stroke: #fff;
+    }
+
+    .donut-ring-segment {
+      filter: drop-shadow(0 2px 4px rgba(138, 93, 38, 0.08));
+    }
+
+    .donut-avatar {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 176px;
+      height: 176px;
+      overflow: hidden;
+      border: 0;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: none;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    .donut-avatar::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 8px #fff;
+      pointer-events: none;
+    }
+
+    .donut-avatar img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      pointer-events: none;
+    }
+
+    .donut-tooltip {
+      position: absolute;
+      z-index: 3;
+      left: 50%;
+      top: 22px;
+      max-width: 240px;
+      padding: 5px 8px;
+      border-radius: 2px;
+      background: rgba(124, 84, 34, 0.92);
+      color: #fff;
+      font-size: 12px;
+      line-height: 18px;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      transform: translate(-50%, -100%);
+      transition: opacity .12s ease;
+    }
+
+    .donut-tooltip.is-visible {
+      opacity: 1;
+    }
+
+    .donut-total strong {
+      color: #8a5d26;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .donut-total .j-finance-number {
+      font-family: var(--font-number);
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 28px;
+    }
+
+    .donut-total .j-finance-unit {
+      margin-left: 1px;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+
+    .legend-dot {
+      border-radius: 2px;
+    }
+
+    .theme-section .theme-legend {
+      width: 100%;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      justify-items: stretch;
+      column-gap: 0;
+      row-gap: 10px;
+      padding-top: 2px;
+    }
+
+    .theme-section .legend-row {
+      grid-template-columns: 9px max-content;
+      gap: 6px;
+      min-width: 0;
+      width: 100%;
+      justify-content: start;
+    }
+
+    .theme-section .legend-row:nth-child(3n + 2) {
+      justify-content: center;
+    }
+
+    .theme-section .legend-row:nth-child(3n) {
+      justify-content: end;
+    }
+
+    .btn {
+      min-height: 32px;
+      border: 0.5px solid var(--j-border);
+      padding: 6px 12px;
+      background: #fff;
+      color: var(--j-text-strong);
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: none;
+    }
+
+    .btn:hover {
+      border-color: rgba(138, 93, 38, 0.32);
+      box-shadow: none;
+      transform: none;
+    }
+
+    .btn.primary {
+      border-color: var(--j-blue);
+      background: var(--j-blue);
+      color: #fff;
+    }
+
+    .search,
+    .select {
+      min-height: 32px;
+      border: 0.5px solid var(--j-border);
+      padding: 6px 10px;
+      color: var(--j-text-strong);
+      font-size: 14px;
+    }
+
+    .search:focus,
+    .select:focus {
+      border-color: var(--j-blue);
+      outline: none;
+    }
+
+    .native-select-hidden {
+      display: none !important;
+    }
+
+    .select-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .select-trigger span:first-child {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .select-chevron {
+      position: relative;
+      width: 14px;
+      height: 14px;
+      flex: 0 0 14px;
+    }
+
+    .select-chevron::after {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 4px;
+      width: 7px;
+      height: 7px;
+      border-right: 1.4px solid #000;
+      border-bottom: 1.4px solid #000;
+      transform: rotate(45deg);
+    }
+
+    table {
+      min-width: 940px;
+    }
+
+    th,
+    td {
+      border-bottom: 0.5px solid var(--j-border);
+      padding: 13px 16px;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    th {
+      background: #fffaf3;
+      color: var(--j-text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: none;
+    }
+
+    td.name {
+      min-width: 240px;
+    }
+
+    #transactions.panel,
+    #assetDetails.panel,
+    #inferredPositions.panel {
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    #transactions > .panel-head,
+    #assetDetails > .panel-head,
+    #inferredPositions > .panel-head {
+      border-bottom: 0;
+      padding: 0 0 14px;
+      background: transparent;
+    }
+
+    #assetDetails > .panel-head .tools {
+      display: none;
+    }
+
+    #inferredPositions .inferred-tools {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      justify-content: stretch;
+      width: 100%;
+    }
+
+    #inferredPositions .inferred-tools .search {
+      grid-column: 1 / -1;
+      min-width: 0;
+      width: 100%;
+    }
+
+    #inferredPositions .inferred-tools .select {
+      min-width: 0;
+      width: 100%;
+    }
+
+    #transactions .section-actions,
+    #inferredPositions .section-actions {
+      border-top: 0;
+      padding: 12px 0 0;
+      background: transparent;
+    }
+
+    #transactions .section-actions .btn,
+    #inferredPositions .section-actions .btn {
+      width: 100%;
+    }
+
+    #transactions .table-wrap,
+    #assetDetails .table-wrap,
+    #inferredPositions .table-wrap,
+    #allHoldings .table-wrap {
+      --sticky-column-width: 148px;
+      position: relative;
+      overflow-x: auto;
+      overflow-y: hidden;
+      border-top: 0.5px solid var(--j-border);
+      border-bottom: 0.5px solid var(--j-border);
+      background: #fff;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      overscroll-behavior-x: contain;
+    }
+
+    #transactions .table-wrap::-webkit-scrollbar,
+    #assetDetails .table-wrap::-webkit-scrollbar,
+    #inferredPositions .table-wrap::-webkit-scrollbar,
+    #allHoldings .table-wrap::-webkit-scrollbar {
+      display: none;
+    }
+
+    #transactions .table-wrap {
+      --sticky-column-width: 108px;
+      border-bottom: 0;
+    }
+
+    #transactions .table-wrap table {
+      width: 502px;
+      min-width: 502px;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+    }
+
+    #transactions .table-wrap th:nth-child(2),
+    #transactions .table-wrap td:nth-child(2) {
+      width: 118px;
+      min-width: 118px;
+      max-width: 118px;
+      white-space: normal;
+    }
+
+    #transactions .table-wrap th:nth-child(3),
+    #transactions .table-wrap td:nth-child(3) {
+      width: 166px;
+      min-width: 166px;
+      max-width: 166px;
+      text-align: center;
+    }
+
+    #transactions .table-wrap th:nth-child(4),
+    #transactions .table-wrap td:nth-child(4) {
+      width: 110px;
+      min-width: 110px;
+      max-width: 110px;
+      text-align: center;
+    }
+
+    #transactions .table-wrap th + th,
+    #transactions .table-wrap td + td,
+    #inferredPositions .table-wrap th + th,
+    #inferredPositions .table-wrap td + td {
+      border-left: 0.5px solid rgba(0, 0, 0, 0.06);
+    }
+
+    #assetDetails .table-wrap table {
+      width: 760px;
+      min-width: 760px;
+    }
+
+    #allHoldings .table-wrap table {
+      width: 920px;
+      min-width: 920px;
+    }
+
+    #inferredPositions .table-wrap {
+      --sticky-column-width: 170px;
+    }
+
+    #inferredPositions .table-wrap table {
+      width: 560px;
+      min-width: 560px;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+    }
+
+    #inferredPositions .table-wrap {
+      font-family: var(--font-ui);
+    }
+
+    #inferredPositions .table-wrap th,
+    #inferredPositions .table-wrap td {
+      vertical-align: middle;
+      font-family: var(--font-ui);
+    }
+
+    #inferredPositions .table-wrap th.numeric,
+    #inferredPositions .table-wrap td.numeric {
+      text-align: center;
+      font-family: var(--font-ui);
+      font-variant-numeric: tabular-nums;
+    }
+
+    #inferredPositions .table-wrap .inferred-th-content {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 0;
+      line-height: 20px;
+      vertical-align: middle;
+      font-family: var(--font-ui);
+      white-space: nowrap;
+    }
+
+    #inferredPositions .table-wrap th.numeric .inferred-th-content {
+      width: 100%;
+    }
+
+    #inferredPositions .table-wrap th.sortable::after {
+      content: none;
+    }
+
+    #inferredPositions .table-wrap th:nth-child(2),
+    #inferredPositions .table-wrap td:nth-child(2) {
+      width: 140px;
+      min-width: 140px;
+      max-width: 140px;
+    }
+
+    #inferredPositions .table-wrap th:nth-child(3),
+    #inferredPositions .table-wrap td:nth-child(3) {
+      width: 120px;
+      min-width: 120px;
+      max-width: 120px;
+      text-align: center;
+    }
+
+    #inferredPositions .table-wrap th:nth-child(4),
+    #inferredPositions .table-wrap td:nth-child(4) {
+      width: 130px;
+      min-width: 130px;
+      max-width: 130px;
+      text-align: center;
+    }
+
+    #inferredPositions .table-wrap .inferred-th-help {
+      flex: 0 0 20px;
+      margin-left: -2px;
+    }
+
+    .table-sort-icon {
+      width: 10px;
+      height: 16px;
+      flex: 0 0 10px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      color: #7c7c7c;
+      vertical-align: middle;
+    }
+
+    .table-sort-icon::before,
+    .table-sort-icon::after {
+      content: "";
+      display: block;
+      width: 0;
+      height: 0;
+      flex: 0 0 auto;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+    }
+
+    .table-sort-icon::before {
+      border-bottom: 5px solid currentColor;
+    }
+
+    .table-sort-icon::after {
+      border-top: 5px solid currentColor;
+    }
+
+    #assetDetails .table-wrap::after,
+    #allHoldings .table-wrap::after {
+      content: "";
+      position: absolute;
+      left: var(--sticky-column-width);
+      top: 0;
+      bottom: 0;
+      z-index: 36;
+      width: 28px;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(124, 84, 34, 0.18), rgba(124, 84, 34, 0));
+    }
+
+    #transactions .table-wrap th,
+    #transactions .table-wrap td,
+    #assetDetails .table-wrap th,
+    #assetDetails .table-wrap td,
+    #inferredPositions .table-wrap th,
+    #inferredPositions .table-wrap td,
+    #allHoldings .table-wrap th,
+    #allHoldings .table-wrap td {
+      min-height: 48px;
+      padding: 13px 12px;
+      white-space: nowrap;
+    }
+
+    #transactions .table-wrap th:first-child,
+    #transactions .table-wrap td:first-child,
+    #assetDetails .table-wrap th:first-child,
+    #assetDetails .table-wrap td:first-child,
+    #inferredPositions .table-wrap th:first-child,
+    #inferredPositions .table-wrap td:first-child,
+    #allHoldings .table-wrap th:first-child,
+    #allHoldings .table-wrap td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      width: var(--sticky-column-width);
+      min-width: var(--sticky-column-width);
+      max-width: var(--sticky-column-width);
+      background: #fff;
+      white-space: normal;
+      overflow: visible;
+      box-shadow: none;
+    }
+
+    #transactions .table-wrap th:first-child::after,
+    #transactions .table-wrap td:first-child::after,
+    #inferredPositions .table-wrap th:first-child::after,
+    #inferredPositions .table-wrap td:first-child::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: -18px;
+      bottom: 0;
+      width: 18px;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(124, 84, 34, 0.1), rgba(124, 84, 34, 0));
+    }
+
+    #transactions .table-wrap th:first-child,
+    #assetDetails .table-wrap th:first-child,
+    #inferredPositions .table-wrap th:first-child,
+    #allHoldings .table-wrap th:first-child {
+      z-index: 3;
+      background: #fffaf3;
+    }
+
+    #transactions .trade-asset-cell,
+    #inferredPositions .trade-asset-cell {
+      line-height: 18px;
+    }
+
+    #transactions .trade-asset-cell .asset-link,
+    #inferredPositions .trade-asset-cell .asset-link {
+      display: inline;
+      white-space: normal;
+      word-break: normal;
+      overflow-wrap: anywhere;
+      line-height: 18px;
+      vertical-align: top;
+      border-bottom: 0;
+      padding-bottom: 0;
+      text-decoration-line: underline;
+      text-decoration-color: currentColor;
+      text-decoration-thickness: 0.5px;
+      text-underline-offset: 3px;
+      text-decoration-skip-ink: none;
+    }
+
+    #transactions .trade-action-amount {
+      display: inline-grid;
+      gap: 4px;
+      align-items: start;
+      justify-items: center;
+    }
+
+    #transactions .trade-action-amount .tag {
+      width: auto;
+      min-width: 44px;
+      justify-content: center;
+      text-align: center;
+    }
+
+    #transactions .trade-amount-value {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 17px;
+      white-space: nowrap;
+    }
+
+    #transactions .trade-amount-value.buy {
+      color: var(--j-red);
+    }
+
+    #transactions .trade-amount-value.sell {
+      color: var(--j-green);
+    }
+
+    #transactions .table-wrap th,
+    #transactions .table-wrap td {
+      vertical-align: middle;
+      font-family: var(--font-ui);
+    }
+
+    #transactions .trade-date-cell {
+      color: var(--j-text-strong);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .trade-date-filter {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 6px;
+      padding: 0 0 12px;
+      font-family: var(--font-ui);
+    }
+
+    .trade-date-field {
+      min-width: 0;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      border: 0.5px solid var(--j-border);
+      border-radius: 2px;
+      background: #fffaf3;
+      overflow: hidden;
+    }
+
+    .trade-date-field input[type="hidden"] {
+      display: none;
+    }
+
+    .trade-date-trigger {
+      width: 100%;
+      min-width: 0;
+      height: 100%;
+      border: 0;
+      padding: 0 8px;
+      background: transparent;
+      color: var(--j-text-strong);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      line-height: 20px;
+      text-align: left;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .trade-date-trigger span:first-child {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .trade-date-icon {
+      position: relative;
+      width: 14px;
+      height: 14px;
+      flex: 0 0 14px;
+      border: 1.4px solid rgba(0, 0, 0, 0.72);
+      border-radius: 2px;
+    }
+
+    .trade-date-icon::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      top: 3px;
+      height: 1.4px;
+      background: rgba(0, 0, 0, 0.72);
+      border-radius: 1px;
+    }
+
+    .trade-date-icon::after {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: -2px;
+      width: 2px;
+      height: 4px;
+      border-radius: 1px;
+      background: rgba(0, 0, 0, 0.72);
+      box-shadow: 6px 0 0 rgba(0, 0, 0, 0.72);
+    }
+
+    .trade-date-separator {
+      color: var(--j-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    #transactions .asset-link,
+    #inferredPositions .asset-link {
+      color: var(--j-blue);
+      border-bottom: 0;
+      padding-bottom: 0;
+      font-weight: 700;
+      text-decoration-line: underline;
+      text-decoration-color: currentColor;
+      text-decoration-thickness: 0.5px;
+      text-underline-offset: 3px;
+      text-decoration-skip-ink: none;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+    }
+
+    #transactions .asset-link:hover,
+    #inferredPositions .asset-link:hover {
+      color: var(--j-blue);
+      text-decoration-line: underline;
+    }
+
+    .asset-table-meta {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 4px;
+      margin-top: 5px;
+      min-width: 0;
+    }
+
+    .asset-table-code {
+      min-width: 0;
+      overflow: hidden;
+      color: var(--j-text-secondary);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 17px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .asset-table-meta .tag {
+      max-width: 86px;
+      flex: 0 0 auto;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #inferredPositions .ranked-asset-cell {
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr);
+      align-items: start;
+      column-gap: 8px;
+    }
+
+    .asset-table-rank {
+      padding-top: 2px;
+      color: var(--j-vip-brown);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 17px;
+      font-variant-numeric: tabular-nums;
+      text-align: left;
+    }
+
+    .asset-table-main {
+      min-width: 0;
+    }
+
+    .asset-table-tags {
+      min-width: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 4px;
+      column-gap: 4px;
+      overflow: hidden;
+    }
+
+    .tag {
+      min-height: 22px;
+      border: 0.5px solid var(--j-border);
+      padding: 2px 7px;
+      background: #fffaf3;
+      color: var(--j-text-secondary);
+      font-size: 12px;
+      line-height: 17px;
+    }
+
+    .tag.status-high {
+      border-color: rgba(66, 200, 137, 0.25);
+      background: var(--j-green-soft);
+      color: #17895f;
+    }
+
+    .tag.status-low {
+      border-color: rgba(213, 73, 65, 0.25);
+      background: var(--j-red-soft);
+      color: var(--j-red);
+    }
+
+    .tag.buy {
+      border-color: rgba(213, 73, 65, 0.25);
+      background: var(--j-red-soft);
+      color: var(--j-red);
+    }
+
+    .tag.sell {
+      border-color: rgba(66, 200, 137, 0.25);
+      background: var(--j-green-soft);
+      color: #17895f;
+    }
+
+    .tag.status-mid {
+      border-color: rgba(216, 145, 43, 0.28);
+      background: var(--j-amber-soft);
+      color: #9a640f;
+    }
+
+    .hint {
+      display: inline-grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border: 0;
+      border-radius: 0;
+      background: transparent url("../assets/j-design-system-shell/plus-question-icon.png") center / 20px 20px no-repeat;
+      color: transparent;
+      font-size: 0;
+      line-height: 0;
+      margin-left: 0;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+
+    .module-title-with-help {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .module-title-with-help h2 {
+      margin: 0;
+    }
+
+    .module-title-with-help .hint {
+      flex: 0 0 20px;
+    }
+
+    .section-actions,
+    .table-note {
+      border-color: var(--j-border);
+      background: #fff;
+    }
+
+    .asset-picker {
+      padding: 18px;
+    }
+
+    .asset-picker-grid {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 10px;
+    }
+
+    .asset-kpi strong {
+      color: var(--j-text-strong);
+    }
+
+    .asset-detail-kpis {
+      gap: 8px;
+    }
+
+    .asset-kpi {
+      border: 0.5px solid var(--j-border);
+      background: #fff;
+      backdrop-filter: none;
+    }
+
+    .asset-kpi span {
+      color: var(--j-text-secondary);
+      font-size: 12px;
+      line-height: 17px;
+    }
+
+    .asset-kpi strong {
+      font-size: 18px;
+      line-height: 25px;
+      font-weight: 600;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 0;
+      padding: 0 18px 18px;
+    }
+
+    .timeline::before,
+    .timeline-dot {
+      display: none;
+    }
+
+    .timeline-item {
+      min-height: 50px;
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      margin-left: 0;
+      border: 0;
+      border-bottom: 0.5px solid var(--j-border);
+      border-radius: 0;
+      padding: 12px 0;
+      background: #fff;
+    }
+
+    .timeline-action {
+      justify-content: center;
+    }
+
+    .no-chain {
+      border: 0.5px dashed var(--j-border);
+      background: #fffaf3;
+    }
+
+    .help-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+      background: rgba(0, 0, 0, 0.75);
+    }
+
+    .help-dialog {
+      width: 100%;
+      max-width: 414px;
+      max-height: min(72vh, 520px);
+      display: flex;
+      flex-direction: column;
+      border: 0;
+      border-radius: 2px 2px 0 0;
+      box-shadow: none;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .help-head {
+      flex: 0 0 64px;
+      min-height: 64px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      border-bottom: 0.5px solid var(--j-border);
+    }
+
+    .help-head h3 {
+      justify-self: center;
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 28px;
+      letter-spacing: 0;
+      color: var(--j-text-strong);
+    }
+
+    .help-close {
+      width: auto;
+      height: 44px;
+      padding: 0;
+      border: 0;
+      border-radius: 2px;
+      background: transparent;
+      color: var(--j-text-secondary);
+      font-size: 16px;
+      line-height: 22px;
+    }
+
+    .help-confirm {
+      justify-self: end;
+      color: var(--j-vip-primary);
+      font-weight: 600;
+    }
+
+    .help-cancel {
+      justify-self: start;
+    }
+
+    .help-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 18px 20px calc(24px + env(safe-area-inset-bottom));
+      color: var(--j-text-secondary);
+      font-size: 15px;
+      line-height: 24px;
+      white-space: normal;
+    }
+
+    .date-picker-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+      background: rgba(0, 0, 0, 0.75);
+    }
+
+    .date-picker-modal.open {
+      display: flex;
+    }
+
+    .date-picker-sheet {
+      width: 100%;
+      max-width: 414px;
+      border-radius: 2px 2px 0 0;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .date-picker-head {
+      height: 64px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      border-bottom: 0.5px solid var(--j-border);
+      font-family: var(--font-ui);
+    }
+
+    .date-picker-head h3 {
+      justify-self: center;
+      margin: 0;
+      color: var(--j-text-strong);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 28px;
+      letter-spacing: 0;
+    }
+
+    .date-picker-cancel,
+    .date-picker-confirm {
+      width: auto;
+      height: 44px;
+      padding: 0;
+      border: 0;
+      border-radius: 2px;
+      background: transparent;
+      font-family: var(--font-ui);
+      font-size: 16px;
+      line-height: 22px;
+      cursor: pointer;
+    }
+
+    .date-picker-cancel {
+      justify-self: start;
+      color: var(--j-text-secondary);
+    }
+
+    .date-picker-confirm {
+      justify-self: end;
+      color: #4f7df3;
+      font-weight: 600;
+    }
+
+    .date-picker-wheel {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 6px;
+      padding: 8px 22px calc(22px + env(safe-area-inset-bottom));
+      font-family: var(--font-ui);
+    }
+
+    .date-picker-wheel::before {
+      content: "";
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      top: 50%;
+      height: 40px;
+      transform: translateY(-50%);
+      border-radius: 2px;
+      background: #f3f3f3;
+      pointer-events: none;
+    }
+
+    .date-picker-column {
+      position: relative;
+      z-index: 1;
+      height: 136px;
+      overflow-y: auto;
+      padding: 48px 0;
+      scroll-snap-type: y mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .date-picker-column::-webkit-scrollbar {
+      display: none;
+    }
+
+    .date-picker-option {
+      width: 100%;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      background: transparent;
+      color: rgba(0, 0, 0, 0.36);
+      font-family: var(--font-ui);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 22px;
+      letter-spacing: 0;
+      scroll-snap-align: center;
+      cursor: pointer;
+    }
+
+    .date-picker-option.is-near {
+      color: rgba(0, 0, 0, 0.62);
+    }
+
+    .date-picker-option.is-selected {
+      color: var(--j-text-strong);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 24px;
+    }
+
+    .select-sheet-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.62);
+    }
+
+    .select-sheet-modal.open {
+      display: flex;
+    }
+
+    .select-sheet-dialog {
+      width: 100%;
+      max-width: 414px;
+      border-radius: 2px 2px 0 0;
+      background: #fff;
+      padding: 0 14px calc(20px + env(safe-area-inset-bottom));
+    }
+
+    .select-sheet-head {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: var(--font-ui);
+    }
+
+    .select-sheet-head h3 {
+      margin: 0;
+      color: var(--j-text-strong);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 28px;
+    }
+
+    .select-sheet-close {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      flex: 0 0 44px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .select-sheet-close::before,
+    .select-sheet-close::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      top: 21px;
+      width: 20px;
+      height: 1.5px;
+      border-radius: 1px;
+      background: rgba(0, 0, 0, 0.32);
+    }
+
+    .select-sheet-close::before {
+      transform: rotate(45deg);
+    }
+
+    .select-sheet-close::after {
+      transform: rotate(-45deg);
+    }
+
+    .select-sheet-list {
+      display: grid;
+      gap: 8px;
+      max-height: min(52vh, 420px);
+      overflow-y: auto;
+      padding-bottom: 4px;
+      font-family: var(--font-ui);
+    }
+
+    .select-sheet-option {
+      width: 100%;
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 0;
+      border-radius: 2px;
+      padding: 0 16px;
+      background: #fff;
+      color: var(--j-text-strong);
+      font-family: var(--font-ui);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .select-sheet-option.is-selected {
+      background: #f1f5ff;
+      color: #5a82e6;
+      font-weight: 600;
+    }
+
+    .select-sheet-check {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      border: 1.5px solid rgba(0, 0, 0, 0.14);
+      border-radius: 50%;
+    }
+
+    .select-sheet-option.is-selected .select-sheet-check {
+      border-color: #5a82e6;
+      background: #5a82e6;
+    }
+
+    .select-sheet-option.is-selected .select-sheet-check::after {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 3px;
+      width: 5px;
+      height: 8px;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(45deg);
+    }
+
+    footer.footnote {
+      border-top: 0 !important;
+      padding-top: 0;
+      font-size: 10px;
+      line-height: 16px;
+    }
+
+    @media (max-width: 1180px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 0.5px solid var(--j-border);
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        background: #fff;
+      }
+
+      .page {
+        display: block;
+        width: 100%;
+        max-width: 414px;
+        margin: 0 auto;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        padding: 12px 16px;
+        background: #fff;
+      }
+
+      .brand {
+        padding-bottom: 10px;
+      }
+
+      .nav {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        overflow-x: auto;
+      }
+
+      .nav button {
+        flex: 0 0 auto;
+        white-space: nowrap;
+      }
+
+      main {
+        padding: 14px 16px 22px;
+      }
+
+      .topbar {
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-copy {
+        grid-template-columns: minmax(0, 1fr) 104px;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .portrait {
+        width: 104px;
+        height: 104px;
+      }
+
+      .profile-medal h3 {
+        font-size: 24px;
+        line-height: 32px;
+      }
+
+      .panel-head,
+      .theme-chart,
+      .asset-picker {
+        padding: 14px 16px;
+      }
+
+      .tools {
+        justify-content: stretch;
+      }
+
+      .search,
+      .select,
+      .btn {
+        width: 100%;
+      }
+
+      .timeline-item {
+        grid-template-columns: 52px minmax(0, 1fr);
+      }
+
+      .timeline-item > .tag:last-child {
+        grid-column: 2;
+        justify-self: start;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .profile-copy {
+        grid-template-columns: minmax(0, 1fr) 92px;
+      }
+
+      .portrait {
+        width: 92px;
+        height: 92px;
+      }
+
+      .j-breadcrumb {
+        font-size: 14px;
+      }
+    }
+
+    /* Force the product into a 414px mobile canvas on every viewport. */
+    body {
+      background: linear-gradient(180deg, #fff8e8 0%, #fffaf3 48%, #fdf4d7 100%);
+    }
+
+    body.sheet-open {
+      overflow: hidden;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 414px;
+      min-height: 100vh;
+      display: block;
+      margin: 0 auto;
+      padding-top: 88px;
+      padding-bottom: 83px;
+      background: linear-gradient(180deg, #fffaf3 0%, #ffffff 276px);
+      box-shadow: 0 0 0 0.5px var(--j-border);
+    }
+
+    .vip-hero {
+      margin: -14px -16px 12px;
+      padding: 16px 16px 14px;
+    }
+
+    .j-statusbar-fixed,
+    .j-nav-fixed,
+    .j-bottom-actions-fixed {
+      position: fixed;
+      left: 50%;
+      z-index: 100;
+      width: 100%;
+      max-width: 414px;
+      transform: translateX(-50%);
+      background: #fff;
+    }
+
+    .j-statusbar-fixed {
+      top: 0;
+      height: 44px;
+    }
+
+    .j-statusbar-fixed__time {
+      position: absolute;
+      left: 18px;
+      top: 11px;
+      width: 70px;
+      color: rgba(0, 0, 0, 0.9);
+      font-family: var(--font-ui);
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 21px;
+      text-align: center;
+    }
+
+    .j-statusbar-fixed__icons {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .j-statusbar-fixed__icons img {
+      display: block;
+      height: 12px;
+      object-fit: contain;
+    }
+
+    .j-nav-fixed {
+      top: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 12px 6px 7px;
+    }
+
+    .j-nav-fixed__left {
+      flex: 0 0 90px;
+      width: 90px;
+      display: flex;
+      align-items: center;
+    }
+
+    .j-nav-fixed__back {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      padding: 0;
+      background: transparent;
+    }
+
+    .j-nav-fixed__back img {
+      display: block;
+      width: 10.1213px;
+      height: 17.4142px;
+    }
+
+    .j-nav-fixed__capsule img {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .j-nav-fixed__title {
+      flex: 1 1 0;
+      min-width: 0;
+      overflow: hidden;
+      color: rgba(0, 0, 0, 0.9);
+      font-family: var(--font-ui);
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 25px;
+      text-align: center;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .j-nav-fixed__right {
+      flex: 0 0 90px;
+      width: 90px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .j-nav-fixed__capsule {
+      width: 90px;
+      height: 34px;
+    }
+
+    .j-bottom-actions-fixed {
+      bottom: 0;
+      height: 83px;
+      border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .j-bottom-actions-fixed__grid {
+      height: 49px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+    }
+
+    .j-bottom-actions-fixed__item {
+      flex: 1 0 0;
+      min-width: 0;
+      height: 49px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: rgba(0, 0, 0, 0.5);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 16.8px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .j-bottom-actions-fixed__icon-box {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+    }
+
+    .j-bottom-actions-fixed__icon-box img {
+      display: block;
+      max-width: 24px;
+      max-height: 24px;
+    }
+
+    .j-bottom-actions-fixed__safe {
+      height: 34px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      height: auto;
+      border-right: 0;
+      border-bottom: 0.5px solid var(--j-border);
+      padding: 12px 16px 10px;
+      background: #fff;
+    }
+
+    .brand {
+      padding-bottom: 10px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 2px;
+      margin-top: 14px;
+      padding-bottom: 0;
+      border-bottom: 0.5px solid var(--j-border);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav button {
+      position: relative;
+      flex: 0 0 auto;
+      min-height: 32px;
+      border-radius: 0;
+      padding: 7px;
+      background: transparent;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .nav button.active {
+      background: transparent;
+      color: var(--j-blue);
+    }
+
+    .nav button.active::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: -1px;
+      height: 2px;
+      border-radius: 2px;
+      background: var(--j-blue);
+    }
+
+    main {
+      width: 100%;
+      max-width: none;
+      padding: 14px 16px 24px;
+      background: #fff;
+    }
+
+    .topbar,
+    .panel-head,
+    .asset-picker-head,
+    .asset-chain-head {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .topbar {
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .status {
+      align-self: flex-start;
+    }
+
+    .hero-grid,
+    .top-holdings,
+    .profile-medal {
+      grid-template-columns: 1fr;
+    }
+
+    .profile-copy {
+      grid-template-columns: minmax(0, 1fr) 104px;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .portrait {
+      width: 104px;
+      height: 104px;
+    }
+
+    .holding-cards,
+    .asset-picker-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .side-stack,
+    .table-panel {
+      margin-top: 12px;
+    }
+
+    .holdings-hero.panel {
+      border: 0;
+    }
+
+    .holdings-hero > .panel-head {
+      border-bottom: 0;
+      padding: 0 0 12px;
+    }
+
+    .top-holdings {
+      gap: 0;
+      padding: 0;
+    }
+
+    .profile-medal {
+      min-height: auto;
+      border: 0;
+      border-radius: 0;
+      border-bottom: 0.5px solid var(--j-border);
+      background: #fffaf3;
+    }
+
+    .holding-cards {
+      gap: 0;
+    }
+
+    .holding-card {
+      min-height: 76px;
+      border: 0;
+      border-bottom: 0.5px solid var(--j-border);
+      border-radius: 0;
+      padding: 13px 0 13px 50px;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .holding-card:hover {
+      border-color: var(--j-border);
+      background: #fffaf3;
+    }
+
+    .holding-card::before {
+      left: 0;
+      top: 13px;
+      bottom: 13px;
+      width: 3px;
+    }
+
+    .rank {
+      left: 14px;
+      top: 15px;
+    }
+
+    .holding-cards.holding-rank-list {
+      --holding-label-width: 126px;
+      --holding-value-space: 92px;
+      --holding-bar-indent: 0px;
+      position: relative;
+      display: block;
+      width: 100%;
+      padding-top: 6px;
+    }
+
+    .holding-rank-rows {
+      position: relative;
+      display: block;
+    }
+
+    .holding-rank-rows::before {
+      content: "";
+      position: absolute;
+      left: var(--holding-label-width);
+      top: 0;
+      bottom: -8px;
+      width: 0.5px;
+      background: var(--j-chart-border);
+    }
+
+    .holding-rank-row {
+      position: relative;
+      display: block;
+      height: 46px;
+      min-height: 46px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .holding-rank-row:hover {
+      background: #fffaf3;
+    }
+
+    .holding-rank-label {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: var(--holding-label-width);
+      height: 36px;
+      transform: translateY(-50%);
+      color: var(--j-text-strong);
+    }
+
+    .holding-rank-index {
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 24px;
+      color: var(--rank-index-color, #a6a6a6);
+      font-family: var(--font-number);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .holding-rank-row:nth-child(-n + 3) .holding-rank-index {
+      background: linear-gradient(270deg, #9F6B41 0%, #F4CA81 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .holding-rank-name {
+      position: absolute;
+      left: 54px;
+      top: 1px;
+      width: calc(var(--holding-label-width) - 58px);
+      overflow: hidden;
+      color: var(--j-text-strong);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 18px;
+      text-align: left;
+      text-overflow: ellipsis;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .asset-link.holding-rank-name:hover {
+      color: var(--j-text-strong);
+      text-decoration: none;
+    }
+
+    .holding-rank-logo {
+      position: absolute;
+      left: 27px;
+      top: 7px;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 50%;
+      background: var(--logo-bg, #8a5d26);
+      box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, .08);
+    }
+
+    .holding-rank-logo img {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #fff;
+      opacity: 0;
+    }
+
+    .holding-rank-logo span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      color: #fff;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .holding-rank-logo--loaded img {
+      opacity: 1;
+    }
+
+    .holding-rank-logo--loaded span {
+      display: none;
+    }
+
+    .holding-rank-logo--fallback span {
+      display: flex;
+    }
+
+    .holding-rank-logo--fallback img {
+      display: none;
+    }
+
+    .holding-rank-code {
+      position: absolute;
+      left: 54px;
+      top: 20px;
+      width: calc(var(--holding-label-width) - 58px);
+      overflow: hidden;
+      color: var(--j-text-muted);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 15px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .holding-rank-bar-track {
+      position: absolute;
+      left: calc(var(--holding-label-width) + var(--holding-bar-indent));
+      right: var(--holding-value-space);
+      top: 50%;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      overflow: visible;
+      transform: translateY(-50%);
+    }
+
+    .holding-rank-bar {
+      display: block;
+      flex: 0 0 auto;
+      height: 18px;
+      min-width: 4px;
+      border-radius: 2px;
+      background: linear-gradient(270deg, #9F6B41 0%, #F4CA81 100%);
+    }
+
+    .holding-rank-value {
+      flex: 0 0 auto;
+      margin-left: 6px;
+      color: #9F6B41;
+      font-family: var(--font-number);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .holding-rank-value .j-finance-unit {
+      margin-left: 1px;
+      color: #9F6B41;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 15px;
+    }
+
+    .holding-rank-axis {
+      position: relative;
+      height: 42px;
+      margin: 12px 0 0;
+      color: var(--j-text-muted);
+      font-family: var(--font-number);
+      font-size: 11px;
+      line-height: 15px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .holding-rank-axis-track {
+      position: absolute;
+      left: calc(var(--holding-label-width) + var(--holding-bar-indent));
+      right: var(--holding-value-space);
+      top: 0;
+      height: 38px;
+      border-top: 0.5px solid var(--j-chart-border);
+    }
+
+    .holding-rank-axis-ticks span {
+      position: absolute;
+      top: 0;
+      width: 1px;
+      height: 7px;
+      transform: translateX(-0.5px);
+      background: var(--j-chart-border);
+    }
+
+    .holding-rank-axis-labels {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 10px;
+      height: 28px;
+    }
+
+    .holding-rank-axis-labels span {
+      position: absolute;
+      top: 0;
+      min-width: 24px;
+      color: var(--j-text-muted);
+      text-align: center;
+      transform: translateX(-50%) rotate(-45deg);
+      transform-origin: 50% 0;
+    }
+
+    .holding-rank-brand {
+      position: absolute;
+      right: 6px;
+      bottom: 18px;
+      width: 60px;
+      height: auto;
+      opacity: 0.1;
+      filter: grayscale(1) brightness(0);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .panel-head,
+    .theme-chart,
+    .asset-picker {
+      padding: 14px 16px;
+    }
+
+    .tools {
+      justify-content: stretch;
+    }
+
+    .search,
+    .select,
+    .btn {
+      width: 100%;
+    }
+
+    .asset-detail-kpis {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .timeline-item {
+      grid-template-columns: 52px minmax(0, 1fr);
+    }
+
+    .timeline-item > .tag:last-child {
+      grid-column: 2;
+      justify-self: start;
+    }
+
+    .holdings-hero > .panel-head {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 0 14px;
+      border-bottom: 0;
+      background: transparent;
+    }
+
+    .holdings-hero > .panel-head h2 {
+      margin: 0;
+      color: var(--j-text-strong);
+      font-family: var(--font-ui);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 28px;
+    }
+
+    .section-mini-action {
+      position: relative;
+      flex: 0 0 auto;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 0;
+      padding: 0 5px 0 0;
+      background: transparent;
+      color: #8a5d26;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 18px;
+      overflow: visible;
+      white-space: nowrap;
+    }
+
+    .section-mini-action::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-top: 1.5px solid currentColor;
+      border-right: 1.5px solid currentColor;
+      transform: rotate(45deg);
+    }
+
+    .theme-section {
+      margin-top: 26px;
+    }
+
+    .theme-section-divider {
+      width: calc(100% + 32px);
+      margin-left: -16px;
+      margin-right: -16px;
+      margin-bottom: 22px;
+      background: #f3f3f3;
+    }
+
+    .theme-section-title h2 {
+      font-family: var(--font-ui);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 28px;
+    }
+
+    .theme-section .theme-chart {
+      padding: 0;
+    }
+
+    .theme-section .donut-wrap {
+      min-height: auto;
+      margin-top: -18px;
+      gap: 0;
+    }
+
+    .theme-section .donut-total {
+      margin-top: -8px;
+    }
+
+    .theme-section .theme-legend {
+      width: 100%;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      justify-items: stretch;
+      column-gap: 0;
+      row-gap: 10px;
+    }
+
+    .theme-section .legend-row {
+      grid-template-columns: 9px max-content;
+      gap: 6px;
+      width: 100%;
+      justify-content: start;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .theme-section .legend-row:nth-child(3n + 2) {
+      justify-content: center;
+    }
+
+    .theme-section .legend-row:nth-child(3n) {
+      justify-content: end;
+    }
+
+    .page.is-detail-page .vip-hero,
+    .page.is-detail-page .section-switch {
+      display: none;
+    }
+
+    .page.is-detail-page #inferredPositions {
+      margin-top: 0;
+    }
+
+    #assetDetails {
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    #assetDetailBody.empty {
+      padding: 0;
+      color: inherit;
+    }
+
+    .selected-asset-summary {
+      width: 100%;
+      padding: 0;
+      background: transparent;
+      color: var(--j-text-strong);
+    }
+
+    .selected-asset-summary h3 {
+      margin: 0 0 14px;
+      color: var(--j-text-strong);
+      font-family: var(--font-ui);
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 29px;
+      letter-spacing: 0;
+    }
+
+    .selected-asset-title {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .selected-asset-name {
+      min-width: 0;
+    }
+
+    .selected-asset-code {
+      color: var(--j-text-secondary);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 18px;
+    }
+
+    .asset-title-logo {
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 50%;
+      background: var(--logo-bg, #8A5D26);
+      box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, .08);
+    }
+
+    .asset-title-logo img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #fff;
+      opacity: 0;
+    }
+
+    .asset-title-logo span {
+      color: #fff;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .asset-title-logo--loaded img {
+      opacity: 1;
+    }
+
+    .asset-title-logo--loaded span {
+      display: none;
+    }
+
+    .asset-title-logo--fallback img {
+      display: none;
+    }
+
+    .selected-asset-summary .asset-detail-kpis {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 5px;
+    }
+
+    .selected-asset-summary .asset-kpi {
+      min-height: 62px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      padding: 6px 5px;
+      border: 0.5px solid var(--j-border);
+      border-radius: 2px;
+      background: #fffaf3;
+      text-align: center;
+      box-shadow: none;
+    }
+
+    .selected-asset-summary .asset-kpi--buy {
+      border-color: rgba(225, 68, 84, 0.18);
+      background: var(--j-red-soft);
+    }
+
+    .selected-asset-summary .asset-kpi--sell {
+      border-color: rgba(73, 170, 118, 0.18);
+      background: var(--j-green-soft);
+    }
+
+    .selected-asset-summary .asset-kpi span {
+      color: var(--j-text-secondary);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 16px;
+      margin-bottom: 0;
+    }
+
+    .selected-asset-summary .asset-kpi strong {
+      min-width: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: center;
+      gap: 2px;
+      color: var(--j-text-strong);
+      font-family: var(--font-ui);
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 20px;
+      text-align: center;
+    }
+
+    .selected-asset-summary .asset-kpi strong .j-finance-number {
+      font-family: var(--font-number);
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 24px;
+    }
+
+    .selected-asset-summary .asset-kpi strong .j-finance-unit {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 16px;
+    }
+
+    .selected-asset-summary .asset-kpi--buy strong,
+    .selected-asset-summary .asset-kpi--buy strong .j-finance-number,
+    .selected-asset-summary .asset-kpi--buy strong .j-finance-unit {
+      color: var(--j-red);
+    }
+
+    .selected-asset-summary .asset-kpi--sell strong,
+    .selected-asset-summary .asset-kpi--sell strong .j-finance-number,
+    .selected-asset-summary .asset-kpi--sell strong .j-finance-unit {
+      color: #17895f;
+    }
+
+    .asset-chain-head {
+      width: 100%;
+      padding: 18px 0 10px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 0.5px solid #f3f3f3;
+      background: transparent;
+    }
+
+    .asset-chain-head h3 {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin: 0;
+      color: var(--j-text-strong);
+      font-family: var(--font-ui);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 28px;
+    }
+
+    .timeline-amount-label {
+      flex: 0 0 auto;
+      padding: 0;
+      color: var(--j-text-secondary);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      line-height: 18px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .timeline {
+      width: 100%;
+      display: grid;
+      gap: 0;
+      padding: 0 0 4px;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 22px;
+      bottom: 22px;
+      width: 1px;
+      display: block;
+      background: #ececec;
+    }
+
+    .timeline-item {
+      min-height: 76px;
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      column-gap: 12px;
+      margin-left: 0;
+      padding: 13px 0 13px 24px;
+      border: 0;
+      border-bottom: 0.5px solid var(--j-border);
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 1px;
+      top: 22px;
+      width: 11px;
+      height: 11px;
+      display: block;
+      border: 2px solid #fff;
+      border-radius: 99px;
+      background: var(--j-red);
+      box-shadow: 0 0 0 1px rgba(213, 73, 65, 0.28);
+    }
+
+    .timeline-dot.sell {
+      background: var(--j-green);
+      box-shadow: 0 0 0 1px rgba(23, 137, 95, 0.28);
+    }
+
+    .timeline-main {
+      min-width: 0;
+      display: grid;
+      gap: 4px;
+    }
+
+    .timeline-main strong {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--j-text-strong);
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+    }
+
+    .timeline-main span {
+      color: var(--j-text-secondary);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      line-height: 18px;
+      white-space: normal;
+    }
+
+    .timeline-money {
+      justify-self: end;
+      white-space: nowrap;
+    }
+
+    #assetDetails .asset-timeline-actions {
+      border-top: 0;
+      padding: 12px 0 0;
+      background: transparent;
+    }
+
+    #assetDetails .asset-timeline-actions .btn {
+      width: 100%;
+      border-color: var(--j-vip-deep);
+      background: var(--j-vip-deep);
+      color: #fff;
+    }
+
+    #assetDetails > .panel-head {
+      display: none;
+    }
+
+    @media (max-width: 360px) {
+      .asset-detail-kpis {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-copy {
+        grid-template-columns: minmax(0, 1fr) 86px;
+      }
+
+      .portrait {
+        width: 86px;
+        height: 86px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="page">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="mark"><img src="trump-portrait.jpg" alt="Donald J. Trump"></div>
-        <div><strong>特朗普交易披露追踪</strong></div>
-      </div>
-      <nav class="nav">
-        <button class="active" data-nav="topHoldings" onclick="scrollHomeSection('topHoldingsSection', 'topHoldings')">前十大推算持仓</button>
-        <button data-nav="theme" onclick="scrollHomeSection('themeSection', 'theme')">投资主题占比</button>
-        <button data-nav="tradesPreview" onclick="scrollHomeSection('transactions', 'tradesPreview')">最新披露交易</button>
-        <button data-nav="asset" onclick="scrollHomeSection('assetDetails', 'asset')">资产详情</button>
-      </nav>
-    </aside>
-
+  <div class="j-statusbar-fixed" aria-hidden="true">
+    <span class="j-statusbar-fixed__time">9:41</span>
+    <span class="j-statusbar-fixed__icons">
+      <img src="../assets/j-design-system-shell/plus-shell-status-cellular-569-149.svg" alt="">
+      <img src="../assets/j-design-system-shell/plus-shell-status-wifi-569-149.svg" alt="">
+      <img src="../assets/j-design-system-shell/plus-shell-status-battery-569-149.svg" alt="">
+    </span>
+  </div>
+  <div class="j-nav-fixed" role="navigation" aria-label="小程序导航">
+    <div class="j-nav-fixed__left">
+      <button class="j-nav-fixed__back" type="button" aria-label="返回" onclick="goHome()">
+        <img src="../assets/j-design-system-shell/plus-shell-nav-back-569-150.svg" alt="">
+      </button>
+    </div>
+    <div class="j-nav-fixed__title">特朗普</div>
+    <div class="j-nav-fixed__right">
+      <span class="j-nav-fixed__capsule" aria-hidden="true">
+        <img src="../assets/j-design-system-shell/plus-shell-nav-capsule-569-150.svg" alt="">
+      </span>
+    </div>
+  </div>
+  <div class="page j-page--with-bottom-actions">
     <main>
-      <header class="topbar">
-        <div>
+      <header class="topbar vip-hero">
+        <div class="vip-hero-copy">
           <h1>特朗普交易披露追踪</h1>
-          <div class="subtitle">真实读取本地 OGE / SEC 采集库，仅展示个股、ETF、基金，金额保留官方披露区间。</div>
+          <div class="j-breadcrumb" aria-label="页面来源">
+            <span class="j-breadcrumb__item">金十数据</span>
+            <span class="j-breadcrumb__separator">›</span>
+            <span class="j-breadcrumb__item">特朗普</span>
+            <span class="j-search-icon" aria-hidden="true"></span>
+          </div>
+          <div class="hero-updated">更新时间：2026-08-25</div>
         </div>
-        <div class="status" id="connectionStatus"><span class="dot"></span><span>连接后台中</span></div>
+        <div class="vip-hero-art" aria-hidden="true">
+          <img class="vip-hero-art__item vip-hero-art__profile" src="../assets/trump-hero-profile.png" alt="">
+          <img class="vip-hero-art__item vip-hero-art__kline" src="../assets/trump-hero-kline.png" alt="">
+          <img class="vip-hero-art__item vip-hero-art__bars" src="../assets/trump-hero-bars.png" alt="">
+        </div>
       </header>
 
-      <section class="grid hero-grid home-section" id="topHoldingsSection">
+      <div class="section-switch" aria-label="内容切换">
+        <button class="is-active" data-view="holdings" type="button" onclick="switchHomeView('holdings')">持仓与占比</button>
+        <button data-view="asset" type="button" onclick="switchHomeView('asset')">资产交易详情</button>
+      </div>
+
+      <section class="grid hero-grid home-section" id="topHoldingsSection" data-home-view="holdings">
         <div class="panel holdings-hero">
           <div class="panel-head">
             <div>
-              <h2>Donald J. Trump 披露跟踪</h2>
-              <p>以 2025 年度资产披露为基准，并纳入 2026 年迄今 278-T 增量交易，展示交易轨迹与披露口径推算状态。</p>
-            </div>
-          </div>
-          <div class="top-holdings">
-            <div class="profile-medal">
-              <div class="profile-copy">
-                <div class="portrait"><img src="trump-portrait.jpg" alt="Donald J. Trump"></div>
-                <div>
-                  <div class="profile-kicker">DISCLOSURE TRACKER</div>
-                  <h3>前十大推算持仓</h3>
-                  <span>基于 OGE 官方披露区间，按披露价值区间估算排序。</span>
-                </div>
+              <div class="module-title-with-help">
+                <h2>前十大推算持仓</h2>
               </div>
             </div>
-            <div class="holding-cards" id="topHoldings"></div>
+            <button class="section-mini-action" type="button" onclick="showInferredDetails()">查看全部</button>
           </div>
-          <div class="section-actions">
-            <button class="btn primary" onclick="showInferredDetails()">查看更多</button>
+          <div class="top-holdings">
+            <div class="holding-cards holding-rank-list" id="topHoldings"></div>
           </div>
         </div>
+      </section>
 
-        <aside class="side-stack">
-          <div class="panel" id="themeSection">
-            <div class="panel-head">
-              <div><h2>投资主题占比</h2><p>按全部推算持仓的净估算金额归类。</p></div>
-            </div>
-            <div class="theme-chart" id="conceptSummary"></div>
+      <section class="theme-section home-section" id="themeSection" data-home-view="holdings">
+        <div class="theme-section-divider" aria-hidden="true"></div>
+        <div class="theme-section-title">
+          <div class="module-title-with-help">
+            <h2>投资主题占比</h2>
           </div>
-        </aside>
+        </div>
+        <div class="theme-chart" id="conceptSummary"></div>
       </section>
 
       <section class="panel table-panel hidden full-section" id="allHoldings">
@@ -311,7 +3343,7 @@
               <option value="date_asc">交易日 ↑</option>
               <option value="amount_desc">金额估算 ↓</option>
               <option value="amount_asc">金额估算 ↑</option>
-              <option value="asset_asc">资产名称 A-Z</option>
+              <option value="asset_asc">资产名称顺序</option>
             </select>
             <button class="btn" onclick="searchHoldings()">搜索</button>
             <button class="btn" onclick="hideAllHoldings()">收起</button>
@@ -328,61 +3360,80 @@
       <section class="panel table-panel hidden full-section" id="inferredPositions">
         <div class="panel-head">
           <div><h2>推算持仓状态</h2><p>基于年度基准快照与后续交易流水，仅表示披露口径下的可识别状态。</p></div>
-          <div class="tools">
+          <div class="tools inferred-tools">
             <input class="search" id="inferredSearch" placeholder="搜索资产、代码或主题">
-            <select class="select" id="inferredConcept" onchange="applyInferredFilters()">
+            <select class="select native-select-hidden" id="inferredConcept" onchange="applyInferredFilters(true)" aria-hidden="true" tabindex="-1">
               <option value="">全部主题</option>
             </select>
-            <select class="select" id="inferredStatus" onchange="applyInferredFilters()">
+            <button class="select select-trigger" id="inferredConceptTrigger" type="button" onclick="openSelectSheet('inferredConcept')" aria-haspopup="dialog"><span id="inferredConceptText">全部主题</span><span class="select-chevron" aria-hidden="true"></span></button>
+            <select class="select native-select-hidden" id="inferredStatus" onchange="applyInferredFilters(true)" aria-hidden="true" tabindex="-1">
               <option value="">全部状态</option>
             </select>
-            <select class="select" id="inferredConfidence" onchange="applyInferredFilters()">
-              <option value="">全部置信度</option>
+            <button class="select select-trigger" id="inferredStatusTrigger" type="button" onclick="openSelectSheet('inferredStatus')" aria-haspopup="dialog"><span id="inferredStatusText">全部状态</span><span class="select-chevron" aria-hidden="true"></span></button>
+            <select class="select native-select-hidden" id="inferredSort" onchange="applyInferredFilters(true)" aria-hidden="true" tabindex="-1">
+              <option value="exposure_desc">披露规模排序</option>
+              <option value="baseline_desc">基准估算排序</option>
+              <option value="purchase_desc">买入估算排序</option>
+              <option value="sale_desc">卖出估算排序</option>
+              <option value="recent_desc">最近交易排序</option>
+              <option value="asset_asc">资产名称顺序</option>
             </select>
-            <select class="select" id="inferredSort" onchange="applyInferredFilters()">
-              <option value="exposure_desc">披露规模估算 ↓</option>
-              <option value="recent_desc">最近交易 ↓</option>
-              <option value="asset_asc">资产名称 A-Z</option>
-            </select>
-            <button class="btn" onclick="hideInferredDetails()">收起</button>
+            <button class="select select-trigger" id="inferredSortTrigger" type="button" onclick="openSelectSheet('inferredSort')" aria-haspopup="dialog"><span id="inferredSortText">披露规模排序</span><span class="select-chevron" aria-hidden="true"></span></button>
           </div>
         </div>
-        <div class="table-note" id="inferredSummary">加载推算持仓数据中...</div>
+        <div class="table-note" id="inferredSummary" hidden>加载推算持仓数据中...</div>
         <div class="table-wrap">
           <table>
             <thead><tr>
-              <th class="sortable" onclick="setInferredSort('asset_asc')">资产</th>
-              <th>代码</th>
-              <th>主题</th>
-              <th class="sortable numeric" onclick="setInferredSort('exposure_desc')">披露规模估算 <span class="hint" onclick="event.stopPropagation(); openHelp('exposure')">?</span></th>
-              <th class="sortable" onclick="setInferredSort('recent_desc')">最近交易</th>
-              <th>推算状态 <span class="hint" onclick="event.stopPropagation(); openHelp('status')">?</span></th>
-              <th>置信度 <span class="hint" onclick="event.stopPropagation(); openHelp('confidence')">?</span></th>
+              <th><span class="inferred-th-content">资产</span></th>
+              <th class="numeric sortable" onclick="setInferredSort('exposure_desc')"><span class="inferred-th-content">披露规模估算 <button class="hint inferred-th-help" type="button" aria-label="披露规模估算说明" onclick="event.stopPropagation(); openHelp('exposure')"></button><span class="table-sort-icon" aria-hidden="true"></span></span></th>
+              <th class="sortable" onclick="setInferredSort('recent_desc')"><span class="inferred-th-content">最近交易 <span class="table-sort-icon" aria-hidden="true"></span></span></th>
+              <th><span class="inferred-th-content">推算状态 <button class="hint inferred-th-help" type="button" aria-label="推算状态说明" onclick="event.stopPropagation(); openHelp('status')"></button></span></th>
             </tr></thead>
             <tbody id="inferredRows"></tbody>
           </table>
         </div>
+        <div class="section-actions inferred-load-actions hidden">
+          <button class="btn primary" id="inferredLoadMore" type="button" onclick="loadMoreInferred()">查看更多</button>
+        </div>
       </section>
 
-      <section class="panel table-panel home-section" id="transactions">
+      <section class="panel table-panel home-section hidden" id="transactions" data-home-view="asset">
         <div class="panel-head">
-          <div><h2>最新披露交易</h2><p>首页默认按交易日降序展示最近 10 条交易，完整时间线可进入详情页筛选。</p></div>
+          <div><h2>最新披露交易</h2></div>
+        </div>
+        <div class="trade-date-filter" aria-label="交易日筛选">
+          <label class="trade-date-field">
+            <input id="tradeStartDate" type="hidden" aria-label="开始交易日">
+            <button class="trade-date-trigger" id="tradeStartDateTrigger" type="button" onclick="openTradeDatePicker('start')" aria-label="开始交易日">
+              <span id="tradeStartDateText">开始交易日</span>
+              <span class="trade-date-icon" aria-hidden="true"></span>
+            </button>
+          </label>
+          <span class="trade-date-separator">至</span>
+          <label class="trade-date-field">
+            <input id="tradeEndDate" type="hidden" aria-label="结束交易日">
+            <button class="trade-date-trigger" id="tradeEndDateTrigger" type="button" onclick="openTradeDatePicker('end')" aria-label="结束交易日">
+              <span id="tradeEndDateText">结束交易日</span>
+              <span class="trade-date-icon" aria-hidden="true"></span>
+            </button>
+          </label>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>资产</th><th>代码</th><th>主题</th><th>动作</th><th>交易日</th><th>金额区间（美元）</th><th>披露日</th></tr></thead>
+            <thead><tr><th>交易日</th><th>资产</th><th>金额(美元)</th><th>披露日</th></tr></thead>
             <tbody id="tradeRows"></tbody>
           </table>
         </div>
         <div class="section-actions">
-          <button class="btn primary" onclick="showTradeDetails()">查看更多</button>
+          <button class="btn primary" id="tradeLoadMore" onclick="showTradeDetails()">查看更多</button>
         </div>
       </section>
 
-      <section class="panel table-panel home-section" id="assetDetails">
+      <section class="panel table-panel hidden full-section" id="assetDetails">
         <div class="panel-head">
-          <div><h2 id="assetDetailTitle">资产交易详情</h2><p id="assetDetailSubtitle">默认展示首个资产，可搜索或点击卡片切换交易披露链。</p></div>
-          <div class="tools"><span class="pill" id="assetDetailBadge">等待选择资产</span><button class="btn" onclick="hideAssetDetails()">收起</button></div>
+          <div><h2 id="assetDetailTitle">资产交易详情</h2><p id="assetDetailSubtitle" hidden>默认展示首个资产，可搜索或点击卡片切换交易披露链。</p></div>
+          <div class="tools"><span class="pill" id="assetDetailBadge">等待选择资产</span></div>
         </div>
         <div id="assetDetailBody" class="empty">请点击首页持仓卡片、推算持仓表或交易记录中的资产名称。</div>
       </section>
@@ -400,35 +3451,84 @@
         </div>
       </section>
 
-      <div class="help-modal" id="helpModal" onclick="closeHelp(event)">
+      <div class="help-modal" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle" onclick="closeHelp(event)">
         <div class="help-dialog" onclick="event.stopPropagation()">
           <div class="help-head">
+            <button class="help-close help-cancel" type="button" onclick="closeHelp()">取消</button>
             <h3 id="helpTitle">字段说明</h3>
-            <button class="help-close" onclick="closeHelp()">×</button>
+            <button class="help-close help-confirm" type="button" onclick="closeHelp()">确认</button>
           </div>
           <div class="help-body" id="helpBody"></div>
         </div>
       </div>
 
+      <div class="date-picker-modal" id="tradeDatePicker" role="dialog" aria-modal="true" aria-labelledby="tradeDatePickerTitle" onclick="closeTradeDatePicker(event)">
+        <div class="date-picker-sheet" onclick="event.stopPropagation()">
+          <div class="date-picker-head">
+            <button class="date-picker-cancel" type="button" onclick="closeTradeDatePicker()">取消</button>
+            <h3 id="tradeDatePickerTitle">选择时间</h3>
+            <button class="date-picker-confirm" type="button" onclick="confirmTradeDatePicker()">确定</button>
+          </div>
+          <div class="date-picker-wheel" id="tradeDatePickerWheel" aria-label="选择交易日期"></div>
+        </div>
+      </div>
+
+      <div class="select-sheet-modal" id="selectSheet" role="dialog" aria-modal="true" aria-labelledby="selectSheetTitle" onclick="closeSelectSheet(event)">
+        <div class="select-sheet-dialog" onclick="event.stopPropagation()">
+          <div class="select-sheet-head">
+            <h3 id="selectSheetTitle">请选择</h3>
+            <button class="select-sheet-close" type="button" onclick="closeSelectSheet()" aria-label="关闭"></button>
+          </div>
+          <div class="select-sheet-list" id="selectSheetOptions"></div>
+        </div>
+      </div>
+
       <footer class="footnote">
-        数据说明：本产品基于 OGE 公开披露文件整理，交易披露存在制度性延迟；金额为官方披露区间，不代表精确持仓金额、股数或成交价。页面面向投资用户，仅在主视图展示个股、ETF、基金；市政债、票据、现金、房地产和私人项目默认不进入主列表。低置信度 OCR 记录进入复核后台，不作为确认数据展示。
+        数据来源于美国联邦道德办公室（OGE）官网公开披露文件，仅筛选个股、ETF、基金等资产，后经整理、估算处理。因披露存在时滞且部分金额为区间数据，页面内容仅供参考，不代表实时精确持仓，不构成投资建议，具体以OGE官方披露为准。
       </footer>
     </main>
   </div>
+
+  <nav class="j-bottom-actions-fixed" aria-label="底部操作">
+    <div class="j-bottom-actions-fixed__grid">
+      <button class="j-bottom-actions-fixed__item" type="button">
+        <span class="j-bottom-actions-fixed__icon-box"><img src="../assets/j-design-system-shell/plus-shell-bookmark-569-115.svg" alt=""></span>
+        <span>订阅</span>
+      </button>
+      <button class="j-bottom-actions-fixed__item" type="button">
+        <span class="j-bottom-actions-fixed__icon-box"><img src="../assets/j-design-system-shell/plus-shell-image-569-115.svg" alt=""></span>
+        <span>生成长图</span>
+      </button>
+      <button class="j-bottom-actions-fixed__item" type="button">
+        <span class="j-bottom-actions-fixed__icon-box"><img src="../assets/j-design-system-shell/plus-shell-wechat-569-115.svg" alt=""></span>
+        <span>分享</span>
+      </button>
+      <button class="j-bottom-actions-fixed__item" type="button">
+        <span class="j-bottom-actions-fixed__icon-box"><img src="../assets/j-design-system-shell/plus-shell-floating-window-569-115.svg" alt=""></span>
+        <span>加入浮窗</span>
+      </button>
+    </div>
+    <div class="j-bottom-actions-fixed__safe" aria-hidden="true"></div>
+  </nav>
 
   <script>
     const API_BASE = 'http://127.0.0.1:8765';
     let allTrades = [];
     let allInferredPositions = [];
     let inferredLoadedFull = false;
+    const INFERRED_INITIAL_LIMIT = 30;
+    const INFERRED_LOAD_STEP = 30;
+    const TRADE_INITIAL_LIMIT = 10;
+    const TRADE_LOAD_STEP = 10;
+    const ASSET_TIMELINE_INITIAL_LIMIT = 10;
+    const ASSET_TIMELINE_LOAD_STEP = 10;
+    let inferredVisibleLimit = INFERRED_INITIAL_LIMIT;
+    let tradeVisibleLimit = TRADE_INITIAL_LIMIT;
+    let assetTimelineVisibleLimit = ASSET_TIMELINE_INITIAL_LIMIT;
     let allAnnualTrades = [];
     let selectedAssetKey = '';
     let assetPickerQuery = '';
     const HELP_TEXT = {
-      exposure: {
-        title: '披露规模估算',
-        body: '基于 OGE 年度披露区间与后续交易披露区间，按区间中点估算出的披露口径规模。它不代表真实账户金额、持股数量或实时市值。'
-      },
       baseline: {
         title: '基准区间估算',
         body: '来自年度 278e 披露中的资产价值区间。页面将每条区间取中点后，按同一资产或代码合并汇总，用于表示该资产的年报基准规模，不代表真实账户金额。'
@@ -436,6 +3536,10 @@
       purchase: {
         title: '买入区间估算',
         body: '来自后续交易披露中标记为买入的金额区间。页面将这些区间取中点后汇总，用于表示后续披露中的累计买入规模，不代表精确成交金额或股数。'
+      },
+      exposure: {
+        title: '披露规模估算',
+        body: '以年度披露基准为基础，叠加后续买入区间估算并扣减卖出区间估算后得到，用于展示披露口径下的推算规模，不代表实时精确持仓金额。'
       },
       sale: {
         title: '卖出区间估算',
@@ -448,21 +3552,56 @@
       confidence: {
         title: '置信度',
         body: '表示当前推算状态的可靠程度，不代表投资收益或胜率。买卖区间重叠越多、信息越不完整，置信度通常越低。'
+      },
+      dataSource: {
+        title: '数据说明',
+        body: '本产品基于 OGE 公开披露文件整理，交易披露存在制度性延迟；金额为官方披露区间，不代表精确持仓金额、股数或成交价。页面面向投资用户，仅在主视图展示个股、ETF、基金；市政债、票据、现金、房地产和私人项目默认不进入主列表。低置信度 OCR 记录进入复核后台，不作为确认数据展示。'
       }
     };
 
     function fmt(n) { return new Intl.NumberFormat('en-US').format(n || 0); }
-    function fmtMoney(value) {
+    function moneyParts(value) {
       const amount = Number(value || 0);
-      if (!Number.isFinite(amount)) return '0 美元';
-      if (Math.abs(amount) >= 100000000) return `${(amount / 100000000).toFixed(2)} 亿美元`;
-      if (Math.abs(amount) >= 10000) return `${(amount / 10000).toFixed(2)} 万美元`;
-      return `${fmt(Math.round(amount))} 美元`;
+      if (!Number.isFinite(amount)) return { number: '0', unit: '美元' };
+      if (Math.abs(amount) >= 100000000) return { number: (amount / 100000000).toFixed(2), unit: '亿美元' };
+      if (Math.abs(amount) >= 10000) return { number: (amount / 10000).toFixed(2), unit: '万美元' };
+      return { number: fmt(Math.round(amount)), unit: '美元' };
+    }
+    function fmtMoney(value) {
+      const parts = moneyParts(value);
+      return `${parts.number} ${parts.unit}`;
+    }
+    function fmtMoneyHtml(value) {
+      const parts = moneyParts(value);
+      return `<span class="j-finance-number">${esc(parts.number)}</span><span class="j-finance-unit">${esc(parts.unit)}</span>`;
+    }
+    function niceHoldingAxisStep(maxWan, targetTicks = 3) {
+      const value = Number(maxWan || 0);
+      if (!Number.isFinite(value) || value <= 0) return 1;
+      const rough = value / targetTicks;
+      const magnitude = Math.pow(10, Math.floor(Math.log10(rough)));
+      const steps = [1, 2, 2.5, 5, 10];
+      const picked = steps.find(step => step * magnitude >= rough) || 10;
+      return picked * magnitude;
+    }
+    function formatHoldingAxisTick(value) {
+      const amount = Number(value || 0);
+      if (!Number.isFinite(amount)) return '0';
+      if (amount >= 10000) {
+        const yi = amount / 10000;
+        return `${Number.isInteger(yi) ? yi.toFixed(0) : yi.toFixed(1)}亿`;
+      }
+      return String(Math.round(amount));
     }
     function fmtOptionalMoney(value) {
       const amount = Number(value || 0);
       if (!Number.isFinite(amount) || amount <= 0) return '—';
       return fmtMoney(amount);
+    }
+    function fmtOptionalMoneyHtml(value) {
+      const amount = Number(value || 0);
+      if (!Number.isFinite(amount) || amount <= 0) return '—';
+      return fmtMoneyHtml(amount);
     }
     function fmtMoneyRange(value) {
       const text = String(value || '').trim();
@@ -478,6 +3617,32 @@
       }
       return fmt(nums[0]);
     }
+    function compactMoneyScale(amount) {
+      const value = Math.abs(Number(amount || 0));
+      if (value >= 100000000) return { divisor: 100000000, unit: '亿' };
+      if (value >= 10000) return { divisor: 10000, unit: '万' };
+      return { divisor: 1, unit: '' };
+    }
+    function scaledMoneyNumber(amount, scale) {
+      if (!scale.unit) return fmt(Math.round(Number(amount || 0)));
+      return (Number(amount || 0) / scale.divisor).toFixed(1);
+    }
+    function fmtMoneyRangeCompact(value) {
+      const text = String(value || '').trim();
+      if (!text) return '';
+      const normalized = text.replace(/,/g, '');
+      const nums = [...normalized.matchAll(/\$?\s*(\d+)/g)].map(match => Number(match[1]));
+      if (!nums.length) return text;
+      const max = Math.max(...nums.map(num => Math.abs(num)));
+      const scale = compactMoneyScale(max);
+      if (/^over\b/i.test(normalized) && nums[0]) {
+        return `超过 ${scaledMoneyNumber(nums[0], scale)}${scale.unit}`;
+      }
+      if (nums.length >= 2) {
+        return `${scaledMoneyNumber(nums[0], scale)} - ${scaledMoneyNumber(nums[1], scale)}${scale.unit}`;
+      }
+      return `${scaledMoneyNumber(nums[0], scale)}${scale.unit}`;
+    }
     function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     function jsArg(s) { return JSON.stringify(String(s ?? '')).replace(/</g, '\\u003c'); }
     function shortName(name, max = 58) { const s = String(name || ''); return s.length > max ? s.slice(0, max - 1) + '…' : s; }
@@ -489,7 +3654,8 @@
     }
     function setStatus(ok, text) {
       const el = document.getElementById('connectionStatus');
-      el.innerHTML = `<span class="dot ${ok ? 'ok' : 'bad'}"></span><span>${esc(text)}</span>`;
+      if (!el) return;
+      el.innerHTML = `<span class="connection-badge ${ok ? 'connection-badge--ok' : 'connection-badge--bad'}">${esc(text)}</span>`;
     }
     function translateAction(value) {
       const text = String(value || '').toLowerCase();
@@ -506,21 +3672,42 @@
       return value || '';
     }
     function setActiveNav(key) {
-      document.querySelectorAll('.nav button[data-nav]').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.nav === key);
+      document.querySelectorAll('.section-switch button[data-view]').forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.view === key);
       });
     }
-    function showHomeSections() {
-      document.querySelectorAll('.home-section').forEach(section => section.classList.remove('hidden'));
+    function setDetailPageMode(enabled, title = '推算持仓状态') {
+      document.querySelector('.page')?.classList.toggle('is-detail-page', enabled);
+      const navTitle = document.querySelector('.j-nav-fixed__title');
+      if (navTitle) navTitle.textContent = enabled ? title : '特朗普';
+    }
+    function goHome() {
+      closeHelp();
+      closeTradeDatePicker();
+      closeSelectSheet();
+      showHomeSection('holdings', 'holdings', false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function showHomeSections(activeView = 'holdings') {
+      setDetailPageMode(false);
       document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
+      document.querySelectorAll('.home-section').forEach(section => {
+        section.classList.toggle('hidden', section.dataset.homeView !== activeView);
+      });
     }
     function hideHomeSections() {
       document.querySelectorAll('.home-section').forEach(section => section.classList.add('hidden'));
     }
-    function scrollHomeSection(id, navKey) {
-      showHomeSections();
+    function showHomeSection(view, navKey = view, shouldScroll = true) {
+      showHomeSections(view);
       setActiveNav(navKey);
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (shouldScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function scrollHomeSection(view, navKey = view) {
+      showHomeSection(view, navKey);
+    }
+    function switchHomeView(view) {
+      showHomeSection(view, view);
     }
     function confidenceClass(value) {
       const text = String(value || '');
@@ -538,13 +3725,238 @@
     function openHelp(key) {
       const item = HELP_TEXT[key];
       if (!item) return;
+      closeTradeDatePicker();
+      closeSelectSheet();
       document.getElementById('helpTitle').textContent = item.title;
       document.getElementById('helpBody').textContent = item.body;
       document.getElementById('helpModal').classList.add('open');
+      document.body.classList.add('sheet-open');
     }
 
     function closeHelp() {
       document.getElementById('helpModal').classList.remove('open');
+      document.body.classList.remove('sheet-open');
+    }
+
+    const tradeDatePickerState = {
+      target: 'start',
+      draft: { year: 2026, month: 1, day: 1 }
+    };
+    const tradeDatePickerScrollTimers = {};
+
+    function pad2(value) {
+      return String(value).padStart(2, '0');
+    }
+
+    function tradeDateDisplayValue(value) {
+      return value ? String(value).replace(/-/g, '/') : '';
+    }
+
+    function updateTradeDateTrigger(target) {
+      const input = document.getElementById(target === 'end' ? 'tradeEndDate' : 'tradeStartDate');
+      const text = document.getElementById(target === 'end' ? 'tradeEndDateText' : 'tradeStartDateText');
+      if (!input || !text) return;
+      text.textContent = tradeDateDisplayValue(input.value) || (target === 'end' ? '结束交易日' : '开始交易日');
+    }
+
+    function updateTradeDateTriggers() {
+      updateTradeDateTrigger('start');
+      updateTradeDateTrigger('end');
+    }
+
+    function parseTradeDateParts(value, fallback) {
+      const match = String(value || '').match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
+      let date = null;
+      if (match) date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+      if (!date || Number.isNaN(date.getTime())) date = fallback instanceof Date ? fallback : new Date();
+      return { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
+    }
+
+    function daysInTradeMonth(year, month) {
+      return new Date(year, month, 0).getDate();
+    }
+
+    function clampTradeDateDraft() {
+      const maxDay = daysInTradeMonth(tradeDatePickerState.draft.year, tradeDatePickerState.draft.month);
+      tradeDatePickerState.draft.day = Math.min(tradeDatePickerState.draft.day, maxDay);
+    }
+
+    function tradeDateInput(target = tradeDatePickerState.target) {
+      return document.getElementById(target === 'end' ? 'tradeEndDate' : 'tradeStartDate');
+    }
+
+    function latestTradeDateFallback() {
+      const latest = allTrades.reduce((max, row) => Math.max(max, dateValue(row)), 0);
+      return latest ? new Date(latest) : new Date();
+    }
+
+    function tradeDateYearOptions() {
+      const years = allTrades
+        .map(row => new Date(dateValue(row)).getFullYear())
+        .filter(Number.isFinite);
+      years.push(tradeDatePickerState.draft.year);
+      const min = Math.max(1990, Math.min(...years) - 1);
+      const max = Math.min(2099, Math.max(...years));
+      return Array.from({ length: max - min + 1 }, (_, index) => min + index);
+    }
+
+    function datePickerColumn(part, values, formatter) {
+      const current = tradeDatePickerState.draft[part];
+      return `<div class="date-picker-column" data-picker-column="${part}" onscroll="syncTradeDatePickerColumn(this)">
+        ${values.map(value => {
+          const distance = Math.abs(Number(value) - Number(current));
+          const klass = value === current ? ' is-selected' : distance === 1 ? ' is-near' : '';
+          return `<button class="date-picker-option${klass}" type="button" data-picker-value="${value}" onclick="setTradeDatePickerPart('${part}', ${value})">${formatter(value)}</button>`;
+        }).join('')}
+      </div>`;
+    }
+
+    function renderTradeDatePicker() {
+      clampTradeDateDraft();
+      const years = tradeDateYearOptions();
+      const months = Array.from({ length: 12 }, (_, index) => index + 1);
+      const days = Array.from({ length: daysInTradeMonth(tradeDatePickerState.draft.year, tradeDatePickerState.draft.month) }, (_, index) => index + 1);
+      const wheel = document.getElementById('tradeDatePickerWheel');
+      if (!wheel) return;
+      wheel.innerHTML = `
+        ${datePickerColumn('year', years, year => `${year}年`)}
+        ${datePickerColumn('month', months, month => `${pad2(month)}月`)}
+        ${datePickerColumn('day', days, day => `${pad2(day)}日`)}
+      `;
+      requestAnimationFrame(() => {
+        wheel.querySelectorAll('.date-picker-column').forEach(column => {
+          const selected = column.querySelector('.date-picker-option.is-selected');
+          if (selected) column.scrollTop = selected.offsetTop - (column.clientHeight - selected.offsetHeight) / 2;
+        });
+      });
+    }
+
+    function setTradeDatePickerPart(part, value) {
+      tradeDatePickerState.draft[part] = Number(value);
+      renderTradeDatePicker();
+    }
+
+    function centeredTradeDatePickerValue(column) {
+      const options = [...(column?.querySelectorAll('.date-picker-option') || [])];
+      const center = (column?.scrollTop || 0) + (column?.clientHeight || 0) / 2;
+      const selected = options.reduce((nearest, option) => {
+        const optionCenter = option.offsetTop + option.offsetHeight / 2;
+        const distance = Math.abs(optionCenter - center);
+        return !nearest || distance < nearest.distance ? { option, distance } : nearest;
+      }, null)?.option;
+      return Number(selected?.dataset?.pickerValue);
+    }
+
+    function commitTradeDatePickerColumn(column, shouldRender = true) {
+      const part = column?.dataset?.pickerColumn;
+      if (!part) return false;
+      const value = centeredTradeDatePickerValue(column);
+      if (!Number.isFinite(value) || tradeDatePickerState.draft[part] === value) return false;
+      tradeDatePickerState.draft[part] = value;
+      if (shouldRender) renderTradeDatePicker();
+      return true;
+    }
+
+    function syncTradeDatePickerColumn(column) {
+      const part = column?.dataset?.pickerColumn;
+      if (!part) return;
+      window.clearTimeout(tradeDatePickerScrollTimers[part]);
+      tradeDatePickerScrollTimers[part] = window.setTimeout(() => {
+        commitTradeDatePickerColumn(column);
+      }, 80);
+    }
+
+    function readTradeDatePickerWheel() {
+      const wheel = document.getElementById('tradeDatePickerWheel');
+      if (!wheel) return;
+      wheel.querySelectorAll('.date-picker-column').forEach(column => {
+        commitTradeDatePickerColumn(column, false);
+      });
+    }
+
+    function openTradeDatePicker(target) {
+      closeHelp();
+      closeSelectSheet();
+      tradeDatePickerState.target = target === 'end' ? 'end' : 'start';
+      tradeDatePickerState.draft = parseTradeDateParts(tradeDateInput(tradeDatePickerState.target)?.value, latestTradeDateFallback());
+      renderTradeDatePicker();
+      document.getElementById('tradeDatePicker')?.classList.add('open');
+      document.body.classList.add('sheet-open');
+    }
+
+    function closeTradeDatePicker() {
+      document.getElementById('tradeDatePicker')?.classList.remove('open');
+      document.body.classList.remove('sheet-open');
+    }
+
+    function confirmTradeDatePicker() {
+      readTradeDatePickerWheel();
+      clampTradeDateDraft();
+      const { year, month, day } = tradeDatePickerState.draft;
+      const input = tradeDateInput();
+      if (input) input.value = `${year}-${pad2(month)}-${pad2(day)}`;
+      normalizeTradeDateRange(tradeDatePickerState.target);
+      updateTradeDateTriggers();
+      closeTradeDatePicker();
+      applyTradeDateFilters();
+    }
+
+    const CUSTOM_SELECT_IDS = ['inferredConcept', 'inferredStatus', 'inferredSort'];
+    const CUSTOM_SELECT_TITLES = {
+      inferredConcept: '选择主题',
+      inferredStatus: '选择状态',
+      inferredSort: '排序方式'
+    };
+
+    function syncSelectTrigger(id) {
+      const select = document.getElementById(id);
+      const text = document.getElementById(`${id}Text`);
+      if (!select || !text) return;
+      text.textContent = select.options[select.selectedIndex]?.textContent || '';
+    }
+
+    function syncSelectTriggers() {
+      CUSTOM_SELECT_IDS.forEach(syncSelectTrigger);
+    }
+
+    function openSelectSheet(id) {
+      const select = document.getElementById(id);
+      const modal = document.getElementById('selectSheet');
+      const list = document.getElementById('selectSheetOptions');
+      const title = document.getElementById('selectSheetTitle');
+      if (!select || !modal || !list || !title) return;
+      closeHelp();
+      closeTradeDatePicker();
+      title.textContent = CUSTOM_SELECT_TITLES[id] || '请选择';
+      list.innerHTML = [...select.options].map(option => {
+        const selected = option.value === select.value;
+        return `<button class="select-sheet-option${selected ? ' is-selected' : ''}" type="button" data-select-id="${esc(id)}" data-select-value="${esc(option.value)}" onclick="selectSheetOptionFromButton(this)">
+          <span class="select-sheet-check" aria-hidden="true"></span>
+          <span>${esc(option.textContent)}</span>
+        </button>`;
+      }).join('');
+      modal.classList.add('open');
+      document.body.classList.add('sheet-open');
+    }
+
+    function closeSelectSheet(event) {
+      if (event && event.target !== event.currentTarget) return;
+      document.getElementById('selectSheet')?.classList.remove('open');
+      document.body.classList.remove('sheet-open');
+    }
+
+    function selectSheetOptionFromButton(button) {
+      if (!button) return;
+      selectSheetOption(button.dataset.selectId || '', button.dataset.selectValue || '');
+    }
+
+    function selectSheetOption(id, value) {
+      const select = document.getElementById(id);
+      if (!select) return;
+      select.value = value;
+      syncSelectTrigger(id);
+      closeSelectSheet();
+      if (id.startsWith('inferred')) applyInferredFilters(true);
     }
 
     function normalizedAssetName(value) {
@@ -563,6 +3975,118 @@
         `data-asset-name="${esc(cleanTradeAsset(row.asset_name))}"`,
         `data-asset-ticker="${esc(row.ticker || '')}"`
       ].join(' ');
+    }
+
+    const ASSET_DISPLAY_NAMES = {
+      AAPL: '苹果',
+      A: '安捷伦科技',
+      ABBV: '艾伯维',
+      ACN: '埃森哲',
+      ACI: '艾伯森',
+      ALNY: '阿尔尼拉姆制药',
+      AMD: 'AMD',
+      ARE: '亚历山大房地产REIT',
+      NVDA: '英伟达',
+      GOOGL: '谷歌A',
+      GOOG: '谷歌C',
+      AVGO: '博通',
+      AMZN: '亚马逊',
+      MSFT: '微软',
+      META: 'Meta',
+      JPM: '摩根大通',
+      TSLA: '特斯拉',
+      GS: '高盛',
+      TMO: '赛默飞世尔',
+      CCL: '嘉年华',
+      YUM: '百胜餐饮',
+      TRV: '旅行者保险',
+      SNOW: 'Snowflake',
+      PNC: 'PNC金融',
+      KEY: 'KeyCorp',
+      BAC: '美国银行',
+      HD: '家得宝',
+      V: 'Visa',
+      WFC: '富国银行',
+      XOM: '埃克森美孚',
+      JNJ: '强生',
+      NFLX: '奈飞',
+      'BRK.B': '伯克希尔',
+      GE: 'GE航空航天',
+      QCOM: '高通',
+      WMT: '沃尔玛',
+      MRK: '默沙东',
+      LLY: '礼来',
+      KO: '可口可乐',
+      CVX: '雪佛龙',
+      C: '花旗',
+      UNH: '联合健康',
+      BA: '波音',
+      PLTR: '帕兰蒂尔',
+      VIG: '先锋股息增值ETF',
+      SPY: '标普500ETF',
+      SPYM: 'SPDR标普500',
+      IGM: 'iShares科技',
+      SPHQ: '景顺质量ETF'
+    };
+
+    const ASSET_LOGOS = {
+      AAPL: 'https://logo.clearbit.com/apple.com',
+      NVDA: 'https://logo.clearbit.com/nvidia.com',
+      GOOGL: 'https://logo.clearbit.com/abc.xyz',
+      GOOG: 'https://logo.clearbit.com/abc.xyz',
+      AVGO: 'https://logo.clearbit.com/broadcom.com',
+      AMZN: 'https://logo.clearbit.com/amazon.com',
+      MSFT: 'https://logo.clearbit.com/microsoft.com',
+      META: 'https://logo.clearbit.com/meta.com',
+      JPM: 'https://logo.clearbit.com/jpmorganchase.com',
+      TSLA: 'https://logo.clearbit.com/tesla.com',
+      GS: 'https://logo.clearbit.com/goldmansachs.com',
+      SPYM: 'https://logo.clearbit.com/ssga.com',
+      IGM: 'https://logo.clearbit.com/ishares.com',
+      SPHQ: 'https://logo.clearbit.com/invesco.com'
+    };
+
+    const ASSET_LOGO_COLORS = {
+      AAPL: '#111111',
+      NVDA: '#76B900',
+      GOOGL: '#4285F4',
+      GOOG: '#4285F4',
+      AVGO: '#C41230',
+      AMZN: '#FF9900',
+      MSFT: '#00A4EF',
+      META: '#0866FF',
+      JPM: '#6B7280',
+      TSLA: '#E82127',
+      GS: '#7399C6'
+    };
+
+    function assetDisplayName(row) {
+      const ticker = String(row.ticker || '').toUpperCase();
+      return ASSET_DISPLAY_NAMES[ticker] || cleanTradeAsset(row.asset_name);
+    }
+
+    function assetLogoHtml(row) {
+      const ticker = String(row.ticker || '').toUpperCase();
+      const sourceName = cleanTradeAsset(row.asset_name);
+      const fallback = (assetDisplayName(row) || ticker || sourceName || '?').slice(0, 1).toUpperCase();
+      const logo = ASSET_LOGOS[ticker];
+      const color = ASSET_LOGO_COLORS[ticker] || '#8A5D26';
+      if (!logo) {
+        return `<span class="holding-rank-logo holding-rank-logo--fallback" style="--logo-bg:${color};"><span>${esc(fallback)}</span></span>`;
+      }
+      return `<span class="holding-rank-logo" style="--logo-bg:${color};"><img src="${esc(logo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onload="this.closest('.holding-rank-logo').classList.add('holding-rank-logo--loaded');" onerror="this.closest('.holding-rank-logo').classList.add('holding-rank-logo--fallback'); this.remove();"><span>${esc(fallback)}</span></span>`;
+    }
+
+    function assetTitleLogoHtml(row) {
+      const ticker = String(row.ticker || '').toUpperCase();
+      const sourceName = cleanTradeAsset(row.asset_name);
+      const fallback = (assetDisplayName(row) || ticker || sourceName || '?').slice(0, 1).toUpperCase();
+      const logo = ASSET_LOGOS[ticker];
+      const color = ASSET_LOGO_COLORS[ticker] || '#8A5D26';
+      if (!logo) {
+        return `<span class="asset-title-logo asset-title-logo--fallback" style="--logo-bg:${color};"><span>${esc(fallback)}</span></span>`;
+      }
+      return `<span class="asset-title-logo" style="--logo-bg:${color};"><img src="${esc(logo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onload="this.closest('.asset-title-logo').classList.add('asset-title-logo--loaded');" onerror="this.closest('.asset-title-logo').classList.add('asset-title-logo--fallback'); this.remove();"><span>${esc(fallback)}</span></span>`;
     }
 
     function selectAssetFromElement(element) {
@@ -587,27 +4111,57 @@
       const topRows = [...rows]
         .sort((a, b) => inferredExposure(b) - inferredExposure(a))
         .slice(0, 10);
-      const totalTopExposure = topRows.reduce((sum, row) => sum + inferredExposure(row), 0) || 1;
+      const maxExposure = Math.max(...topRows.map(row => inferredExposure(row)), 1);
+      const maxWan = maxExposure / 10000;
+      const stepWan = niceHoldingAxisStep(maxWan);
+      const axisMaxWan = stepWan * Math.ceil(maxWan / stepWan);
+      const ticks = [];
+      for (let tick = 0; tick <= axisMaxWan + stepWan / 2; tick += stepWan) ticks.push(tick);
+      const labelTicks = ticks.filter(tick => tick > 0);
+      const topColors = ['#9F6B41', '#9F6B41', '#9F6B41'];
       if (!topRows.length) {
         document.getElementById('topHoldings').innerHTML = '<div class="empty">暂无推算持仓数据。</div>';
         return;
       }
-      document.getElementById('topHoldings').innerHTML = topRows.map((row, index) => {
+      const rowsHtml = topRows.map((row, index) => {
         const exposure = inferredExposure(row);
-        const share = exposure / totalTopExposure * 100;
-        const subtitle = [
-          row.ticker || row.asset_category || '—',
-          row.inferred_status || ''
-        ].filter(Boolean).join(' · ');
+        const share = exposure / maxExposure * 100;
+        const barColor = topColors[index] || '#9F6B41';
+        const valueColor = topColors[index] || '#9F6B41';
+        const indexColor = topColors[index] || '#A6A6A6';
+        const assetName = assetDisplayName(row);
+        const assetTitle = cleanTradeAsset(row.asset_name);
+        const code = row.ticker || row.asset_category || '—';
+        const rank = String(index + 1).padStart(2, '0');
         return `
-        <article class="holding-card" role="button" tabindex="0" ${assetDataAttrs(row)} onclick="selectAssetFromElement(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); selectAssetFromElement(this);}">
-          <div class="rank">${String(index + 1).padStart(2, '0')}</div>
-          <strong title="${esc(row.asset_name)}">${assetLink(row, shortName(row.asset_name))}</strong>
-          <div class="holding-meta"><span>${esc(subtitle)}</span><span class="range">${fmtMoney(exposure)}</span></div>
-          <div class="bar"><span style="width:${Math.max(8, Math.min(100, share))}%"></span></div>
-        </article>
+          <div class="holding-rank-row" ${assetDataAttrs(row)} style="--bar-color:${barColor};--value-color:${valueColor};--rank-index-color:${indexColor};" role="button" tabindex="0" onclick="selectAssetFromElement(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); selectAssetFromElement(this);}">
+            <span class="holding-rank-label">
+              <span class="holding-rank-index">${rank}</span>
+              ${assetLogoHtml(row)}
+              <button class="asset-link holding-rank-name" ${assetDataAttrs(row)} title="${esc(assetTitle)}" onclick="event.stopPropagation(); selectAssetFromElement(this)">${esc(assetName)}</button>
+              <span class="holding-rank-code">${esc(code)}</span>
+            </span>
+            <span class="holding-rank-bar-track">
+              <span class="holding-rank-bar" style="width:${Math.max(3, Math.min(100, share))}%"></span>
+              <span class="holding-rank-value">${fmtMoneyHtml(exposure)}</span>
+            </span>
+          </div>
       `;
       }).join('');
+      const axisHtml = `
+        <div class="holding-rank-axis" aria-hidden="true">
+          <span class="holding-rank-axis-track">
+            <span class="holding-rank-axis-ticks">
+              ${ticks.map(tick => `<span style="left:${(tick / axisMaxWan) * 100}%"></span>`).join('')}
+            </span>
+            <span class="holding-rank-axis-labels">
+              ${labelTicks.map(tick => `<span style="left:${(tick / axisMaxWan) * 100}%">${formatHoldingAxisTick(tick)}</span>`).join('')}
+            </span>
+          </span>
+        </div>
+      `;
+      const brandHtml = '<img class="holding-rank-brand" src="../assets/jinshi-data-logo.svg" alt="" aria-hidden="true">';
+      document.getElementById('topHoldings').innerHTML = `<div class="holding-rank-rows">${rowsHtml}</div>${axisHtml}${brandHtml}`;
     }
 
     function renderConceptSummary(positions) {
@@ -626,43 +4180,88 @@
       const rows = [...conceptTotals.entries()]
         .map(([concept, midpoint_volume]) => ({ concept, midpoint_volume }))
         .sort((a, b) => b.midpoint_volume - a.midpoint_volume);
-      const palette = ['#2f6df6', '#19b98f', '#f4a21c', '#ee5353', '#7357f6', '#10a7c9', '#6fba2c', '#8b887f'];
+      const palette = [
+        'rgba(255, 105, 24, 0.86)',
+        'rgba(255, 213, 97, 0.94)',
+        'rgba(221, 187, 152, 0.96)',
+        'rgba(154, 188, 172, 0.95)',
+        'rgba(80, 111, 153, 0.92)',
+        'rgba(191, 95, 76, 0.9)',
+        'rgba(123, 212, 207, 0.88)',
+        'rgba(158, 158, 158, 0.9)'
+      ];
       const visible = rows.slice(0, 7).map((row, index) => ({
         label: row.concept,
         value: Number(row.midpoint_volume || 0),
         color: palette[index % palette.length]
       })).filter(row => row.value > 0);
       const rest = rows.slice(7).reduce((sum, row) => sum + Number(row.midpoint_volume || 0), 0);
-      if (rest > 0) visible.push({ label: '其他主题', value: rest, color: '#9a958a' });
+      if (rest > 0) visible.push({ label: '其他主题', value: rest, color: 'rgba(158, 158, 158, 0.9)' });
       const total = visible.reduce((sum, row) => sum + row.value, 0) || 1;
       const cx = 120;
       const cy = 120;
-      const radius = 104;
-      let angle = -90;
+      const radius = 88;
+      const stroke = 28;
+      const circumference = 2 * Math.PI * radius;
+      let offset = 0;
       const segments = visible.map((row, index) => {
-        const span = Math.max(3, row.value / total * 360);
-        const start = angle;
-        const end = index === visible.length - 1 ? 270 : Math.min(270, angle + span);
-        angle = end;
-        return `<path d="${pieSegment(cx, cy, radius, start, end)}" fill="${row.color}"></path>`;
+        const arc = index === visible.length - 1
+          ? Math.max(0, circumference - offset)
+          : Math.max(3, row.value / total * circumference);
+        const gap = visible.length > 1 ? 3 : 0;
+        const dash = `${Math.max(0, arc - gap)} ${circumference}`;
+        const pct = Math.round(row.value / total * 100);
+        const tip = `${row.label}：${fmtMoney(row.value)} · ${pct}%`;
+        const segment = `<circle class="donut-ring-segment" cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${row.color}" stroke-width="${stroke}" stroke-dasharray="${dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})" data-tip="${esc(tip)}" tabindex="0" onpointerenter="showDonutTooltip(event)" onpointermove="moveDonutTooltip(event)" onpointerleave="hideDonutTooltip(event)" onfocus="showDonutTooltip(event)" onblur="hideDonutTooltip(event)" onclick="showDonutTooltip(event)"></circle>`;
+        offset += arc;
+        return segment;
       }).join('');
       const legend = visible.map(row => {
-        const pct = Math.round(row.value / total * 100);
         return `<div class="legend-row">
           <i class="legend-dot" style="background:${row.color}"></i>
           <strong title="${esc(row.label)}">${esc(row.label)}</strong>
-          <span>${pct}% · ${fmtMoney(row.value)}</span>
         </div>`;
       }).join('');
       target.innerHTML = `
         <div class="donut-wrap">
-          <svg class="donut-chart" viewBox="0 0 240 240" aria-label="投资主题占比">
-            ${segments}
-          </svg>
-          <div class="donut-total"><strong>${fmtMoney(total)}</strong>估算合计</div>
+          <div class="donut-visual">
+            <svg class="donut-chart donut-chart--ring" viewBox="0 0 240 240" aria-label="投资主题占比">
+              <circle class="donut-ring-bg" cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke-width="${stroke}"></circle>
+              ${segments}
+            </svg>
+            <span class="donut-avatar" aria-hidden="true"><img src="../assets/trump-donut-portrait.png" alt="" loading="lazy"></span>
+            <span class="donut-tooltip" role="status" aria-live="polite"></span>
+          </div>
+          <div class="donut-total"><strong>${fmtMoneyHtml(total)}</strong>估算合计</div>
         </div>
         <div class="theme-legend">${legend}</div>
       `;
+    }
+
+    function showDonutTooltip(event) {
+      const visual = event.currentTarget.closest('.donut-visual');
+      const tooltip = visual?.querySelector('.donut-tooltip');
+      const text = event.currentTarget.dataset.tip || '';
+      if (!tooltip || !text) return;
+      tooltip.textContent = text;
+      tooltip.classList.add('is-visible');
+      moveDonutTooltip(event);
+    }
+
+    function moveDonutTooltip(event) {
+      const visual = event.currentTarget.closest('.donut-visual');
+      const tooltip = visual?.querySelector('.donut-tooltip');
+      if (!visual || !tooltip) return;
+      const rect = visual.getBoundingClientRect();
+      const x = Number.isFinite(event.clientX) && event.clientX > 0 ? event.clientX - rect.left : rect.width / 2;
+      const y = Number.isFinite(event.clientY) && event.clientY > 0 ? event.clientY - rect.top : rect.height / 2;
+      tooltip.style.left = `${Math.max(16, Math.min(rect.width - 16, x))}px`;
+      tooltip.style.top = `${Math.max(20, Math.min(rect.height - 12, y - 10))}px`;
+    }
+
+    function hideDonutTooltip(event) {
+      const visual = event.currentTarget.closest('.donut-visual');
+      visual?.querySelector('.donut-tooltip')?.classList.remove('is-visible');
     }
 
     function polarPoint(cx, cy, radius, angle) {
@@ -681,20 +4280,31 @@
     }
 
     function renderTrades(rows) {
-      const previewRows = [...rows].sort(assetTradeSort).slice(0, 10);
+      const filteredRows = tradeRowsInDateRange(rows).sort(assetTradeSort);
+      const previewRows = filteredRows.slice(0, tradeVisibleLimit);
+      updateTradeLoadMore(filteredRows.length, previewRows.length);
       document.getElementById('tradeRows').innerHTML = previewRows.length ? previewRows.map(row => {
         const kind = String(row.transaction_type || '').toLowerCase();
         const tagClass = kind.includes('sale') ? 'sell' : kind.includes('purchase') ? 'buy' : '';
+        const actionLabel = translateAction(row.transaction_type);
+        const conceptLabel = row.concept || '其他';
         return `<tr>
-          <td class="name">${assetLink(row, cleanTradeAsset(row.asset_name))}</td>
-          <td>${esc(row.ticker || '—')}</td>
-          <td><span class="tag">${esc(row.concept || '其他')}</span></td>
-          <td><span class="tag ${tagClass}">${esc(translateAction(row.transaction_type))}</span></td>
-          <td>${esc(row.transaction_date || '')}</td>
-          <td>${esc(fmtMoneyRange(row.amount_range || ''))}</td>
+          <td class="trade-date-cell">${esc(formatTradeDate(row.transaction_date))}</td>
+          <td class="name trade-asset-cell">
+            ${assetLink(row, assetDisplayName(row))}
+            <span class="asset-table-meta">
+              <span class="asset-table-tags"><span class="tag">${esc(conceptLabel)}</span></span>
+            </span>
+          </td>
+          <td>
+            <span class="trade-action-amount">
+              <span class="tag ${tagClass}">${esc(actionLabel)}</span>
+              <span class="trade-amount-value ${tagClass}">${esc(fmtMoneyRange(row.amount_range || ''))}</span>
+            </span>
+          </td>
           <td>${esc(String(row.filed_date || '').slice(0, 10))}</td>
         </tr>`;
-      }).join('') : '<tr><td colspan="7" class="empty">没有匹配交易。</td></tr>';
+      }).join('') : '<tr><td colspan="4" class="empty">没有匹配交易。</td></tr>';
     }
 
     function tradeSourceLabel(row) {
@@ -720,6 +4330,91 @@
         return new Date(y, m - 1, d).getTime();
       }
       return Date.parse(row.transaction_date || '') || 0;
+    }
+
+    function dateInputValue(date) {
+      if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '';
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function parseDateInputMs(value, isEnd = false) {
+      const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (!match) return NaN;
+      const [year, month, day] = match.slice(1).map(Number);
+      const date = isEnd
+        ? new Date(year, month - 1, day, 23, 59, 59, 999)
+        : new Date(year, month - 1, day);
+      return date.getTime();
+    }
+
+    function normalizeTradeDateRange(changedTarget) {
+      const startInput = document.getElementById('tradeStartDate');
+      const endInput = document.getElementById('tradeEndDate');
+      if (!startInput || !endInput || !startInput.value || !endInput.value) return;
+      const start = parseDateInputMs(startInput.value);
+      const end = parseDateInputMs(endInput.value, true);
+      if (!Number.isFinite(start) || !Number.isFinite(end) || start <= end) return;
+      if (changedTarget === 'end') {
+        startInput.value = endInput.value;
+      } else {
+        endInput.value = startInput.value;
+      }
+    }
+
+    function formatTradeDate(value) {
+      const parts = String(value || '').split('/');
+      if (parts.length === 3) {
+        const [m, d, y] = parts.map(Number);
+        if (y && m && d) return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      }
+      const parsed = Date.parse(value || '');
+      return parsed ? dateInputValue(new Date(parsed)) : value || '—';
+    }
+
+    function setupDefaultTradeDateRange(rows) {
+      const startInput = document.getElementById('tradeStartDate');
+      const endInput = document.getElementById('tradeEndDate');
+      if (!startInput || !endInput || !rows.length) return;
+      const latest = rows.reduce((max, row) => Math.max(max, dateValue(row)), 0);
+      if (!latest) return;
+      const end = new Date(latest);
+      const start = new Date(latest);
+      start.setMonth(start.getMonth() - 3);
+      startInput.value = dateInputValue(start);
+      endInput.value = dateInputValue(end);
+      updateTradeDateTriggers();
+    }
+
+    function tradeRowsInDateRange(rows) {
+      const startValue = document.getElementById('tradeStartDate')?.value || '';
+      const endValue = document.getElementById('tradeEndDate')?.value || '';
+      const start = startValue ? parseDateInputMs(startValue) : 0;
+      const end = endValue ? parseDateInputMs(endValue, true) : Number.POSITIVE_INFINITY;
+      return [...rows].filter(row => {
+        const value = dateValue(row);
+        return value && value >= start && value <= end;
+      });
+    }
+
+    function updateTradeLoadMore(total, visible) {
+      const actions = document.querySelector('#transactions .section-actions');
+      const button = document.getElementById('tradeLoadMore');
+      const hasMore = total > visible;
+      if (actions) actions.classList.toggle('hidden', !hasMore);
+      if (button) button.setAttribute('aria-label', `查看更多披露交易，当前显示 ${visible} / ${total} 条`);
+    }
+
+    function applyTradeDateFilters() {
+      tradeVisibleLimit = TRADE_INITIAL_LIMIT;
+      renderTrades(allTrades);
+    }
+
+    function loadMoreTrades() {
+      tradeVisibleLimit += TRADE_LOAD_STEP;
+      renderTrades(allTrades);
     }
 
     function filedDateValue(row) {
@@ -803,24 +4498,7 @@
     }
 
     function applyTradeFilters() {
-      const concept = document.getElementById('tradeConcept').value;
-      const action = document.getElementById('tradeAction').value;
-      const sort = document.getElementById('tradeSort').value;
-      let rows = allTrades.filter(row => {
-        if (concept && (row.concept || '其他') !== concept) return false;
-        if (action && translateAction(row.transaction_type) !== action) return false;
-        return true;
-      });
-      rows.sort((a, b) => {
-        if (sort === 'filed_asc') return filedDateValue(a) - filedDateValue(b) || dateValue(b) - dateValue(a);
-        if (sort === 'filed_desc') return filedDateValue(b) - filedDateValue(a) || dateValue(b) - dateValue(a);
-        if (sort === 'date_asc') return dateValue(a) - dateValue(b);
-        if (sort === 'amount_desc') return amountMid(b) - amountMid(a);
-        if (sort === 'amount_asc') return amountMid(a) - amountMid(b);
-        if (sort === 'asset_asc') return cleanTradeAsset(a.asset_name).localeCompare(cleanTradeAsset(b.asset_name), 'zh-Hans-CN');
-        return filedDateValue(b) - filedDateValue(a) || dateValue(b) - dateValue(a);
-      });
-      renderTrades(rows);
+      applyTradeDateFilters();
     }
 
     function renderHoldings(rows) {
@@ -863,81 +4541,108 @@
 
     function renderInferredPositions(rows) {
       const total = allInferredPositions.length;
-      document.getElementById('inferredSummary').textContent = rows.length
-        ? `当前显示 ${fmt(rows.length)} / ${fmt(total)} 项。估算金额均为官方披露区间中点汇总，不代表真实持仓金额或股数。`
-        : `当前筛选无匹配结果。总计 ${fmt(total)} 项推算资产。`;
-      document.getElementById('inferredRows').innerHTML = rows.length ? rows.map(row => `
+      const visibleRows = rows.slice(0, inferredVisibleLimit);
+      const summary = document.getElementById('inferredSummary');
+      if (summary) {
+        summary.textContent = rows.length
+          ? `当前显示 ${fmt(visibleRows.length)} / ${fmt(total)} 项。`
+          : `当前筛选无匹配结果。总计 ${fmt(total)} 项推算资产。`;
+      }
+      document.getElementById('inferredRows').innerHTML = visibleRows.length ? visibleRows.map((row, index) => `
         <tr>
-          <td class="name">${assetLink(row, row.asset_name)}</td>
-          <td>${esc(row.ticker || '—')}</td>
-          <td><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></td>
-          <td class="numeric strong-money">${fmtMoney(inferredExposure(row))}</td>
+          <td class="name trade-asset-cell">
+            <span class="ranked-asset-cell">
+              <span class="asset-table-rank">${String(index + 1).padStart(2, '0')}</span>
+              <span class="asset-table-main">
+                ${assetLink(row, assetDisplayName(row))}
+                <span class="asset-table-meta">
+                  <span class="asset-table-code">${esc(row.ticker || '—')}</span>
+                  <span class="asset-table-tags"><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></span>
+                </span>
+              </span>
+            </span>
+          </td>
+          <td class="numeric">${fmtOptionalMoney(inferredExposure(row))}</td>
           <td>${esc(row.last_trade_type ? translateAction(row.last_trade_type) + ' ' + row.last_trade_date : '—')}</td>
           <td><span class="tag ${statusClass(row.inferred_status)}" title="披露口径推算状态，不等于实际账户持仓。">${esc(row.inferred_status)}</span></td>
-          <td><span class="tag ${confidenceClass(row.confidence_label)}" title="判断可靠程度，不代表投资胜率。">${esc(row.confidence_label)}</span></td>
         </tr>
-      `).join('') : '<tr><td colspan="7" class="empty">暂无推算结果。</td></tr>';
+      `).join('') : '<tr><td colspan="4" class="empty">暂无推算结果。</td></tr>';
+      const actions = document.querySelector('.inferred-load-actions');
+      const loadMore = document.getElementById('inferredLoadMore');
+      const hasMore = rows.length > visibleRows.length;
+      if (actions) actions.classList.toggle('hidden', !hasMore);
+      if (loadMore) {
+        loadMore.textContent = `查看更多`;
+        loadMore.setAttribute('aria-label', `查看更多推算持仓，当前显示 ${visibleRows.length} / ${rows.length} 项`);
+      }
     }
 
     function inferredRowHtml(row) {
       return `<tr>
-        <td class="name">${assetLink(row, row.asset_name)}</td>
-        <td>${esc(row.ticker || '—')}</td>
-        <td><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></td>
-        <td class="numeric strong-money">${fmtMoney(inferredExposure(row))}</td>
+        <td class="name trade-asset-cell">
+          ${assetLink(row, assetDisplayName(row))}
+          <span class="asset-table-meta">
+            <span class="asset-table-code">${esc(row.ticker || '—')}</span>
+            <span class="asset-table-tags"><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></span>
+          </span>
+        </td>
+        <td class="numeric">${fmtOptionalMoney(inferredExposure(row))}</td>
         <td>${esc(row.last_trade_type ? translateAction(row.last_trade_type) + ' ' + row.last_trade_date : '—')}</td>
         <td><span class="tag ${statusClass(row.inferred_status)}" title="披露口径推算状态，不等于实际账户持仓。">${esc(row.inferred_status)}</span></td>
-        <td><span class="tag ${confidenceClass(row.confidence_label)}" title="判断可靠程度，不代表投资胜率。">${esc(row.confidence_label)}</span></td>
       </tr>`;
     }
 
     function populateInferredFilters(rows) {
       const conceptSelect = document.getElementById('inferredConcept');
       const statusSelect = document.getElementById('inferredStatus');
-      const confidenceSelect = document.getElementById('inferredConfidence');
       const currentConcept = conceptSelect.value;
       const currentStatus = statusSelect.value;
-      const currentConfidence = confidenceSelect.value;
       const concepts = [...new Set(rows.map(row => row.concept || row.asset_category || '其他'))].sort((a, b) => a.localeCompare(b, 'zh-Hans-CN'));
       const statuses = [...new Set(rows.map(row => row.inferred_status || '状态不明'))];
-      const confidences = [...new Set(rows.map(row => row.confidence_label || '低'))];
       conceptSelect.innerHTML = '<option value="">全部主题</option>' + concepts.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
       statusSelect.innerHTML = '<option value="">全部状态</option>' + statuses.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
-      confidenceSelect.innerHTML = '<option value="">全部置信度</option>' + confidences.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
       conceptSelect.value = concepts.includes(currentConcept) ? currentConcept : '';
       statusSelect.value = statuses.includes(currentStatus) ? currentStatus : '';
-      confidenceSelect.value = confidences.includes(currentConfidence) ? currentConfidence : '';
+      syncSelectTriggers();
     }
 
     function setInferredSort(value) {
       const select = document.getElementById('inferredSort');
       select.value = value;
-      applyInferredFilters();
+      syncSelectTrigger('inferredSort');
+      applyInferredFilters(true);
     }
 
-    function applyInferredFilters() {
+    function applyInferredFilters(resetLimit = false) {
+      if (resetLimit) inferredVisibleLimit = INFERRED_INITIAL_LIMIT;
       const query = document.getElementById('inferredSearch').value.trim().toUpperCase();
       const concept = document.getElementById('inferredConcept').value;
       const status = document.getElementById('inferredStatus').value;
-      const confidence = document.getElementById('inferredConfidence').value;
       const sort = document.getElementById('inferredSort').value;
       let rows = allInferredPositions.filter(row => {
         const rowConcept = row.concept || row.asset_category || '其他';
         if (concept && rowConcept !== concept) return false;
         if (status && (row.inferred_status || '状态不明') !== status) return false;
-        if (confidence && (row.confidence_label || '低') !== confidence) return false;
         if (query) {
-          const haystack = [row.asset_name, row.ticker, rowConcept, row.inferred_status, row.confidence_label].join(' ').toUpperCase();
+          const haystack = [row.asset_name, row.ticker, rowConcept, row.inferred_status].join(' ').toUpperCase();
           if (!haystack.includes(query)) return false;
         }
         return true;
       });
       rows.sort((a, b) => {
+        if (sort === 'baseline_desc') return Number(b.baseline_midpoint || 0) - Number(a.baseline_midpoint || 0);
+        if (sort === 'purchase_desc') return Number(b.purchase_midpoint || 0) - Number(a.purchase_midpoint || 0);
+        if (sort === 'sale_desc') return Number(b.sale_midpoint || 0) - Number(a.sale_midpoint || 0);
         if (sort === 'recent_desc') return inferredDateValue(b) - inferredDateValue(a);
         if (sort === 'asset_asc') return String(a.asset_name || '').localeCompare(String(b.asset_name || ''), 'zh-Hans-CN');
         return inferredExposure(b) - inferredExposure(a);
       });
       renderInferredPositions(rows);
+    }
+
+    function loadMoreInferred() {
+      inferredVisibleLimit += INFERRED_LOAD_STEP;
+      applyInferredFilters(false);
     }
 
     function findPositionByKey(key, fallbackName, fallbackTicker) {
@@ -1010,7 +4715,7 @@
           <strong>${esc(row.asset_name || '未命名资产')}</strong>
           <span class="asset-choice-meta">
             <span>${esc([row.ticker || row.asset_category || '', row.inferred_status || ''].filter(Boolean).join(' · '))}</span>
-            <span class="asset-choice-money">${esc(fmtMoney(inferredExposure(row)))}</span>
+            <span class="asset-choice-money">${fmtMoneyHtml(inferredExposure(row))}</span>
           </span>
         </button>`;
     }
@@ -1024,7 +4729,7 @@
         : '<div class="empty">没有更多匹配资产。可以换一个代码或资产关键词试试。</div>';
     }
 
-    function renderAssetPicker(filterText = '') {
+    function renderAssetPicker(filterText = '', shouldFocus = false) {
       assetPickerQuery = String(filterText || '');
       const rows = assetPickerRows(filterText);
       const visibleRows = selectedAssetKey ? rows.filter(row => detailKey(row) !== selectedAssetKey) : rows;
@@ -1036,7 +4741,6 @@
           <div class="asset-picker-head">
             <div>
               <h3>选择资产</h3>
-              <p>默认展示披露规模估算最高的 12 项，也可以从首页卡片、推算持仓表或交易记录中点击任意资产名称。</p>
             </div>
             <input class="search" id="assetPickerSearch" placeholder="搜索资产名称或代码" value="${esc(filterText)}">
           </div>
@@ -1050,37 +4754,27 @@
         </div>`;
       const input = document.getElementById('assetPickerSearch');
       if (input) {
-        input.focus();
-        input.setSelectionRange(input.value.length, input.value.length);
-        input.addEventListener('input', event => renderAssetPicker(event.target.value));
+        if (shouldFocus) {
+          input.focus();
+          input.setSelectionRange(input.value.length, input.value.length);
+        }
+        input.addEventListener('input', event => renderAssetPicker(event.target.value, true));
       }
       return rows;
     }
 
-    function selectedAssetOverviewHtml(position, trades, detailId) {
+    function selectedAssetOverviewHtml(position, trades) {
       const exposure = inferredExposure(position);
-      const latest = position.last_trade_type ? `${translateAction(position.last_trade_type)} ${position.last_trade_date || ''}` : '—';
+      const displayName = assetDisplayName(position) || position.asset_name || '资产详情';
+      const ticker = String(position.ticker || '').trim().toUpperCase();
       return `
-        <div class="asset-detail-overview">
-          <div class="asset-detail-name selected-asset-card">
-            <div class="selected-asset-main">
-              <div class="asset-detail-tags">
-                <span class="tag">${esc(position.ticker || '暂无代码')}</span>
-                <span class="tag">${esc(position.asset_category || '资产')}</span>
-                <span class="tag">${esc(position.concept || '其他主题')}</span>
-                <span class="tag ${statusClass(position.inferred_status)}">${esc(position.inferred_status || '状态不明')}</span>
-                <span class="tag ${confidenceClass(position.confidence_label)}">置信度 ${esc(position.confidence_label || '低')}</span>
-              </div>
-              <h3>${esc(position.asset_name || '资产详情')}</h3>
-            </div>
-            <div class="asset-detail-kpis">
-              <div class="asset-kpi"><span>披露规模估算</span><strong>${fmtMoney(exposure)}</strong></div>
-              <div class="asset-kpi"><span>年报基准估算</span><strong>${fmtOptionalMoney(position.baseline_midpoint)}</strong></div>
-              <div class="asset-kpi"><span>买入区间估算</span><strong>${fmtOptionalMoney(position.purchase_midpoint)}</strong></div>
-              <div class="asset-kpi"><span>卖出区间估算</span><strong>${fmtOptionalMoney(position.sale_midpoint)}</strong></div>
-              <div class="asset-kpi"><span>最近交易</span><strong>${esc(latest)}</strong></div>
-              <div class="asset-kpi"><span>匹配披露</span><strong>${fmt(trades.length)} 条</strong></div>
-            </div>
+        <div class="asset-detail-overview selected-asset-summary">
+          <h3 class="selected-asset-title">${assetTitleLogoHtml(position)}<span class="selected-asset-name">${esc(displayName)}</span>${ticker ? `<span class="selected-asset-code">${esc(ticker)}</span>` : ''}</h3>
+          <div class="asset-detail-kpis">
+            <div class="asset-kpi"><span>推算披露规模</span><strong>${fmtMoneyHtml(exposure)}</strong></div>
+            <div class="asset-kpi"><span>年报基准估算</span><strong>${fmtOptionalMoneyHtml(position.baseline_midpoint)}</strong></div>
+            <div class="asset-kpi asset-kpi--buy"><span>买入区间估算</span><strong>${fmtOptionalMoneyHtml(position.purchase_midpoint)}</strong></div>
+            <div class="asset-kpi asset-kpi--sell"><span>卖出区间估算</span><strong>${fmtOptionalMoneyHtml(position.sale_midpoint)}</strong></div>
           </div>
         </div>`;
     }
@@ -1110,40 +4804,36 @@
       return mergeRowsById(results).filter(row => isSameAssetTrade(row, position));
     }
 
-    function timelineHtml(trades) {
+    function timelineHtml(trades, visibleLimit = ASSET_TIMELINE_INITIAL_LIMIT) {
       if (!trades.length) {
         return '<div class="no-chain">当前资产有推算持仓信息，但没有匹配到可展示交易链。常见原因包括：该资产只出现在年度持仓披露中、基金代码未出现在交易流水字段中，或原始披露名称与标准化名称差异较大。</div>';
       }
-      return `<div class="timeline">${[...trades].sort(assetTradeSort).slice(0, 8).map(row => {
+      const sortedTrades = [...trades].sort(assetTradeSort);
+      const visibleTrades = sortedTrades.slice(0, visibleLimit);
+      const timeline = `<div class="timeline">${visibleTrades.map(row => {
         const kind = String(row.transaction_type || '').toLowerCase();
         const tagClass = kind.includes('sale') ? 'sell' : kind.includes('purchase') ? 'buy' : '';
         return `
           <div class="timeline-item">
-            <span class="timeline-dot ${tagClass}"></span>
+            <span class="timeline-dot ${tagClass}" aria-hidden="true"></span>
             <div class="timeline-main">
-              <strong>${esc(translateAction(row.transaction_type))} · ${esc(row.transaction_date || '交易日未披露')}</strong>
-              <span>${esc(cleanTradeAsset(row.asset_name))} · 披露日 ${esc(String(row.filed_date || '').slice(0, 10) || '未披露')}</span>
+              <strong>${esc(formatTradeDate(row.transaction_date))}<span class="timeline-action tag ${tagClass}">${esc(translateAction(row.transaction_type))}</span></strong>
+              <span>披露日 ${esc(String(row.filed_date || '').slice(0, 10) || '未披露')}</span>
             </div>
-            <span class="tag ${tagClass}">${esc(fmtMoneyRange(row.amount_range || ''))}</span>
+            <span class="timeline-money tag ${tagClass}">${esc(fmtMoneyRangeCompact(row.amount_range || ''))}</span>
           </div>`;
       }).join('')}</div>`;
+      const loadMore = sortedTrades.length > visibleTrades.length
+        ? `<div class="section-actions asset-timeline-actions">
+            <button class="btn primary" id="assetTimelineLoadMore" type="button" aria-label="查看更多交易披露链，当前显示 ${fmt(visibleTrades.length)} / ${fmt(sortedTrades.length)} 条">查看更多</button>
+          </div>`
+        : '';
+      return timeline + loadMore;
     }
 
-    function toggleAssetTradeTable(button) {
-      const id = button?.dataset?.targetTable || '';
-      const table = document.getElementById(id);
-      if (!table) return;
-      const nextHidden = !table.classList.contains('hidden');
-      table.classList.toggle('hidden', nextHidden);
-      button.textContent = nextHidden ? '查看全部交易明细 >>' : '收起交易明细';
-    }
-
-    function renderAssetDetail(position, trades) {
+    function renderAssetDetail(position, trades, options = {}) {
+      if (options.resetTimeline !== false) assetTimelineVisibleLimit = ASSET_TIMELINE_INITIAL_LIMIT;
       selectedAssetKey = detailKey(position);
-      const exposure = inferredExposure(position);
-      const latest = position.last_trade_type ? `${translateAction(position.last_trade_type)} ${position.last_trade_date || ''}` : '—';
-      const sourceText = sourceBreakdown(trades);
-      const detailId = `assetTradeTable_${Math.random().toString(36).slice(2)}`;
       document.getElementById('assetDetailTitle').textContent = '资产交易详情';
       document.getElementById('assetDetailSubtitle').textContent = [
         `当前资产：${position.asset_name || '未命名资产'}`,
@@ -1153,61 +4843,38 @@
       ].filter(Boolean).join(' · ');
       document.getElementById('assetDetailBadge').textContent = position.ticker || position.asset_category || '资产详情';
       renderAssetChoiceGrid(assetPickerRows(assetPickerQuery));
-      const tradeRows = trades.length ? [...trades]
-        .sort(assetTradeSort)
-        .map(row => {
-          const kind = String(row.transaction_type || '').toLowerCase();
-          const tagClass = kind.includes('sale') ? 'sell' : kind.includes('purchase') ? 'buy' : '';
-          return `<tr>
-            <td><span class="tag">${esc(tradeSourceLabel(row))}</span></td>
-            <td class="name">${assetLink(position, position.asset_name)}</td>
-            <td><span class="tag ${tagClass}">${esc(translateAction(row.transaction_type))}</span></td>
-            <td>${esc(row.transaction_date || '')}</td>
-            <td>${esc(fmtMoneyRange(row.amount_range || ''))}</td>
-            <td>${esc(String(row.filed_date || '').slice(0, 10))}</td>
-            <td><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></td>
-          </tr>`;
-        }).join('')
-        : '<tr><td colspan="7" class="empty">暂无匹配交易披露。</td></tr>';
-      const target = document.getElementById('assetDetailContent') || document.getElementById('assetDetailBody');
-      const featuredSlot = document.getElementById('assetFeaturedSlot');
-      if (featuredSlot) {
-        featuredSlot.innerHTML = selectedAssetOverviewHtml(position, trades, detailId);
-      }
+      const target = document.getElementById('assetDetailBody');
       target.innerHTML = `
-        ${featuredSlot ? '' : selectedAssetOverviewHtml(position, trades, detailId)}
-        <div class="detail-subhead">
-          <span>${esc(sourceText)}</span>
-        </div>
+        ${selectedAssetOverviewHtml(position, trades)}
         <div class="asset-chain-head">
-          <div><h3>交易披露链</h3><p>默认按交易日降序，其次按披露日降序展示。</p></div>
-          <div class="asset-chain-actions">
-            <span class="asset-chain-counts">${esc(sourceText)}</span>
-            ${trades.length ? `<button class="detail-toggle" data-target-table="${esc(detailId)}" onclick="toggleAssetTradeTable(this)">查看全部交易明细 &gt;&gt;</button>` : ''}
-          </div>
+          <h3>交易披露链</h3>
+          <div class="timeline-amount-label">买入/卖出区间估算(美元)</div>
         </div>
-        ${timelineHtml(trades)}
-        <div class="table-wrap hidden" id="${esc(detailId)}">
-          <div class="detail-subhead"><span>全部交易明细：按交易日降序，其次按披露日降序。</span></div>
-          <table>
-            <thead><tr><th>来源</th><th>资产</th><th>动作</th><th>交易日</th><th>金额区间（美元）</th><th>披露日</th><th>主题</th></tr></thead>
-            <tbody>${tradeRows}</tbody>
-          </table>
-        </div>
+        ${timelineHtml(trades, assetTimelineVisibleLimit)}
       `;
+      target.querySelector('#assetTimelineLoadMore')?.addEventListener('click', () => {
+        assetTimelineVisibleLimit += ASSET_TIMELINE_LOAD_STEP;
+        renderAssetDetail(position, trades, { resetTimeline: false });
+      });
     }
 
-    async function openAssetDetails(key, fallbackName = '', fallbackTicker = '', shouldScroll = true) {
-      setActiveNav('asset');
-      showHomeSections();
+    async function openAssetDetails(key, fallbackName = '', fallbackTicker = '', shouldScroll = true, shouldActivate = true) {
+      if (shouldActivate) {
+        setActiveNav('asset');
+        hideHomeSections();
+        setDetailPageMode(true, '资产交易详情');
+        document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
+        document.getElementById('assetDetails').classList.remove('hidden');
+      } else {
+        document.getElementById('assetDetails').classList.add('hidden');
+      }
       const section = document.getElementById('assetDetails');
-      section.classList.remove('hidden');
       document.getElementById('assetDetailTitle').textContent = '资产交易详情';
       document.getElementById('assetDetailSubtitle').textContent = fallbackName ? `正在加载 ${fallbackName} 的披露链路...` : '正在加载该资产的披露链路...';
       document.getElementById('assetDetailBadge').textContent = fallbackTicker || '加载中';
-      const target = document.getElementById('assetDetailContent') || document.getElementById('assetDetailBody');
+      const target = document.getElementById('assetDetailBody');
       target.innerHTML = '<div class="empty">正在读取交易披露记录...</div>';
-      if (shouldScroll) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (shouldScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
 
       try {
         const position = findPositionByKey(key, fallbackName, fallbackTicker);
@@ -1216,7 +4883,7 @@
       } catch (err) {
         document.getElementById('assetDetailSubtitle').textContent = '资产交易详情读取失败';
         document.getElementById('assetDetailBadge').textContent = '加载失败';
-        const errorTarget = document.getElementById('assetDetailContent') || document.getElementById('assetDetailBody');
+        const errorTarget = document.getElementById('assetDetailBody');
         errorTarget.innerHTML = `<div class="empty">暂时无法读取该资产的交易链路：${esc(err.message || err)}</div>`;
       }
     }
@@ -1240,9 +4907,10 @@
     }
 
     async function searchTrades() {
-      const q = encodeURIComponent(document.getElementById('tradeSearch').value.trim());
+      const q = encodeURIComponent(document.getElementById('tradeSearch')?.value.trim() || '');
       allTrades = await api(`/api/transactions?limit=300&state=parsed&public=1${q ? '&q=' + q : ''}`);
-      renderTrades(allTrades);
+      setupDefaultTradeDateRange(allTrades);
+      applyTradeDateFilters();
     }
 
     async function searchHoldings() {
@@ -1253,7 +4921,7 @@
     }
 
     async function showAllHoldings() {
-      setActiveNav('tradesPreview');
+      setActiveNav('asset');
       hideHomeSections();
       document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
       document.getElementById('allHoldings').classList.remove('hidden');
@@ -1263,51 +4931,50 @@
 
     function hideAllHoldings() {
       document.getElementById('allHoldings').classList.add('hidden');
-      scrollHomeSection('transactions', 'tradesPreview');
+      scrollHomeSection('asset', 'asset');
     }
 
     function showOverview() {
-      showHomeSections();
-      setActiveNav('topHoldings');
+      showHomeSection('holdings', 'holdings', false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     async function showInferredDetails() {
-      setActiveNav('topHoldings');
+      setActiveNav('holdings');
       hideHomeSections();
+      setDetailPageMode(true, '推算持仓状态');
       document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
       document.getElementById('inferredPositions').classList.remove('hidden');
+      inferredVisibleLimit = INFERRED_INITIAL_LIMIT;
       if (!inferredLoadedFull) {
         document.getElementById('inferredSummary').textContent = '正在加载完整推算持仓列表...';
         allInferredPositions = await api('/api/inferred-positions?limit=5000');
         inferredLoadedFull = true;
         populateInferredFilters(allInferredPositions);
       }
-      applyInferredFilters();
-      document.getElementById('inferredPositions').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      applyInferredFilters(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function hideInferredDetails() {
       document.getElementById('inferredPositions').classList.add('hidden');
-      scrollHomeSection('topHoldingsSection', 'topHoldings');
+      scrollHomeSection('holdings', 'holdings');
     }
 
     function showTradeDetails() {
-      showAllHoldings();
+      loadMoreTrades();
     }
 
     function showAssetDetails() {
-      setActiveNav('asset');
-      showHomeSections();
-      document.getElementById('assetDetails').classList.remove('hidden');
-      const rows = renderAssetPicker(assetPickerQuery);
+      showHomeSection('asset', 'asset', false);
+      const rows = renderAssetPicker(assetPickerQuery, true);
       const first = rows.find(row => detailKey(row) === selectedAssetKey) || rows[0];
       if (first) openAssetDetails(detailKey(first), first.asset_name, first.ticker, false);
-      document.getElementById('assetDetails').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function hideAssetDetails() {
-      scrollHomeSection('assetDetails', 'asset');
+      goHome();
     }
 
     async function showParseReport() {
@@ -1336,14 +5003,16 @@
         renderTopHoldings(allInferredPositions);
         populateInferredFilters(allInferredPositions);
         document.getElementById('inferredSummary').textContent = '点击“查看更多”后加载完整列表。';
-        document.getElementById('inferredRows').innerHTML = '<tr><td colspan="7" class="empty">完整推算持仓列表暂未展开。</td></tr>';
-        allTrades = data.recent_transactions || [];
-        renderTrades(allTrades);
-        const assetRows = renderAssetPicker();
-        if (assetRows.length) {
-          const first = assetRows[0];
-          openAssetDetails(detailKey(first), first.asset_name, first.ticker, false);
+        document.getElementById('inferredRows').innerHTML = '<tr><td colspan="4" class="empty">完整推算持仓列表暂未展开。</td></tr>';
+        document.querySelector('.inferred-load-actions')?.classList.add('hidden');
+        try {
+          const fetchedTrades = await api('/api/transactions?limit=5000&state=parsed&public=1');
+          allTrades = mergeRowsById([...(data.recent_transactions || []), ...fetchedTrades]);
+        } catch (tradeErr) {
+          allTrades = data.recent_transactions || [];
         }
+        setupDefaultTradeDateRange(allTrades);
+        renderTrades(allTrades);
       } catch (err) {
         setStatus(false, '后台未连接');
         document.getElementById('topHoldings').innerHTML = `<div class="empty">${esc(err.message)}</div>`;
@@ -1354,10 +5023,14 @@
     document.getElementById('holdingSearch').addEventListener('input', () => {
       if (!document.getElementById('holdingSearch').value.trim()) searchHoldings();
     });
-    document.getElementById('inferredSearch').addEventListener('input', applyInferredFilters);
-    document.getElementById('inferredSearch').addEventListener('keydown', e => { if (e.key === 'Enter') applyInferredFilters(); });
+    document.getElementById('inferredSearch').addEventListener('input', () => applyInferredFilters(true));
+    document.getElementById('inferredSearch').addEventListener('keydown', e => { if (e.key === 'Enter') applyInferredFilters(true); });
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeHelp();
+      if (e.key === 'Escape') {
+        closeHelp();
+        closeTradeDatePicker();
+        closeSelectSheet();
+      }
     });
     init();
   </script>

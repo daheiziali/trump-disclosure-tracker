@@ -3,801 +3,1084 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>特朗普交易披露追踪</title>
+  <title>特朗普交易披露追踪 VIP</title>
   <style>
     :root {
-      --bg: #f6f7f9;
+      --page-bg: #fff3d5;
       --surface: #ffffff;
-      --ink: #111827;
-      --muted: #64748b;
-      --subtle: #f1f5f9;
-      --line: #e2e8f0;
-      --blue: #1d4ed8;
-      --blue-soft: #dbeafe;
-      --red: #dc2626;
-      --green: #059669;
-      --gold: #d97706;
-      --shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --ink: rgba(0, 0, 0, 0.9);
+      --muted: rgba(0, 0, 0, 0.55);
+      --line: rgba(159, 107, 65, 0.13);
+      --vip-deep: #9f6b41;
+      --vip-mid: #c9904f;
+      --vip-light: #f4ca81;
+      --red: #e94b5d;
+      --green: #15996f;
+      --font-ui: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-display: "Source Han Serif CN", "Source Han Serif SC", "Noto Serif SC", "Songti SC", serif;
+      --font-number: "D-DIN-PRO", "D-DIN", "DIN Pro", "DIN Alternate", "Arial Narrow", sans-serif;
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html { min-height: 100%; background: var(--page-bg); }
+
     body {
       margin: 0;
-      background: var(--bg);
+      min-height: 100%;
       color: var(--ink);
-      font-size: 15px;
-      line-height: 1.55;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      line-height: 1.5;
+      background: linear-gradient(90deg, #fff8e5 0%, #fffef9 15%, #fffefb 85%, #fff1c9 100%);
       -webkit-font-smoothing: antialiased;
     }
-    a { color: inherit; text-decoration: none; }
-    button, a.button { font: inherit; }
 
-    .shell {
-      width: min(100%, 460px);
-      margin: 0 auto;
-      background: #fff;
+    button, a { font: inherit; color: inherit; }
+    button { border: 0; background: none; cursor: pointer; padding: 0; }
+    a { text-decoration: none; }
+
+    .page {
+      width: min(100%, 414px);
       min-height: 100vh;
-      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.04);
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
+      background: #ffffff;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04);
+      padding-bottom: 96px;
     }
 
-    .hero {
-      position: relative;
-      min-height: 92svh;
-      padding: max(18px, env(safe-area-inset-top)) 18px 22px;
-      display: grid;
-      align-content: space-between;
-      overflow: hidden;
-      color: #fff;
-      background:
-        linear-gradient(180deg, rgba(8, 13, 25, 0.45) 0%, rgba(8, 13, 25, 0.76) 58%, rgba(8, 13, 25, 0.94) 100%),
-        url("trump-portrait.jpg") center 12% / cover no-repeat;
-    }
-    .hero::after {
+    .page::before {
       content: "";
       position: absolute;
-      inset: auto -30% -24% -30%;
-      height: 48%;
-      background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.32), transparent 62%);
-      pointer-events: none;
-    }
-    .hero-top, .hero-copy, .hero-bottom { position: relative; z-index: 1; }
-    .hero-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-    .brand-mark {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      background: #0f172a;
-    }
-    .brand-mark img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-      object-position: center top;
-    }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      min-height: 30px;
-      padding: 5px 10px;
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      border-radius: 999px;
-      color: rgba(255, 255, 255, 0.82);
-      background: rgba(255, 255, 255, 0.09);
-      backdrop-filter: blur(14px);
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .hero-copy {
-      padding-top: 34svh;
-    }
-    .kicker {
-      margin: 0 0 10px;
-      color: #bfdbfe;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 0.16em;
-    }
-    h1 {
-      margin: 0;
-      max-width: 390px;
-      font-size: clamp(38px, 10vw, 54px);
-      line-height: 0.98;
-      letter-spacing: -0.06em;
-    }
-    .hero-text {
-      margin: 14px 0 0;
-      max-width: 360px;
-      color: rgba(255, 255, 255, 0.82);
-      font-size: 15px;
-    }
-    .hero-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin: 22px 0;
-    }
-    .metric {
-      min-height: 74px;
-      padding: 11px 10px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(16px);
-    }
-    .metric strong {
-      display: block;
-      font-size: 19px;
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-    }
-    .metric span {
-      display: block;
-      margin-top: 7px;
-      color: rgba(255, 255, 255, 0.72);
-      font-size: 11px;
-    }
-    .cta-row {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      padding-bottom: max(0px, env(safe-area-inset-bottom));
-    }
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      border: 1px solid transparent;
-      border-radius: 14px;
-      padding: 12px 16px;
-      cursor: pointer;
-      font-weight: 850;
-      letter-spacing: -0.01em;
-    }
-    .button.primary {
-      background: #fff;
-      color: #0f172a;
-      box-shadow: 0 12px 36px rgba(255, 255, 255, 0.14);
-    }
-    .button.ghost {
-      border-color: rgba(255, 255, 255, 0.26);
-      color: #fff;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(14px);
-    }
-
-    section { padding: 28px 18px; }
-    .section-head {
-      margin-bottom: 16px;
-    }
-    .section-head span {
-      color: var(--blue);
-      font-size: 12px;
-      font-weight: 850;
-      letter-spacing: 0.12em;
-    }
-    h2 {
-      margin: 6px 0 0;
-      font-size: 25px;
-      line-height: 1.15;
-      letter-spacing: -0.045em;
-    }
-    .section-copy {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .feature-list {
-      display: grid;
-      gap: 12px;
-    }
-    .feature {
-      display: grid;
-      grid-template-columns: 42px 1fr;
-      gap: 12px;
-      align-items: start;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--surface);
-    }
-    .icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-weight: 900;
-      background: var(--ink);
-    }
-    .feature:nth-child(2) .icon { background: var(--blue); }
-    .feature:nth-child(3) .icon { background: var(--green); }
-    .feature:nth-child(4) .icon { background: var(--gold); }
-    .feature strong {
-      display: block;
-      font-size: 16px;
-      letter-spacing: -0.025em;
-    }
-    .feature p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .preview {
-      padding-top: 0;
-    }
-    .preview-frame {
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      overflow: hidden;
-      background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
-      box-shadow: var(--shadow);
-    }
-    .preview-top {
-      padding: 18px 18px 14px;
-      background: linear-gradient(135deg, #0f172a 0%, #172554 58%, #2563eb 100%);
-      color: #fff;
-    }
-    .preview-top small {
-      color: #93c5fd;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-    }
-    .preview-top h3 {
-      margin: 6px 0 0;
-      font-size: 25px;
-      letter-spacing: -0.04em;
-    }
-    .preview-top p {
-      margin: 8px 0 0;
-      color: rgba(255, 255, 255, 0.74);
-      font-size: 12px;
-    }
-    .holding-shot {
-      margin: 14px;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.86);
-      box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
-    }
-    .shot-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .shot-head strong {
-      display: block;
-      font-size: 18px;
-      line-height: 1.15;
-      letter-spacing: -0.035em;
-    }
-    .shot-head span {
-      display: block;
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .shot-total {
-      text-align: right;
-      color: var(--blue);
-      font-size: 12px;
-      font-weight: 900;
-      white-space: nowrap;
-    }
-    .holding-bars {
-      display: grid;
-      gap: 9px;
-    }
-    .holding-row {
-      position: relative;
-      padding: 11px 12px 10px 42px;
-      border: 1px solid #dbe4ef;
-      border-radius: 15px;
-      background: #fff;
-    }
-    .holding-row::before {
-      content: "";
-      position: absolute;
-      left: 0;
       top: 0;
-      bottom: 0;
-      width: 6px;
-      border-radius: 15px 0 0 15px;
-      background: #0f172a;
+      left: 0;
+      right: 0;
+      height: 236px;
+      z-index: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(255, 224, 128, 0.78) 0%, rgba(255, 238, 179, 0.42) 58%, rgba(255, 255, 255, 0) 100%);
     }
-    .holding-row:nth-child(2)::before { background: var(--red); }
-    .holding-row:nth-child(3)::before { background: var(--blue); }
-    .holding-row:nth-child(4)::before { background: var(--gold); }
-    .holding-row:nth-child(5)::before { background: var(--green); }
-    .rank {
-      position: absolute;
-      left: 12px;
-      top: 12px;
-      width: 22px;
-      height: 22px;
-      border-radius: 999px;
+
+    .status-bar {
+      width: 414px;
+      height: 44px;
+      position: relative;
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 21px 0 24px;
+      background: transparent !important;
+    }
+
+    .status-time {
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 21px;
+      font-weight: 600;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-icons img {
+      display: block;
+      height: 12px;
+      object-fit: contain;
+    }
+
+    .status-icons img:last-child { height: 13px; }
+
+    .mini-nav {
+      width: 414px;
+      height: 44px;
+      position: relative;
+      z-index: 6;
+      display: grid;
+      grid-template-columns: 90px 1fr 90px;
+      align-items: center;
+      padding: 6px 12px 6px 7px;
+      background: transparent !important;
+      backdrop-filter: none;
+      box-shadow: none;
+      border-bottom: 0;
+    }
+
+    .mini-nav__back {
+      width: 32px;
+      height: 32px;
       display: grid;
       place-items: center;
-      background: #0f172a;
-      color: #fff;
-      font-size: 10px;
-      font-weight: 900;
     }
-    .holding-row-title {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .holding-row-title strong {
+
+    .mini-nav__back img,
+    .mini-nav__capsule img {
       display: block;
-      font-size: 13px;
-      line-height: 1.2;
+    }
+
+    .mini-nav__back img {
+      width: 10px;
+      height: 18px;
+      object-fit: contain;
+    }
+
+    .mini-nav__title {
+      min-width: 0;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 25px;
+      font-weight: 600;
+      text-align: center;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .holding-row-meta {
+
+    .mini-nav__capsule {
+      justify-self: end;
+      width: 90px;
+      height: 34px;
+    }
+
+    .mini-nav__capsule img {
+      width: 90px;
+      height: 34px;
+    }
+
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 176px;
+      margin-top: -44px;
+      padding: 58px 20px 12px;
+      overflow: visible;
+      background: transparent;
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
+      background: #ffffff;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      width: 220px;
+      padding-top: 6px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      color: #6f4b20;
+      font-family: var(--font-display);
+      font-size: 30px;
+      line-height: 38px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .hero h1 span {
+      display: block;
+    }
+
+    .hero-caption {
+      margin: 8px 0 0;
+      color: rgba(0, 0, 0, 0.42);
+      font-family: var(--font-ui);
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 400;
+    }
+
+    .hero-art {
+      position: absolute;
+      z-index: 1;
+      right: 14px;
+      top: 38px;
+      width: 142px;
+      height: 126px;
+      overflow: visible;
+    }
+
+    .hero-profile {
+      position: absolute;
+      right: 26px;
+      top: 8px;
+      width: 88px;
+      filter: drop-shadow(0 18px 26px rgba(165, 83, 17, 0.22));
+    }
+
+    .hero-kline,
+    .hero-bars {
+      position: absolute;
+      width: 36px;
+      filter: drop-shadow(0 8px 14px rgba(238, 91, 30, 0.16));
+      animation: floatY 3.6s ease-in-out infinite;
+    }
+
+    .hero-kline {
+      left: 1px;
+      top: 58px;
+      transform: rotate(-10deg);
+    }
+
+    .hero-bars {
+      right: 5px;
+      top: 45px;
+      transform: rotate(10deg);
+      animation-delay: -1.2s;
+    }
+
+    @keyframes floatY {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -7px; }
+    }
+
+    .section {
+      padding: 18px 16px 0;
+    }
+
+    .section-title {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .money {
-      color: var(--blue);
+      gap: 6px;
+      margin: 0 0 10px;
+      color: #6f1e13;
+      font-family: var(--font-display);
+      font-size: 24px;
+      line-height: 32px;
       font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .section-title::before {
+      content: "";
+      width: 4px;
+      height: 22px;
+      border-radius: 1px;
+      background: linear-gradient(180deg, #ff7232 0%, #9f6b41 100%);
+    }
+
+    .info-card,
+    .analysis-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(159, 107, 65, 0.14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 8px 24px rgba(150, 88, 34, 0.08);
+    }
+
+    .info-card + .info-card,
+    .analysis-card + .analysis-card {
+      margin-top: 12px;
+    }
+
+    .info-card {
+      padding: 12px;
+    }
+
+    .info-card p {
+      margin: 0;
+      color: rgba(40, 28, 17, 0.78);
+      font-size: 13px;
+      line-height: 21px;
+      text-align: justify;
+    }
+
+    .analysis-card {
+      padding: 0 12px 12px;
+      background: linear-gradient(180deg, rgba(255, 251, 244, 0.96) 0%, #ffffff 56%);
+    }
+
+    .analysis-head {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      min-height: 40px;
+      margin: 0 -12px 12px;
+      align-items: stretch;
+      border-bottom: 1px solid rgba(159, 107, 65, 0.12);
+    }
+
+    .analysis-index {
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: #ffffff;
+      background: linear-gradient(180deg, #c58b42 0%, #8f5b24 100%);
+      font-size: 17px;
+      line-height: 24px;
+      font-weight: 900;
+    }
+
+    .analysis-name {
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: #8a5724;
+      background: linear-gradient(90deg, rgba(244, 202, 129, 0.18) 0%, rgba(244, 202, 129, 0.02) 100%);
+      font-size: 19px;
+      line-height: 26px;
+      font-weight: 900;
+    }
+
+    .analysis-kicker {
+      margin: 0 0 12px;
+      color: rgba(0, 0, 0, 0.62);
+      font-size: 15px;
+      line-height: 22px;
+      font-weight: 600;
+    }
+
+    .chart-card {
+      position: relative;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .bar-preview {
+      display: grid;
+      gap: 12px;
+      padding: 8px 0 0;
+      width: 100%;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 24px 60px minmax(0, 1fr) 48px;
+      align-items: center;
+      gap: 7px;
+      color: rgba(0, 0, 0, 0.72);
+      font-size: 11px;
+      line-height: 17px;
+      width: 100%;
+    }
+
+    .bar-rank {
+      color: #9f6b41;
+      font-family: var(--font-number);
       font-size: 12px;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .bar-name {
+      min-width: 0;
+      color: #7f4c19;
+      font-size: 12px;
+      font-weight: 800;
+      overflow: hidden;
+      text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .mini-bar {
-      height: 5px;
-      margin-top: 9px;
-      border-radius: 99px;
-      background: #e2e8f0;
+
+    .bar-row strong {
+      color: #7f4c19;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 10px;
+      border-radius: 2px;
+      background: rgba(244, 202, 129, 0.18);
       overflow: hidden;
     }
-    .mini-bar span {
+
+    .bar-fill {
       display: block;
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, #0f172a 0%, #2563eb 100%);
+      background: linear-gradient(270deg, #9f6b41 0%, #f4ca81 100%);
     }
 
-    .timeline {
+    .bar-value {
+      color: #9f6b41;
+      font-family: var(--font-number);
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .bar-value--blur,
+    .asset-blur {
+      filter: blur(4px);
+      opacity: 0.72;
+      user-select: none;
+    }
+
+    .trade-preview-table {
       display: grid;
-      gap: 10px;
-      padding: 0 18px 28px;
+      grid-template-columns: 88px minmax(0, 1fr) 126px;
+      border-top: 1px solid rgba(159, 107, 65, 0.12);
+      border-left: 1px solid rgba(159, 107, 65, 0.08);
     }
-    .event {
+
+    .trade-preview-head,
+    .trade-preview-row {
+      display: contents;
+    }
+
+    .trade-preview-head .trade-cell {
+      min-height: 42px;
+      color: rgba(0, 0, 0, 0.55);
+      background: rgba(255, 249, 240, 0.9);
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 700;
+    }
+
+    .trade-preview-head .trade-cell:nth-child(3) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-left: 0;
+      padding-right: 0;
+      text-align: center;
+    }
+
+    .trade-cell {
+      min-width: 0;
+      min-height: 64px;
+      padding: 10px 8px;
+      border-right: 1px solid rgba(159, 107, 65, 0.08);
+      border-bottom: 1px solid rgba(159, 107, 65, 0.12);
+      background: rgba(255, 255, 255, 0.84);
+    }
+
+    .trade-cell--date {
+      display: flex;
+      align-items: center;
+      color: rgba(0, 0, 0, 0.88);
+      font-family: var(--font-number);
+      font-size: 15px;
+      line-height: 20px;
+      font-weight: 800;
+    }
+
+    .trade-asset-name {
+      display: inline;
+      color: #8a5724;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 900;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    .trade-theme {
+      width: max-content;
+      max-width: 100%;
+      display: block;
+      margin-top: 5px;
+      padding: 2px 6px;
+      border: 1px solid rgba(159, 107, 65, 0.16);
+      border-radius: 2px;
+      color: rgba(0, 0, 0, 0.55);
+      background: rgba(255, 250, 244, 0.85);
+      font-size: 12px;
+      line-height: 18px;
+      white-space: nowrap;
+    }
+
+    .trade-amount {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      text-align: center;
+    }
+
+    .trade-tag {
+      min-width: 34px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 8px;
+      border-radius: 2px;
+      font-size: 12px;
+      line-height: 18px;
+      font-weight: 700;
+    }
+
+    .trade-tag.buy {
+      color: var(--red);
+      border: 1px solid rgba(233, 75, 93, 0.28);
+      background: #fff2f4;
+    }
+
+    .trade-tag.sell {
+      color: var(--green);
+      border: 1px solid rgba(21, 153, 111, 0.24);
+      background: #eafff6;
+    }
+
+    .trade-amount-value {
+      font-family: var(--font-number);
+      font-size: 14px;
+      line-height: 19px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .trade-amount-value.buy { color: var(--red); }
+    .trade-amount-value.sell { color: var(--green); }
+
+    .timeline-preview {
+      width: 100%;
+      padding: 7px 0 8px;
+    }
+
+    .timeline-preview-row {
       position: relative;
-      padding: 14px 14px 14px 40px;
-      border: 1px solid var(--line);
-      border-radius: 17px;
-      background: #fff;
+      display: grid;
+      grid-template-columns: 23px minmax(0, 1fr) auto;
+      column-gap: 12px;
+      min-height: 58px;
+      padding-bottom: 14px;
     }
-    .event::before {
+
+    .timeline-preview-row:not(:last-child)::before {
       content: "";
       position: absolute;
-      left: 16px;
-      top: 19px;
+      left: 5px;
+      top: 12px;
+      bottom: -1px;
+      width: 1px;
+      background: rgba(159, 107, 65, 0.18);
+    }
+
+    .timeline-dot {
+      position: relative;
+      z-index: 1;
       width: 10px;
       height: 10px;
-      border-radius: 999px;
-      background: var(--green);
-      box-shadow: 0 0 0 5px #dcfce7;
+      margin-top: 5px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 0 0 1px currentColor;
     }
-    .event.sell::before {
+
+    .timeline-dot.buy {
+      color: var(--red);
       background: var(--red);
-      box-shadow: 0 0 0 5px #fee2e2;
-    }
-    .event strong {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      font-size: 14px;
-    }
-    .event p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 12px;
     }
 
-    .pay {
-      background: #0f172a;
-      color: #fff;
-      padding-bottom: 92px;
-    }
-    .pay .section-head span { color: #93c5fd; }
-    .pay .section-copy { color: rgba(255, 255, 255, 0.72); }
-    .plans {
-      display: grid;
-      gap: 12px;
-      margin-top: 16px;
-    }
-    .plan {
-      position: relative;
-      padding: 18px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.08);
-    }
-    .plan.featured {
-      background: #fff;
-      color: #0f172a;
-    }
-    .plan-head {
-      display: flex;
-      align-items: start;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .plan h3 {
-      margin: 0;
-      font-size: 17px;
-    }
-    .price {
-      margin-top: 10px;
-      font-size: 34px;
-      font-weight: 900;
-      letter-spacing: -0.06em;
-    }
-    .price small {
-      font-size: 13px;
-      color: var(--muted);
-      letter-spacing: 0;
-    }
-    .plan ul {
-      margin: 14px 0 18px;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 8px;
-      color: rgba(255, 255, 255, 0.72);
-      font-size: 13px;
-    }
-    .plan.featured ul { color: var(--muted); }
-    .plan li::before {
-      content: "✓";
-      margin-right: 8px;
+    .timeline-dot.sell {
       color: var(--green);
-      font-weight: 900;
+      background: var(--green);
     }
-    .plan .button {
-      width: 100%;
-      background: #fff;
-      color: #0f172a;
+
+    .timeline-preview-main {
+      min-width: 0;
     }
-    .plan.featured .button {
-      background: #0f172a;
-      color: #fff;
-    }
-    .recommend {
-      display: inline-flex;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: #fee2e2;
-      color: #b91c1c;
-      font-size: 11px;
+
+    .timeline-preview-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: rgba(0, 0, 0, 0.9);
+      font-family: var(--font-number);
+      font-size: 15px;
+      line-height: 21px;
       font-weight: 900;
     }
 
-    .sticky-buy {
-      position: sticky;
-      bottom: 0;
-      z-index: 10;
-      padding: 10px 14px max(10px, env(safe-area-inset-bottom));
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(18px);
-      border-top: 1px solid var(--line);
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: center;
-    }
-    .sticky-buy strong {
-      display: block;
-      font-size: 14px;
-    }
-    .sticky-buy span {
-      display: block;
-      color: var(--muted);
+    .timeline-preview-date {
+      margin-top: 2px;
+      color: rgba(0, 0, 0, 0.48);
       font-size: 12px;
+      line-height: 18px;
+    }
+
+    .timeline-preview-money {
+      align-self: start;
       margin-top: 1px;
     }
-    .sticky-buy .button {
-      min-height: 42px;
-      border-radius: 12px;
-      background: #0f172a;
-      color: #fff;
-      padding: 9px 14px;
+
+    .chart-note {
+      margin: 10px 0 0;
+      padding: 11px 12px;
+      border-radius: 4px;
+      color: #5f461e;
+      background: #fff6da;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .donut-preview {
+      width: 152px;
+      height: 152px;
+      margin: 4px auto 0;
+      border-radius: 50%;
+      background: conic-gradient(#c88735 0 29%, #f6cc72 29% 48%, #deb88a 48% 65%, #9dc2b2 65% 76%, #597a9d 76% 86%, #c76f5e 86% 91%, #88d4c7 91% 94%, #a9a69d 94% 100%);
+      position: relative;
+      box-shadow: inset 0 0 0 4px #fff, 0 12px 28px rgba(159, 107, 65, 0.16);
+    }
+
+    .donut-preview::before {
+      content: "";
+      position: absolute;
+      inset: 38px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 0 4px #fff;
+    }
+
+    .donut-preview img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 70px;
+      height: 70px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center top;
+      border: 4px solid #ffffff;
+      box-shadow: 0 8px 16px rgba(65, 43, 21, 0.12);
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 18px;
+      margin-top: 12px;
+      font-size: 12px;
+      line-height: 18px;
+      font-weight: 700;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .legend-color {
+      width: 7px;
+      height: 7px;
+      border-radius: 2px;
+      flex: 0 0 auto;
+    }
+
+    .benefit-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 0;
+    }
+
+    .benefit-item {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 11px 12px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, rgba(255, 249, 232, 0.94) 0%, rgba(255, 255, 255, 0.96) 100%);
+      border: 1px solid rgba(244, 202, 129, 0.5);
+    }
+
+    .benefit-icon {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #ffffff;
+      background: linear-gradient(180deg, #f4ca81 0%, #9f6b41 100%);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .benefit-item strong {
+      display: block;
+      color: #604017;
+      font-size: 15px;
+      line-height: 21px;
+      font-weight: 900;
+    }
+
+    .benefit-item span span {
+      display: block;
+      margin-top: 2px;
+      color: rgba(0, 0, 0, 0.58);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .sticky-cta {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      z-index: 20;
+      width: min(100%, 414px);
+      transform: translateX(-50%);
+      padding: 10px 18px calc(10px + env(safe-area-inset-bottom));
+      background: linear-gradient(180deg, rgba(255, 253, 247, 0), rgba(255, 252, 245, 0.96) 22%, #fffaf0 100%);
+    }
+
+    .vip-button {
+      width: 100%;
+      height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 6px;
+      color: #ffffff;
+      background: linear-gradient(270deg, #9f6b41 0%, #f4ca81 100%);
+      box-shadow: 0 8px 22px rgba(159, 107, 65, 0.22);
+      font-family: var(--font-ui);
+      font-size: 18px;
+      line-height: 25px;
+      font-weight: 800;
+    }
+
+    .vip-button svg {
+      width: 22px;
+      height: 22px;
+      flex: 0 0 auto;
+    }
+
+    .vip-button img {
+      width: 26px;
+      height: 26px;
+      flex: 0 0 auto;
+      display: block;
+    }
+
+    .vip-button__text {
+      color: #ffe395;
+      font-family: var(--font-ui);
+      font-weight: 800;
+      background: linear-gradient(180deg, #ffffff 0%, #ffe395 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .modal {
       position: fixed;
       inset: 0;
-      z-index: 30;
+      z-index: 40;
       display: none;
-      align-items: end;
-      background: rgba(15, 23, 42, 0.42);
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.58);
     }
-    .modal.open { display: flex; }
+
+    .modal.is-open { display: flex; }
+
     .sheet {
-      width: min(100%, 460px);
-      margin: 0 auto;
-      padding: 18px 18px max(18px, env(safe-area-inset-bottom));
-      border-radius: 24px 24px 0 0;
-      background: #fff;
-      box-shadow: var(--shadow);
+      width: min(100%, 414px);
+      padding: 18px 18px calc(18px + env(safe-area-inset-bottom));
+      border-radius: 12px 12px 0 0;
+      background: #ffffff;
     }
-    .sheet h3 {
-      margin: 0;
-      font-size: 22px;
-      letter-spacing: -0.04em;
-    }
-    .sheet p {
-      margin: 8px 0 16px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .sheet-actions {
+
+    .sheet-head {
       display: grid;
-      gap: 10px;
+      grid-template-columns: 64px 1fr 64px;
+      align-items: center;
+      margin-bottom: 16px;
     }
-    .sheet-actions .button.primary {
-      background: #0f172a;
-      color: #fff;
+
+    .sheet-action {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 16px;
+      line-height: 24px;
+      text-align: left;
     }
-    .sheet-actions .button.ghost {
+
+    .sheet-confirm {
+      color: #5a82e6;
+      text-align: right;
+    }
+
+    .sheet-title {
       color: var(--ink);
-      border-color: var(--line);
-      background: #fff;
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 900;
+      text-align: center;
     }
-    .legal {
-      padding: 16px 18px 24px;
-      color: #94a3b8;
-      font-size: 11px;
-      background: #0f172a;
+
+    .sheet-art {
+      display: grid;
+      place-items: center;
+      height: 118px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #fff5d5 0%, #fffaf2 100%);
+      overflow: hidden;
+    }
+
+    .sheet-art img {
+      width: 128px;
+      transform: translateY(12px);
+    }
+
+    .sheet p {
+      margin: 0 0 14px;
+      color: rgba(0, 0, 0, 0.62);
+      font-size: 14px;
+      line-height: 22px;
+      text-align: center;
+    }
+
+    .sheet .vip-button {
+      height: 48px;
+      font-size: 16px;
+    }
+
+    @media (max-width: 374px) {
+      .page, .status-bar, .mini-nav { width: 100%; }
+      .hero-art {
+        right: 2px;
+        transform: scale(0.9);
+        transform-origin: right top;
+      }
+      .hero-copy { width: 206px; }
+      .bar-row { grid-template-columns: 22px 56px minmax(0, 1fr) 44px; }
+      .trade-preview-table { grid-template-columns: 82px minmax(0, 1fr) 118px; }
     }
   </style>
 </head>
 <body>
-  <div class="shell">
+  <div class="page">
+    <div class="status-bar" aria-hidden="true">
+      <div class="status-time">19:41</div>
+      <div class="status-icons">
+        <img src="../assets/j-design-system-shell/plus-shell-status-cellular-569-149.svg" alt="">
+        <img src="../assets/j-design-system-shell/plus-shell-status-wifi-569-149.svg" alt="">
+        <img src="../assets/j-design-system-shell/plus-shell-status-battery-569-149.svg" alt="">
+      </div>
+    </div>
+
+    <nav class="mini-nav" aria-label="页面导航">
+      <button class="mini-nav__back" type="button" aria-label="返回">
+        <img src="../assets/j-design-system-shell/plus-shell-nav-back-569-150.svg" alt="">
+      </button>
+      <div class="mini-nav__title">特朗普</div>
+      <div class="mini-nav__capsule" aria-hidden="true">
+        <img src="../assets/j-design-system-shell/plus-shell-nav-capsule-569-150.svg" alt="">
+      </div>
+    </nav>
+
     <header class="hero">
-      <div class="hero-top">
-        <div class="brand">
-          <span class="brand-mark"><img src="trump-portrait.jpg" alt="Donald J. Trump"></span>
-          <span>特朗普交易披露追踪</span>
-        </div>
-        <span class="badge">OGE 官方披露</span>
-      </div>
-
       <div class="hero-copy">
-        <p class="kicker">TRUMP DISCLOSURE TRACKER</p>
-        <h1>看懂特朗普披露里的真实交易线索</h1>
-        <p class="hero-text">把难读的 OGE 披露文件，整理成中文、可搜索、可筛选的交易与推算持仓工具。适合关注美股、政策交易和主题变化的用户。</p>
+        <h1><span>特朗普</span><span>交易披露追踪</span></h1>
+        <p class="hero-caption">功能说明介绍</p>
       </div>
-
-      <div class="hero-bottom">
-        <div class="hero-metrics">
-          <div class="metric"><strong>特朗普真实持仓</strong><span>核心资产速览</span></div>
-          <div class="metric"><strong>交易时间链</strong><span>买入卖出轨迹</span></div>
-          <div class="metric"><strong>重点投资主题</strong><span>行业暴露占比</span></div>
-        </div>
-        <div class="cta-row">
-          <a class="button primary" href="#purchase">立即开通</a>
-        </div>
+      <div class="hero-art" aria-hidden="true">
+        <img class="hero-profile" src="../assets/trump-hero-profile.png" alt="">
+        <img class="hero-kline" src="../assets/trump-hero-kline.png" alt="">
+        <img class="hero-bars" src="../assets/trump-hero-bars.png" alt="">
       </div>
     </header>
 
-    <section>
-      <div class="section-head">
-        <span>TRUMP PORTFOLIO</span>
-        <h2>追踪特朗普投资组合，看清重仓方向与交易变化</h2>
-        <p class="section-copy">基于 OGE 官方最新披露，拆解特朗普证券持仓、交易变化与重仓主题，帮你快速捕捉其投资偏好和潜在政策线索。</p>
-      </div>
-      <div class="feature-list">
-        <article class="feature">
-          <div class="icon">01</div>
-          <div>
-            <strong>全部持仓股</strong>
-            <p>按披露金额区间中点估算排序，快速掌握特朗普交易记录，看到其重仓、增减持和疑似清仓资产。</p>
-          </div>
+    <main>
+      <section class="section">
+        <h2 class="section-title">特朗普持仓与交易链</h2>
+        <article class="info-card">
+          <p>美国联邦道德办公室会公开披露特朗普相关证券资产与交易记录，但原始文件分散、英文表述复杂、金额多为区间。开通 VIP 后，可直接查看整理后的中文资产名称、交易动作、披露日与推算持仓状态。</p>
         </article>
-        <article class="feature">
-          <div class="icon">02</div>
-          <div>
-            <strong>买入卖出交易链</strong>
-            <p>按交易日串联资产完整披露链，清晰呈现买入、卖出、金额区间与披露节奏。</p>
-          </div>
-        </article>
-        <article class="feature">
-          <div class="icon">03</div>
-          <div>
-            <strong>投资主题占比</strong>
-            <p>把资产归入大型科技、AI/半导体、ETF、能源、医疗等主题，看清组合偏向。</p>
-          </div>
-        </article>
-        <article class="feature">
-          <div class="icon">04</div>
-          <div>
-            <strong>中文化与代码标准化</strong>
-            <p>资产名称、股票代码、ETF 代码和披露动作统一整理，降低用户自己查表成本。</p>
-          </div>
-        </article>
-      </div>
-    </section>
+      </section>
 
-    <section class="preview">
-      <div class="preview-frame">
-        <div class="preview-top">
-          <small>PRODUCT PREVIEW</small>
-          <h3>特朗普全部持仓及时追踪</h3>
-          <p>覆盖全部可识别证券持仓，重仓资产、交易变化与主题分布持续更新。</p>
+      <section class="section">
+        <h2 class="section-title">核心功能介绍</h2>
+
+        <article class="analysis-card">
+          <div class="analysis-head">
+            <div class="analysis-index">01</div>
+            <div class="analysis-name">前十大推算持仓</div>
+          </div>
+          <p class="analysis-kicker">按披露规模预览前十大可识别证券资产。帮助快速判断资金主要暴露在哪些标的，以及重仓方向是否集中。</p>
+          <div class="chart-card">
+            <div class="bar-preview" aria-label="推算持仓柱状预览">
+              <div class="bar-row"><span class="bar-rank">01</span><strong class="bar-name">苹果</strong><span class="bar-track"><i class="bar-fill" style="width:100%"></i></span><span class="bar-value bar-value--blur">5042万</span></div>
+              <div class="bar-row"><span class="bar-rank">02</span><strong class="bar-name">英伟达</strong><span class="bar-track"><i class="bar-fill" style="width:78%"></i></span><span class="bar-value bar-value--blur">3959万</span></div>
+              <div class="bar-row"><span class="bar-rank">03</span><strong class="bar-name">谷歌A</strong><span class="bar-track"><i class="bar-fill" style="width:76%"></i></span><span class="bar-value bar-value--blur">3810万</span></div>
+              <div class="bar-row"><span class="bar-rank">04</span><strong class="bar-name">博通</strong><span class="bar-track"><i class="bar-fill" style="width:74%"></i></span><span class="bar-value bar-value--blur">3761万</span></div>
+              <div class="bar-row"><span class="bar-rank">05</span><strong class="bar-name">亚马逊</strong><span class="bar-track"><i class="bar-fill" style="width:73%"></i></span><span class="bar-value bar-value--blur">3690万</span></div>
+              <div class="bar-row"><span class="bar-rank">06</span><strong class="bar-name">微软</strong><span class="bar-track"><i class="bar-fill" style="width:65%"></i></span><span class="bar-value bar-value--blur">3294万</span></div>
+              <div class="bar-row"><span class="bar-rank">07</span><strong class="bar-name">Meta</strong><span class="bar-track"><i class="bar-fill" style="width:61%"></i></span><span class="bar-value bar-value--blur">3053万</span></div>
+              <div class="bar-row"><span class="bar-rank">08</span><strong class="bar-name">摩根大通</strong><span class="bar-track"><i class="bar-fill" style="width:49%"></i></span><span class="bar-value bar-value--blur">2466万</span></div>
+              <div class="bar-row"><span class="bar-rank">09</span><strong class="bar-name">特斯拉</strong><span class="bar-track"><i class="bar-fill" style="width:46%"></i></span><span class="bar-value bar-value--blur">2327万</span></div>
+              <div class="bar-row"><span class="bar-rank">10</span><strong class="bar-name">高盛</strong><span class="bar-track"><i class="bar-fill" style="width:36%"></i></span><span class="bar-value bar-value--blur">1837万</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="analysis-card">
+          <div class="analysis-head">
+            <div class="analysis-index">02</div>
+            <div class="analysis-name">最新披露交易</div>
+          </div>
+          <p class="analysis-kicker">按交易日展示近期买入、卖出披露记录。帮助观察交易动作是否集中出现，并对比不同资产的金额区间。</p>
+          <div class="chart-card">
+            <div class="trade-preview-table" aria-label="最新披露交易表格预览">
+              <div class="trade-preview-head">
+                <div class="trade-cell">交易日</div>
+                <div class="trade-cell">资产</div>
+                <div class="trade-cell">金额(美元)</div>
+              </div>
+              <div class="trade-preview-row">
+                <div class="trade-cell trade-cell--date">2026-05-18</div>
+                <div class="trade-cell">
+                  <span class="trade-asset-name asset-blur">阿尔尼拉姆制药</span>
+                  <span class="trade-theme">生物医药</span>
+                </div>
+                <div class="trade-cell"><span class="trade-amount"><span class="trade-tag sell">卖出</span><span class="trade-amount-value sell">1,001 - 15,000</span></span></div>
+              </div>
+              <div class="trade-preview-row">
+                <div class="trade-cell trade-cell--date">2026-05-18</div>
+                <div class="trade-cell">
+                  <span class="trade-asset-name asset-blur">亚历山大房地产REIT</span>
+                  <span class="trade-theme">房地产/REIT</span>
+                </div>
+                <div class="trade-cell"><span class="trade-amount"><span class="trade-tag sell">卖出</span><span class="trade-amount-value sell">1,001 - 15,000</span></span></div>
+              </div>
+              <div class="trade-preview-row">
+                <div class="trade-cell trade-cell--date">2026-05-18</div>
+                <div class="trade-cell">
+                  <span class="trade-asset-name asset-blur">艾伯森</span>
+                  <span class="trade-theme">消费零售</span>
+                </div>
+                <div class="trade-cell"><span class="trade-amount"><span class="trade-tag sell">卖出</span><span class="trade-amount-value sell">1,001 - 15,000</span></span></div>
+              </div>
+            </div>
+          </div>
+          <p class="chart-note">可查看每笔资产的交易日、披露日、动作与金额区间，辅助判断披露变化是否集中出现。</p>
+        </article>
+
+        <article class="analysis-card">
+          <div class="analysis-head">
+            <div class="analysis-index">03</div>
+            <div class="analysis-name">投资主题占比</div>
+          </div>
+          <p class="analysis-kicker">将披露资产归并到投资主题中。帮助看清资金更偏向科技、半导体、金融等方向。</p>
+          <div class="chart-card">
+            <div class="donut-preview" aria-label="投资主题占比预览">
+              <img src="../assets/trump-donut-portrait.png" alt="">
+            </div>
+            <div class="legend-grid">
+              <span class="legend-item"><i class="legend-color" style="background:#c88735"></i>大型科技</span>
+              <span class="legend-item"><i class="legend-color" style="background:#f6cc72"></i>AI/半导体</span>
+              <span class="legend-item"><i class="legend-color" style="background:#deb88a"></i>其他公司证券</span>
+              <span class="legend-item"><i class="legend-color" style="background:#9dc2b2"></i>ETF</span>
+              <span class="legend-item"><i class="legend-color" style="background:#597a9d"></i>金融服务</span>
+              <span class="legend-item"><i class="legend-color" style="background:#c76f5e"></i>消费零售</span>
+            </div>
+          </div>
+          <p class="chart-note">主题分类会随资产识别和交易披露同步更新，帮助用户从单个股票跳到组合结构。</p>
+        </article>
+
+        <article class="analysis-card">
+          <div class="analysis-head">
+            <div class="analysis-index">04</div>
+            <div class="analysis-name">资产交易详情</div>
+          </div>
+          <p class="analysis-kicker">串联单一资产的历史买卖记录。按时间顺序呈现披露日、交易动作与金额区间。</p>
+          <div class="chart-card">
+            <div class="timeline-preview" aria-label="资产交易链预览">
+              <div class="timeline-preview-row">
+                <span class="timeline-dot buy"></span>
+                <span class="timeline-preview-main">
+                  <span class="timeline-preview-title">2026-05-15 <span class="trade-tag buy">买入</span></span>
+                  <span class="timeline-preview-date">披露日 2026-07-01</span>
+                </span>
+                <span class="trade-tag buy timeline-preview-money">1.5 - 5.0万</span>
+              </div>
+              <div class="timeline-preview-row">
+                <span class="timeline-dot sell"></span>
+                <span class="timeline-preview-main">
+                  <span class="timeline-preview-title">2026-04-27 <span class="trade-tag sell">卖出</span></span>
+                  <span class="timeline-preview-date">披露日 2026-07-01</span>
+                </span>
+                <span class="trade-tag sell timeline-preview-money">5.0 - 10.0万</span>
+              </div>
+              <div class="timeline-preview-row">
+                <span class="timeline-dot buy"></span>
+                <span class="timeline-preview-main">
+                  <span class="timeline-preview-title">2026-03-23 <span class="trade-tag buy">买入</span></span>
+                  <span class="timeline-preview-date">披露日 2026-05-14</span>
+                </span>
+                <span class="trade-tag buy timeline-preview-money">10.0 - 25.0万</span>
+              </div>
+            </div>
+          </div>
+          <p class="chart-note">可以按资产查看完整买入、卖出、金额区间估算和披露日期。</p>
+        </article>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">开通后可查看</h2>
+        <div class="benefit-list">
+          <div class="benefit-item">
+            <span class="benefit-icon">1</span>
+            <span><strong>全部推算持仓状态</strong><span>覆盖所有可识别证券资产，并支持主题、状态、披露规模筛选。</span></span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">2</span>
+            <span><strong>完整资产交易链</strong><span>从最新披露交易进入单个资产详情，查看历史买卖记录。</span></span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">3</span>
+            <span><strong>披露文件整合省时</strong><span>汇总年报与 278-T 增量披露，省去逐份 PDF 核对和手动合并。</span></span>
+          </div>
         </div>
-        <div class="holding-shot" aria-label="特朗普全部持仓追踪样例图">
-          <div class="shot-head">
-            <div>
-              <strong>特朗普真实持仓</strong>
-              <span>按披露口径估算规模排序</span>
-            </div>
-            <div class="shot-total">全部追踪</div>
-          </div>
-          <div class="holding-bars">
-            <div class="holding-row">
-              <span class="rank">01</span>
-              <div class="holding-row-title"><strong>Apple Inc</strong><span class="money">5042.05 万美元</span></div>
-              <div class="holding-row-meta"><span>AAPL · 大型科技</span><span>增持或仍持有</span></div>
-              <div class="mini-bar"><span style="width:100%"></span></div>
-            </div>
-            <div class="holding-row">
-              <span class="rank">02</span>
-              <div class="holding-row-title"><strong>NVIDIA Corp</strong><span class="money">3959.30 万美元</span></div>
-              <div class="holding-row-meta"><span>NVDA · AI/半导体</span><span>增持或仍持有</span></div>
-              <div class="mini-bar"><span style="width:78%"></span></div>
-            </div>
-            <div class="holding-row">
-              <span class="rank">03</span>
-              <div class="holding-row-title"><strong>Alphabet Inc Class A</strong><span class="money">3810.15 万美元</span></div>
-              <div class="holding-row-meta"><span>GOOGL · 大型科技</span><span>增持或仍持有</span></div>
-              <div class="mini-bar"><span style="width:75%"></span></div>
-            </div>
-            <div class="holding-row">
-              <span class="rank">04</span>
-              <div class="holding-row-title"><strong>Broadcom Inc</strong><span class="money">3761.75 万美元</span></div>
-              <div class="holding-row-meta"><span>AVGO · AI/半导体</span><span>重仓跟踪</span></div>
-              <div class="mini-bar"><span style="width:74%"></span></div>
-            </div>
-            <div class="holding-row">
-              <span class="rank">05</span>
-              <div class="holding-row-title"><strong>Amazon.com Inc</strong><span class="money">3690.30 万美元</span></div>
-              <div class="holding-row-meta"><span>AMZN · 大型科技</span><span>交易链完整</span></div>
-              <div class="mini-bar"><span style="width:73%"></span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-head">
-        <span>HOW IT HELPS</span>
-        <h2>交易时间链</h2>
-        <p class="section-copy">快速了解具体持仓资产的交易时间链，以及最新披露交易。</p>
-      </div>
-      <div class="timeline">
-        <article class="event">
-          <strong><span>跟踪最新买入</span></strong>
-          <p>展示买入资产、金额区间和披露日，并自动归入对应资产交易链。</p>
-        </article>
-        <article class="event sell">
-          <strong><span>识别后续卖出</span></strong>
-          <p>聚合卖出记录与金额区间，帮助判断重点资产的减持节奏。</p>
-        </article>
-        <article class="event">
-          <strong><span>查看完整链路</span><span>持续更新</span></strong>
-          <p>按资产串联历史买入、卖出和最新披露，形成更直观的交易轨迹。</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="pay" id="purchase">
-      <div class="section-head">
-        <span>MEMBERSHIP</span>
-        <h2>开通后查看完整披露数据库</h2>
-        <p class="section-copy">首版聚焦特朗普本人 OGE 披露数据，后续可扩展至更多政府重要人员。</p>
-      </div>
-      <div class="plans">
-        <article class="plan featured">
-          <div class="plan-head">
-            <h3>专业版月度会员</h3>
-            <span class="recommend">推荐</span>
-          </div>
-          <div class="price">¥29 <small>/ 月</small></div>
-          <ul>
-            <li>查看全部推算持仓</li>
-            <li>查看完整交易披露链</li>
-            <li>资产名称与代码搜索</li>
-            <li>交易日、披露日、金额区间筛选</li>
-          </ul>
-          <button class="button" onclick="openPay('专业版月度会员')">立即购买</button>
-        </article>
-        <article class="plan">
-          <div class="plan-head">
-            <h3>年度会员</h3>
-            <span class="badge">省心</span>
-          </div>
-          <div class="price">¥199 <small>/ 年</small></div>
-          <ul>
-            <li>包含月度会员全部功能</li>
-            <li>后续新增披露优先查看</li>
-            <li>未来人物扩展权益预留</li>
-          </ul>
-          <button class="button" onclick="openPay('年度会员')">立即购买</button>
-        </article>
-      </div>
-    </section>
-
-    <div class="legal">
-      数据说明：本产品基于 OGE 公开披露文件整理，金额为官方披露区间，不代表精确持仓金额、股数、成交价或实时账户余额。本产品不构成投资建议。
-    </div>
-
-    <div class="sticky-buy">
-      <div>
-        <strong>特朗普交易披露追踪</strong>
-        <span>完整数据库与交易链</span>
-      </div>
-      <a class="button" href="#purchase">开通</a>
-    </div>
+      </section>
+    </main>
   </div>
 
-  <div class="modal" id="payModal" onclick="closePay(event)">
-    <div class="sheet">
-      <h3 id="payTitle">确认开通</h3>
-      <p>这里可接入 App 内支付、微信支付、支付宝或会员系统。当前为 H5 产品介绍页交互占位。</p>
-      <div class="sheet-actions">
-        <button class="button primary" onclick="mockPay()">继续支付</button>
-        <button class="button ghost" onclick="closePay()">稍后再说</button>
+  <div class="sticky-cta">
+    <button class="vip-button" type="button" onclick="openVip()">
+      <img src="../assets/vip-experience.svg" alt="">
+      <span class="vip-button__text">立即开通VIP</span>
+    </button>
+  </div>
+
+  <div class="modal" id="vipModal" onclick="closeVip(event)">
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="vipSheetTitle">
+      <div class="sheet-head">
+        <button class="sheet-action" type="button" onclick="closeVip()">取消</button>
+        <div class="sheet-title" id="vipSheetTitle">开通VIP</div>
+        <button class="sheet-action sheet-confirm" type="button" onclick="mockPay()">确定</button>
       </div>
+      <div class="sheet-art">
+        <img src="../assets/trump-hero-profile.png" alt="">
+      </div>
+      <p>开通后可查看完整推算持仓、最新披露交易与资产交易详情。</p>
+      <button class="vip-button" type="button" onclick="mockPay()">立即开通VIP</button>
     </div>
   </div>
 
   <script>
-    function openPay(plan) {
-      document.getElementById('payTitle').textContent = `确认开通：${plan}`;
-      document.getElementById('payModal').classList.add('open');
+    function openVip() {
+      document.getElementById('vipModal').classList.add('is-open');
     }
-    function closePay(event) {
-      if (event && !event.target.classList.contains('modal')) return;
-      document.getElementById('payModal').classList.remove('open');
+
+    function closeVip(event) {
+      if (event && event.target.id !== 'vipModal') return;
+      document.getElementById('vipModal').classList.remove('is-open');
     }
+
     function mockPay() {
-      alert('支付能力待接入：可由技术接入 App 内购、微信支付或支付宝。');
+      alert('支付能力待接入：这里可对接小程序会员或 App 支付。');
     }
   </script>
 </body>
