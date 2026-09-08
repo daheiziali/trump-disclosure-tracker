@@ -6,6 +6,8 @@
 
 本文档面向产品、设计、前端、后端和数据处理人员，是当前版本的重要验收依据。设计师可基于本文档重新设计页面视觉，但不得改变本文档定义的数据范围、计算方式和状态判断规则。
 
+若本文档与 `PRODUCT_REQUIREMENTS.md`、`TECH_HANDOFF.md` 或历史设计说明中的旧统计口径冲突，以本文档为准。
+
 本文档不详细规定视觉样式、卡片布局、颜色、动效和页面排版，仅保留必要的页面边界和字段口径说明。
 
 ## 2. 产品总体结构
@@ -51,7 +53,7 @@ period_start = period_end 向前回溯 12 个月
 统计条件：transaction_date >= period_start 且 transaction_date <= period_end
 ```
 
-`as_of_date` 建议由后端接口显式返回。生产环境可使用当前系统日期；如果是静态数据快照或历史回放，也可以使用当前已纳入数据中的最新交易日作为 `as_of_date`，但页面和接口必须同时返回 `period_start` 与 `period_end`，避免用户误解。
+`as_of_date` 必须由后端接口显式返回。生产环境使用本次数据快照生成日期；静态演示或历史回放使用该快照固定的生成日期。不能使用“数据中的最新交易日”代替 `as_of_date`，因为披露本身存在延迟，会把统计窗口错误地向过去平移。页面和接口必须同时返回 `period_start` 与 `period_end`，避免用户误解。
 
 如果某条记录缺失交易日，不应进入近一年交易统计池；可保留在复核后台。
 
@@ -80,6 +82,66 @@ period_start = period_end 向前回溯 12 个月
 ```
 
 同一 ticker 对应不同证券类别时，需保留类别校验。例如 ETF、普通股、优先股、基金不得仅凭相同字符串误合并。
+
+### 3.5 交易去重与修订版处理
+
+所有交易次数、买入/卖出规模、主题占比、披露规模估算和状态判断，都必须基于去重后的 `canonical_trade_events`，不得直接聚合解析表原始行。
+
+处理顺序：
+
+```text
+1. 先完成资产标准化。
+2. 同一源文件内的重复解析行只保留一条。
+3. 同一申报文件存在修订版时，以最新有效修订版为准；被替代版本不参与统计。
+4. 同一交易同时出现在年度报告交易明细和 278-T 中时，只计为一个交易事件，但保留全部来源引用。
+5. 完成去重后，再生成排行榜、交易链和资产状态。
+```
+
+跨文件交易事件匹配至少需要比较：
+
+```text
+申报人
+标准化资产标识
+交易日
+买入/卖出动作
+金额区间
+账户、子持仓或原始行路径（源文件可提供时）
+```
+
+仅凭“同资产 + 同交易日 + 同动作 + 同金额区间”不足以自动删除，因为同日可能存在多笔真实交易。缺少账户或行级证据、又无法确认是否重复的记录，应标记为 `needs_review`，在人工确认前不进入用户端聚合统计。
+
+建议保留：
+
+```text
+canonical_trade_id
+source_record_ids
+dedup_status = canonical / duplicate / superseded / needs_review
+dedup_reason
+```
+
+### 3.6 年报基准与计算周期
+
+年报基准必须使用当前最新有效年度报告中的资产快照，不能把不同年份年报的持仓金额累加。
+
+```text
+baseline_filing_id       最新有效年度报告 ID
+baseline_as_of_date      年报资产快照对应的报告期截止日或有效日期
+baseline_midpoint        同一最新年报内，该资产跨账户/子持仓区间中点合计
+```
+
+“最新有效年度报告”优先按报告期截止日确定；同一报告期存在修订版时，再按修订版本和披露日选择最新有效版本。不得只按数据库写入时间选择基准。
+
+规则：
+
+- 同一最新年报内，同一资产分布在多个可识别账户或子持仓时可以合计。
+- 更早年份年报只用于历史回溯，不参与当前基准求和。
+- 新年度报告生效后，以新基准替换旧基准，并从新的 `baseline_as_of_date` 重新计算后续增量。
+- 只有 `transaction_date > baseline_as_of_date` 的去重交易，才可作为当前基准之后的增量；基准日及之前的交易不得再次叠加。
+- 如果无法可靠确定 `baseline_as_of_date`，应标记 `baseline_date_quality = needs_review`，不得据此输出「疑似清仓」。
+
+`baseline_midpoint = 0` 只表示最新有效年报中没有可识别的该资产基准，不表示官方确认真实持仓为 0。
+
+每个资产都应维护当前可识别持仓周期。新年报基准会重置周期；触发疑似清仓后首次再次买入，会开启新的买入周期，避免旧周期的累计卖出永久影响后续状态。
 
 ## 4. 数据范围
 
@@ -142,8 +204,21 @@ OGE 披露中的资产价值和交易金额均为区间，不是精确金额。
 baseline_midpoint       年报基准区间中点合计
 purchase_midpoint       指定统计范围内买入区间中点合计
 sale_midpoint           指定统计范围内卖出区间中点合计
+raw_inferred_exposure   基准 + 基准后买入 - 基准后卖出的原始结果
 inferred_exposure       披露规模估算
 ```
+
+持仓规模计算必须使用最新年报基准和基准日之后的去重交易：
+
+```text
+raw_inferred_exposure = baseline_midpoint
+                      + post_baseline_purchase_midpoint
+                      - post_baseline_sale_midpoint
+
+inferred_exposure = max(0, raw_inferred_exposure)
+```
+
+如果 `raw_inferred_exposure < 0`，用户端不得展示负持仓；后端应保留原始值并标记 `exposure_anomaly = true`，检查重复交易、基准日期、区间估算和资产合并是否有误。
 
 用户端主列表不强制并列展示「基准区间估算」「买入区间估算」「卖出区间估算」，但后端和复核后台必须保留，方便解释和审计。
 
@@ -197,7 +272,7 @@ inferred_exposure       披露规模估算
 计算逻辑：
 
 ```text
-披露规模估算 = 年报基准区间中点合计 + 年报基准之后已纳入买入区间中点合计 - 年报基准之后已纳入卖出区间中点合计
+披露规模估算 = max(0, 最新年报基准区间中点合计 + 基准日之后去重买入区间中点合计 - 基准日之后去重卖出区间中点合计)
 ```
 
 技术输出字段建议：
@@ -232,11 +307,13 @@ inferred_exposure       披露规模估算
 买入 1 次、卖出 1 次均计为 1 条披露交易记录。
 ```
 
-进入高频交易榜的建议门槛：
+进入高频交易榜的 MVP 固定门槛：
 
 ```text
 交易次数不少于 3 次。
 ```
+
+该门槛应作为后端可配置参数保存，但同一数据快照内必须统一使用一个阈值，并在接口返回 `frequency_threshold = 3`。调整阈值属于统计版本变更，不能由前端临时修改。
 
 门槛说明：
 
@@ -550,20 +627,33 @@ MVP 阶段建议不开放自由时间周期切换，只展示清晰口径。后�
 
 ```text
 baseline_midpoint           年报基准区间中点合计
-trade_chain_all             该资产全部可识别交易链，按交易日升序/降序均可生成
-trade_chain_period          该资产近一年交易链
+baseline_as_of_date         最新有效年报基准日期
+baseline_date_quality       基准日期质量：confirmed / needs_review
+trade_chain_all             该资产全部去重后的可识别交易链
+trade_chain_period          该资产近一年去重交易链
 buy_count_period            近一年买入次数
 sell_count_period           近一年卖出次数
 purchase_midpoint_period    近一年买入金额区间中点合计
 sale_midpoint_period        近一年卖出金额区间中点合计
-last_period_trade           近一年内最近一条交易，按交易日降序、披露日降序取第一条
-last_period_action          近一年内最近一次交易动作：买入/卖出
-last_period_trade_date      近一年内最近一次交易日
+last_period_trade_date      近一年内最近一个发生交易的日期
+last_period_action          最近交易日的最终动作：买入/卖出/neutral_same_day
 possible_exit_signal        是否曾触发疑似清仓信号
 possible_exit_date          最近一次疑似清仓信号对应交易日
+active_cycle_start          当前可识别持仓周期起点
+buy_count_since_exit        最近一次疑似清仓之后的买入次数
 ```
 
-状态判断默认基于「近一年」交易窗口，但「疑似新进」需要回看该资产完整交易链，因为它依赖“此前曾疑似清仓、最近又买入”的连续关系。
+状态判断默认用「近一年」确定当前是否有新动作以及最近动作；「疑似清仓」的金额覆盖率必须回放当前完整持仓周期；「疑似新进」必须回看最近一次疑似清仓及其后的完整交易链。不能把三者都简化为近一年金额汇总。
+
+同一交易日既有买入又有卖出时，披露日只能用于列表稳定排序，不能代表真实先后顺序。状态判断应先按交易日聚合：
+
+```text
+当日买入中点合计 > 当日卖出中点合计：该日动作 = 买入
+当日买入中点合计 < 当日卖出中点合计：该日动作 = 卖出
+当日买入中点合计 = 当日卖出中点合计：该日动作 = neutral_same_day
+```
+
+`neutral_same_day` 不直接生成新状态，沿用该交易日前最后一个可判断状态；若此前没有可判断状态，则该资产不进入状态筛选结果并转后台复核。用户端仍不展示「状态不明」。
 
 ### 10.3 状态判断顺序
 
@@ -578,7 +668,7 @@ possible_exit_date          最近一次疑似清仓信号对应交易日
 6. 仍持有
 ```
 
-顺序很重要。同一资产最终只能输出一个状态。例如某资产最近一次是买入，但此前曾触发疑似清仓，则优先显示「疑似新进」，而不是普通「增持」。
+顺序很重要。同一资产最终只能输出一个状态。例如某资产此前曾触发疑似清仓，之后首次重新买入，则优先显示「疑似新进」；同周期继续发生第二次买入后，改为「增持」。
 
 ### 10.4 疑似清仓
 
@@ -592,45 +682,87 @@ possible_exit_date          最近一次疑似清仓信号对应交易日
 
 ```text
 last_period_action = 卖出
-且 identifiable_position_base > 0
-且 sale_midpoint_to_last_sell / identifiable_position_base >= 80%
+且 active_cycle_base_midpoint > 0
+且 baseline_date_quality != needs_review（存在年报基准时）
+且 clearance_ratio_mid >= CLEARANCE_RATIO_THRESHOLD
 ```
 
-可识别持仓基础建议定义为：
+其中 MVP 默认配置：
 
 ```text
-identifiable_position_base = 年报基准区间中点 + 该卖出节点之前已披露买入金额区间中点合计
-sale_midpoint_to_last_sell = 截至最近一次卖出节点的累计卖出金额区间中点合计
+CLEARANCE_RATIO_THRESHOLD = 0.80
 ```
 
-若技术实现暂时无法逐节点回放交易链，MVP 阶段可使用近一年汇总近似判断：
+`0.80` 是产品判断阈值，不是 OGE 官方规则，也不是“已确认卖出 80% 股数”。该阈值必须由后端配置、记录统计版本；后续只有经过人工抽样和历史回测后才能调整。
+
+本文中的 `clearance_ratio` 准确含义是“披露金额覆盖率”，不是持股数量卖出比例。由于基准价值与交易金额发生在不同日期，价格波动也会影响该比例，因此它只能用于生成疑似信号。
+
+#### 10.4.1 当前持仓周期
+
+疑似清仓必须按当前可识别持仓周期计算，不能把资产全部历史买卖无限累计。
+
+周期起点按以下顺序确定：
 
 ```text
-identifiable_position_base = 年报基准区间中点 + 近一年累计买入金额区间中点合计
-sale_midpoint_to_last_sell = 近一年累计卖出金额区间中点合计
+1. 优先使用最新有效年报的 baseline_as_of_date。
+2. 如果年报没有该资产，则使用当前周期第一笔可识别买入的交易日。
+3. 此前触发疑似清仓、之后首次重新买入时，以该次买入开启新周期。
+4. 新年报发布后，无论此前周期如何，都以新年报基准重置周期。
 ```
 
-阈值分层：
+在最近一次卖出节点，计算：
 
 ```text
-卖出比例 < 50%：
+active_cycle_base_midpoint = 当前周期年报基准区间中点
+                               + 当前周期内、最近卖出节点之前及当日的买入区间中点合计
+
+sale_midpoint_to_last_sell = 当前周期起点之后、截至最近卖出节点的卖出区间中点合计
+
+clearance_ratio_mid = sale_midpoint_to_last_sell / active_cycle_base_midpoint
+```
+
+如果年报没有该资产，但当前周期先出现一笔或多笔买入，这些买入可以建立 `active_cycle_base_midpoint`；因此后续卖出仍可判断减持或疑似清仓。
+
+“当前周期内”具体指：以年报为起点时只纳入 `transaction_date > baseline_as_of_date` 的交易；以疑似清仓后首次买入为起点时，必须包含该笔起点买入。
+
+#### 10.4.2 区间上下界与置信度
+
+为避免只看区间中点造成夸大，后端还必须保留上下界：
+
+```text
+active_cycle_base_low  = 当前周期基准下限 + 当前周期买入下限合计
+active_cycle_base_high = 当前周期基准上限 + 当前周期买入上限合计
+sale_low_to_last_sell  = 当前周期卖出下限合计
+sale_high_to_last_sell = 当前周期卖出上限合计
+
+clearance_ratio_floor   = sale_low_to_last_sell / active_cycle_base_high
+clearance_ratio_mid     = sale_midpoint_to_last_sell / active_cycle_base_midpoint
+clearance_ratio_ceiling = sale_high_to_last_sell / active_cycle_base_low
+```
+
+当分母为 0 或缺失时，对应比例输出 `null`，不能强行设为 0 或无穷大。
+
+用户端状态按中点比例分层：
+
+```text
+clearance_ratio_mid < 0.50：
     状态 = 减持
     后端 clearance_confidence = normal_reduce
 
-50% <= 卖出比例 < 80%：
+0.50 <= clearance_ratio_mid < 0.80：
     状态 = 减持
     后端 clearance_confidence = large_reduce
 
-80% <= 卖出比例 < 100%：
+clearance_ratio_mid >= 0.80：
     状态 = 疑似清仓
     后端 clearance_confidence = possible_clearance
-
-卖出比例 >= 100%：
-    状态 = 疑似清仓
-    后端 clearance_confidence = strong_possible_clearance
 ```
 
-原因：
+只有在 `clearance_ratio_floor >= 0.80` 时，后端才可把置信度提升为 `strong_possible_clearance`。仅仅因为中点比例达到或超过 100%，不能自动视为强置信度。
+
+如果 `clearance_ratio_mid > 1.00`，后端保留原始比例并标记 `clearance_ratio_overflow = true`，优先复核重复交易、周期起点、基准遗漏和资产误合并。用户端比例展示最高封顶为 100%，状态仍只显示「疑似清仓」。
+
+#### 10.4.3 阈值依据与必要限制
 
 OGE 只披露金额区间，不披露股数、成交价格和真实账户余额。因此系统不能输出「确认清仓」，只能输出「疑似清仓」。
 
@@ -639,15 +771,34 @@ OGE 只披露金额区间，不披露股数、成交价格和真实账户余额�
 - 低于 50% 通常更接近普通减持，不应夸大为退出信号。
 - 50%-80% 已经是大额卖出，但仍可能只是降低仓位，应继续显示「减持」，后端保留大额减持标签。
 - 80% 以上说明累计卖出规模已接近此前可识别持仓基础，在 OGE 区间披露限制下，可以作为疑似退出信号。
-- 100% 以上说明按区间中点估算已覆盖可识别持仓基础，但仍不能确认真实清仓，所以仍显示「疑似清仓」，只在后端提高置信度。
+- 80% 阈值用于区分普通减持和接近退出的披露信号；它必须通过历史样本复核持续校准，不能表述为官方标准。
 
 必要限制：
 
 ```text
-如果 identifiable_position_base <= 0，不允许判断为疑似清仓。
+如果 active_cycle_base_midpoint <= 0，不允许判断为疑似清仓。
 如果最近一次近一年交易不是卖出，不允许判断为疑似清仓。
-如果疑似清仓之后又出现买入，且最近一次近一年交易为买入，应进入「疑似新进」判断。
+如果交易未完成去重、修订版处理或资产标准化，不允许判断为疑似清仓。
+如果无法可靠确定当前持仓周期，不允许判断为疑似清仓。
+如果金额区间无效或关键交易日缺失，不允许判断为疑似清仓。
+如果存在未完成复核的同名资产、证券类别、账户归属、合并拆分、代码变更或其他公司行动，不允许判断为疑似清仓。
+如果疑似清仓之后首次又出现买入，且近一年最近动作是买入，应进入「疑似新进」判断。
 ```
+
+当上述条件不足时，用户端按最近动作显示「减持」，后端标记 `clearance_review_required = true`。不得使用未经去重的近一年汇总值代替完整周期回放。
+
+上线前必须完成以下边界测试：
+
+```text
+clearance_ratio_mid = 0.4999 / 0.5000 / 0.7999 / 0.8000 / 0.9999 / 1.0000
+年报基准存在 / 不存在
+年报基准日期可靠 / 不可靠
+同日只有卖出 / 同日有买有卖
+疑似清仓后首次买入 / 第二次买入 / 再次卖出
+原始文件 / 修订版 / 跨文件重复记录
+```
+
+每次调整 `CLEARANCE_RATIO_THRESHOLD`，都应记录规则版本，并人工复核全部疑似清仓结果或至少 30 个覆盖不同区间、资产类型和数据来源的样本；若样本不足，则复核全部结果。重点记录因重复披露、基准遗漏、资产误合并和区间过宽造成的误判。
 
 ### 10.5 疑似新进
 
@@ -661,13 +812,15 @@ OGE 只披露金额区间，不披露股数、成交价格和真实账户余额�
 
 ```text
 此前曾出现疑似清仓信号
-且疑似清仓之后又出现至少 1 次买入
+且该信号之后当前周期只出现 1 次买入
 且近一年内最近一次交易为买入
 ```
 
 注意：
 
 「疑似新进」不是简单的「年报基准没有该资产，但近一年有买入也有卖出」。这种旧定义过宽，容易误判。
+
+疑似清仓后第一次重新买入显示「疑似新进」；如果之后又发生第二次买入，且最近动作仍为买入，则显示「增持」。这与“无年报基准时首次买入为新进、继续买入为增持”的规则保持一致。
 
 判断示例：
 
@@ -767,26 +920,30 @@ sell_count_period = 0
 
 ```text
 baseline = baseline_midpoint
-trades_all = 该资产全部可识别交易链
-trades_period = trade_chain_all 中 period_start <= transaction_date <= period_end 的记录
+trades_all = 该资产全部 canonical_trade_events，按交易日升序
+trades_period = trades_all 中 period_start <= transaction_date <= period_end 的记录
 buy_count_period = trades_period 中 action = 买入 的条数
 sell_count_period = trades_period 中 action = 卖出 的条数
 purchase_midpoint_period = trades_period 中买入金额区间中点合计
 sale_midpoint_period = trades_period 中卖出金额区间中点合计
-last_period_trade = trades_period 按 transaction_date 降序、filed_date 降序的第一条
-last_period_action = last_period_trade.action
+daily_period = trades_period 按交易日聚合后的每日动作
+last_period_trade_date = daily_period 中最后一个交易日
+last_period_action = 按同日净买卖规则得到的最后可判断动作
+cycle_state = 从最新有效年报基准开始逐日回放；年报无该资产时，从首笔可识别买入开始
 ```
 
 判断顺序：
 
 ```text
-如果 exists_possible_exit_before_latest_buy = true
+如果 cycle_state.latest_possible_exit 存在
+且 cycle_state.buy_count_since_exit = 1
 且 last_period_action = 买入：
     status = 疑似新进
 
 否则如果 last_period_action = 卖出
-且 identifiable_position_base > 0
-且 sale_midpoint_to_last_sell / identifiable_position_base >= 0.8:
+且 cycle_state.data_quality = valid
+且 cycle_state.active_cycle_base_midpoint > 0
+且 cycle_state.clearance_ratio_mid >= CLEARANCE_RATIO_THRESHOLD：
     status = 疑似清仓
 
 否则如果 baseline = 0
@@ -808,17 +965,18 @@ last_period_action = last_period_trade.action
     status = 仍持有
 ```
 
-其中 `exists_possible_exit_before_latest_buy` 的建议判断方式：
+其中 `cycle_state` 的建议生成方式：
 
 ```text
-1. 按交易日升序遍历该资产全部可识别交易链。
-2. 动态累计买入和卖出金额区间中点。
-3. 每遇到一个卖出节点，先确认当时 identifiable_position_base > 0。
-4. 计算 sell_ratio = 截至该卖出节点的累计卖出区间中点 / 当时可识别持仓基础。
-5. 当 sell_ratio >= 0.8 时，标记该节点为疑似清仓信号。
-6. 当 sell_ratio >= 1.0 时，仍只标记为疑似清仓，但后端 clearance_confidence = strong_possible_clearance。
-7. 如果 sell_ratio 在 0.5 到 0.8 之间，用户端仍显示「减持」，后端可标记 clearance_confidence = large_reduce。
-8. 如果该疑似清仓信号之后又出现买入，且近一年内最近一次交易为买入，则当前状态为疑似新进。
+1. 只读取已去重、未被修订版替代、数据质量有效的 canonical_trade_events。
+2. 以最新有效年报基准为周期起点，只回放 baseline_as_of_date 之后的交易。
+3. 按交易日升序聚合同日买卖；同日净额为 0 时不改变上一状态。
+4. 每遇到买入，把该笔区间的低值、中点、高值加入当前周期持仓基础。
+5. 每遇到卖出，把该笔区间的低值、中点、高值加入当前周期累计卖出。
+6. 在每个卖出节点计算 ratio_floor、ratio_mid、ratio_ceiling。
+7. ratio_mid >= 0.80 时记录疑似清仓信号；只有 ratio_floor >= 0.80 时提升为 strong_possible_clearance。
+8. 疑似清仓后第一次买入，标记疑似新进并以该笔买入开启新周期；同周期后续再次买入归为增持。
+9. 新年报基准生效时，清空旧周期累计值并以新基准重新开始。
 ```
 
 边界处理：
@@ -827,6 +985,8 @@ last_period_action = last_period_trade.action
 - 没有近一年交易且年报基准等于 0，不进入用户端主要资产列表，除非该资产需要在历史交易链中被检索。
 - 缺少交易日的记录不参与状态判断，进入复核后台。
 - 没有可识别持仓基础的资产，即使最近一次是卖出，也不允许直接判断为「疑似清仓」，应优先落入「减持」或进入后台复核。
+- `clearance_ratio_mid > 1.00` 时状态仍为「疑似清仓」，同时必须标记异常复核，不能输出超过 100% 的用户端进度。
+- 同一资产在同一交易日同时存在买入和卖出时，必须先按同日净买卖规则处理，不能依赖数据库返回顺序选择状态。
 - 用户端不输出「状态不明」。
 
 ## 11. 状态说明文案
@@ -838,7 +998,7 @@ last_period_action = last_period_trade.action
 增持：最近一次披露交易为买入。
 减持：最近一次披露交易为卖出，且未触发疑似清仓。
 疑似清仓：最近一次披露交易为卖出，且累计卖出规模接近或覆盖此前可识别持仓基础。
-疑似新进：此前曾出现疑似清仓信号，之后最近一次披露交易重新出现买入。
+疑似新进：此前曾出现疑似清仓信号，之后首次披露交易重新出现买入。
 仍持有：年报基准已有该资产，近一年暂无买入或卖出披露。
 ```
 
@@ -963,7 +1123,7 @@ MVP 默认：
 
 交易披露链字段：
 
-- 来源：年报交易明细 / 2026 278-T 披露
+- 来源：年报交易明细 / 278-T 披露
 - 资产名称
 - 动作：买入/卖出
 - 交易日
@@ -1022,8 +1182,12 @@ Alphabet Inc Cl A
 后端验收：
 
 - 可按资产/ticker 合并交易链。
+- 可在所有聚合计算前处理重复披露和修订版替换，仅统计 canonical_trade_events。
+- 当前基准只取最新有效年报，同一资产不得跨年度累加年报基准。
 - 可区分年度基准资产和年报基准之后的后续交易增量。
 - 可按模块输出独立排行榜数据。
 - 可按模块输出独立投资主题占比。
 - 可按最终状态规则输出资产状态。
+- 可按当前持仓周期回放疑似清仓逻辑，并保留区间低值、中点、高值与规则版本。
+- 负披露规模、清仓比例超过 100%、基准日期不可靠等异常均进入后台复核。
 - 保留基准、买入、卖出拆项数据，但用户端主列表不默认展示。
