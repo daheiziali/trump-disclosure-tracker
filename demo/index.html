@@ -4476,7 +4476,7 @@
         popover.id = 'rankHelpPopover';
         popover.className = 'rank-help-popover';
         popover.setAttribute('role', 'tooltip');
-        popover.textContent = '按2026年至今披露记录条数排序';
+        popover.textContent = '按2026年至今披露记录排序';
         document.body.appendChild(popover);
       }
       return popover;
@@ -4985,7 +4985,7 @@
       if (title) {
         const help = themeMetricMode === 'holding'
           ? ''
-          : '<button class="rank-help-tip" type="button" aria-label="按2026年至今披露记录条数排序" aria-expanded="false"></button>';
+          : '<button class="rank-help-tip" type="button" aria-label="按2026年至今披露记录排序" aria-expanded="false"></button>';
         title.innerHTML = `${esc(config.title)}${help}`;
       }
       const topRows = [...rows]
