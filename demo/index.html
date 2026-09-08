@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>特朗普交易披露追踪</title>
+  <title>特朗普交易跟踪</title>
   <style>
     :root {
       --bg: #fff8e8;
@@ -103,8 +103,8 @@
     .donut-total strong { display: block; color: var(--ink); font-size: 22px; line-height: 1.05; margin-bottom: 3px; font-weight: 800; }
     .theme-legend { display: grid; gap: 9px; }
     .legend-row { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: center; gap: 9px; font-size: 12px; }
-    .legend-dot { width: 9px; height: 9px; border-radius: 99px; }
-    .legend-row strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+    .legend-dot { width: 14px; height: 10px; border-radius: 2px; }
+    .legend-row strong { overflow: visible; text-overflow: clip; white-space: nowrap; color: rgba(0, 0, 0, 0.9); font-size: 12px; font-weight: 400; line-height: 17px; }
     .legend-row span { color: var(--muted); font-variant-numeric: tabular-nums; }
     .pill { display: inline-flex; border: 1px solid var(--line); background: #f8fafc; border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--muted); }
 
@@ -183,7 +183,7 @@
     .help-close { border: 1px solid var(--line); background: #fff; color: var(--muted); border-radius: 10px; width: 34px; height: 34px; cursor: pointer; }
     .help-body { padding: 18px 20px 22px; color: var(--muted); line-height: 1.7; white-space: normal; }
     .footnote { margin-top: 18px; color: var(--muted); font-size: 12px; line-height: 1.65; border-top: 1px solid var(--line); padding-top: 12px; }
-    .hidden { display: none; }
+    .hidden { display: none !important; }
     .empty { padding: 20px; color: var(--muted); }
 
     @media (max-width: 1180px) {
@@ -385,40 +385,267 @@
     }
 
     .section-switch {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
       align-items: center;
-      gap: 0;
-      width: 100%;
-      height: 52px;
-      margin: 0 0 22px;
-      padding: 2px;
-      overflow: hidden;
-      border: 0.5px solid rgba(138, 93, 38, 0.22);
-      border-radius: 8px;
-      background: #fff8e8;
+      width: max-content;
+      height: 32px;
+      margin: 12px 0 0;
+      border-radius: 2px;
+      background: #fff3d6;
     }
 
-    .section-switch button {
-      position: relative;
-      height: 48px;
-      min-width: 0;
+    .home-view-trigger {
+      width: auto;
+      min-width: 132px;
+      height: 32px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 8px;
       border: 0;
-      border-radius: 8px;
-      padding: 0 8px;
+      border-radius: 2px;
+      padding: 0 16px;
       background: transparent;
-      color: rgba(138, 93, 38, 0.76);
+      color: #8a5d26;
       cursor: pointer;
+      font-family: "PingFang SC", var(--font-ui);
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 600;
       line-height: 24px;
+      text-align: left;
       white-space: nowrap;
     }
 
-    .section-switch button.is-active {
-      background: linear-gradient(270deg, #ffe395 0%, #ffffff 100%);
-      color: #8a5d26;
-      box-shadow: 0 8px 18px rgba(138, 93, 38, 0.14);
+    .home-view-trigger span:first-child {
+      width: auto;
+      height: 24px;
+      flex: 1 1 auto;
+      overflow: visible;
+      text-overflow: clip;
+      white-space: nowrap;
+    }
+
+    .home-view-trigger::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      flex: 0 0 6px;
+      border-right: 1.6px solid #8a5d26;
+      border-bottom: 1.6px solid #8a5d26;
+      pointer-events: none;
+      transform: translateY(-2px) rotate(45deg);
+    }
+
+    .theme-metric-tabs {
+      width: calc(100% + 32px);
+      height: 44px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      align-items: flex-start;
+      gap: 8px;
+      isolation: isolate;
+      margin: 0 -16px 18px;
+      border-bottom: 0;
+      padding: 6px 16px;
+      background: #fff;
+    }
+
+    .theme-metric-tabs button {
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      height: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      border: 0;
+      border-radius: 2px;
+      background: #f5f5f5;
+      color: rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      font-family: "PingFang SC", var(--font-ui);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      padding: 4px 12px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .theme-metric-tabs button.is-active {
+      background: #fff8e8;
+      color: #815723;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      padding: 4px 12px;
+    }
+
+    .theme-metric-tabs button.is-active::after {
+      content: none;
+    }
+
+    .home-rank-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      width: 246px;
+      height: 42px;
+      margin: 0 auto 12px;
+      color: var(--j-text-strong);
+      font-family: var(--font-ui);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 28px;
+    }
+
+    .home-rank-title__ornament {
+      position: relative;
+      flex: 0 0 42px;
+      width: 42px;
+      height: 42px;
+    }
+
+    .home-rank-title__ornament::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: #f4ca81;
+      -webkit-mask: url("../assets/rank-wheat-left.svg") center / contain no-repeat;
+      mask: url("../assets/rank-wheat-left.svg") center / contain no-repeat;
+    }
+
+    .home-rank-title__ornament--right {
+      transform: scaleX(-1);
+    }
+
+    .home-rank-title__copy {
+      display: flex;
+      flex: 0 0 160px;
+      flex-direction: column;
+      align-items: center;
+      width: 160px;
+      height: 42px;
+    }
+
+    .home-rank-title__copy > span:first-child {
+      width: 160px;
+      height: 28px;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 28px;
+      text-align: center;
+    }
+
+    .home-rank-title__copy .section-title-meta {
+      width: 160px;
+      height: 14px;
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 10px;
+      font-weight: 400;
+      line-height: 14px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    #topHoldingsTitle {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rank-help-tip {
+      position: relative;
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: #815723;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .rank-help-tip::before {
+      content: "?";
+      position: absolute;
+      left: 6px;
+      top: 6px;
+      width: 14px;
+      height: 14px;
+      display: grid;
+      place-items: center;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 14px;
+    }
+
+    .rank-help-popover {
+      position: fixed;
+      z-index: 1000;
+      width: 240px;
+      height: 37px;
+      box-sizing: border-box;
+      display: none;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+      padding: 8px 12px;
+      row-gap: 0;
+      isolation: isolate;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 2px;
+      color: #fff;
+      font-family: var(--font-ui);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 21px;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .rank-help-popover.is-visible {
+      display: flex;
+    }
+
+    .rank-help-popover::before {
+      content: "";
+      position: absolute;
+      left: var(--rank-help-arrow-left, 12px);
+      top: -8px;
+      width: 14px;
+      height: 8px;
+      background: rgba(0, 0, 0, 0.8);
+      clip-path: polygon(0 100%, 50% 0, 100% 100%);
+      z-index: 1;
+    }
+
+    .home-updated {
+      margin: 0 0 12px;
+      color: var(--j-text-secondary);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 17px;
+    }
+
+    .theme-section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
     }
 
     h1,
@@ -445,7 +672,7 @@
       min-width: 0;
       height: 24px;
       gap: 6px;
-      margin-top: 8px;
+      margin-top: 10px;
       color: var(--j-text-secondary);
       font-size: 16px;
       line-height: 24px;
@@ -465,32 +692,32 @@
 
     .j-search-icon {
       position: relative;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
     }
 
     .j-search-icon::before {
       content: "";
       position: absolute;
-      left: 3px;
-      top: 3px;
-      width: 9px;
-      height: 9px;
-      border: 1.6px solid currentColor;
+      left: 2px;
+      top: 2px;
+      width: 8px;
+      height: 8px;
+      border: 1.4px solid currentColor;
       border-radius: 50%;
     }
 
     .j-search-icon::after {
       content: "";
       position: absolute;
-      right: 3px;
-      bottom: 3px;
-      width: 6px;
-      height: 1.6px;
+      left: 10px;
+      top: 10px;
+      width: 5px;
+      height: 1.4px;
       border-radius: 2px;
       background: currentColor;
       transform: rotate(45deg);
-      transform-origin: center;
+      transform-origin: left center;
     }
 
     .hero-updated {
@@ -774,9 +1001,9 @@
       margin: 0;
       color: var(--j-text-strong);
       font-family: var(--font-ui);
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
-      line-height: 28px;
+      line-height: 25px;
       letter-spacing: 0;
     }
 
@@ -897,28 +1124,34 @@
     }
 
     .theme-section .theme-legend {
-      width: 100%;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      justify-items: stretch;
-      column-gap: 0;
-      row-gap: 10px;
+      width: 382px;
+      max-width: 382px;
+      height: 42px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
       padding-top: 2px;
     }
 
+    .theme-section .legend-line {
+      width: 382px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 27px;
+    }
+
     .theme-section .legend-row {
-      grid-template-columns: 9px max-content;
-      gap: 6px;
-      min-width: 0;
-      width: 100%;
+      display: inline-grid;
+      grid-template-columns: 14px minmax(0, max-content);
+      align-items: center;
+      gap: 4px;
+      flex: 0 0 auto;
+      width: max-content;
+      height: 17px;
       justify-content: start;
-    }
-
-    .theme-section .legend-row:nth-child(3n + 2) {
-      justify-content: center;
-    }
-
-    .theme-section .legend-row:nth-child(3n) {
-      justify-content: end;
     }
 
     .btn {
@@ -968,6 +1201,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
+      height: 40px;
+      line-height: 20px;
       text-align: left;
       cursor: pointer;
     }
@@ -984,18 +1219,19 @@
       width: 14px;
       height: 14px;
       flex: 0 0 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .select-chevron::after {
       content: "";
-      position: absolute;
-      left: 3px;
-      top: 4px;
+      display: block;
       width: 7px;
       height: 7px;
       border-right: 1.4px solid #000;
       border-bottom: 1.4px solid #000;
-      transform: rotate(45deg);
+      transform: translateY(-2px) rotate(45deg);
     }
 
     table {
@@ -1038,22 +1274,57 @@
       background: transparent;
     }
 
+    #transactions > .panel-head h2 {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+    }
+
+    #transactions > .panel-head > div {
+      width: 100%;
+    }
+
+    .section-title-meta {
+      color: var(--j-text-secondary);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 17px;
+    }
+
     #assetDetails > .panel-head .tools {
       display: none;
     }
 
     #inferredPositions .inferred-tools {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr);
       gap: 8px;
       justify-content: stretch;
       width: 100%;
     }
 
+    .search-field {
+      display: block;
+      position: relative;
+      min-width: 0;
+    }
+
     #inferredPositions .inferred-tools .search {
-      grid-column: 1 / -1;
       min-width: 0;
       width: 100%;
+      padding-right: 32px;
+    }
+
+    .search-field .j-search-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      color: rgba(0, 0, 0, 0.38);
+      transform: translateY(-50%);
+      pointer-events: none;
     }
 
     #inferredPositions .inferred-tools .select {
@@ -1155,8 +1426,8 @@
     }
 
     #inferredPositions .table-wrap table {
-      width: 560px;
-      min-width: 560px;
+      width: 860px;
+      min-width: 860px;
       border-collapse: separate;
       border-spacing: 0;
       table-layout: fixed;
@@ -1191,6 +1462,21 @@
       white-space: nowrap;
     }
 
+    #inferredPositions .table-wrap .inferred-th-content--stack {
+      align-items: center;
+      gap: 4px;
+      line-height: 16px;
+      white-space: normal;
+    }
+
+    #inferredPositions .table-wrap .inferred-th-label-stack {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      line-height: 16px;
+    }
+
     #inferredPositions .table-wrap th.numeric .inferred-th-content {
       width: 100%;
     }
@@ -1201,25 +1487,45 @@
 
     #inferredPositions .table-wrap th:nth-child(2),
     #inferredPositions .table-wrap td:nth-child(2) {
-      width: 140px;
-      min-width: 140px;
-      max-width: 140px;
+      width: 132px;
+      min-width: 132px;
+      max-width: 132px;
     }
 
     #inferredPositions .table-wrap th:nth-child(3),
     #inferredPositions .table-wrap td:nth-child(3) {
-      width: 120px;
-      min-width: 120px;
-      max-width: 120px;
+      width: 126px;
+      min-width: 126px;
+      max-width: 126px;
       text-align: center;
     }
 
     #inferredPositions .table-wrap th:nth-child(4),
     #inferredPositions .table-wrap td:nth-child(4) {
-      width: 130px;
-      min-width: 130px;
-      max-width: 130px;
+      width: 126px;
+      min-width: 126px;
+      max-width: 126px;
       text-align: center;
+    }
+
+    #inferredPositions .table-wrap th:nth-child(5),
+    #inferredPositions .table-wrap td:nth-child(5) {
+      width: 126px;
+      min-width: 126px;
+      max-width: 126px;
+      text-align: center;
+    }
+
+    #inferredPositions .table-wrap th:nth-child(6),
+    #inferredPositions .table-wrap td:nth-child(6) {
+      width: 180px;
+      min-width: 180px;
+      max-width: 180px;
+      text-align: center;
+    }
+
+    #inferredPositions .table-wrap th:nth-child(6) .inferred-th-content {
+      justify-content: center;
     }
 
     #inferredPositions .table-wrap .inferred-th-help {
@@ -1524,6 +1830,36 @@
       white-space: nowrap;
     }
 
+    .inferred-latest-trade {
+      display: grid;
+      gap: 6px;
+      justify-items: center;
+      min-width: 0;
+      white-space: normal;
+    }
+
+    .inferred-latest-trade .tag {
+      max-width: 128px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .inferred-latest-trade__meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--j-text-secondary);
+      font-size: 12px;
+      line-height: 16px;
+      white-space: nowrap;
+    }
+
+    .inferred-latest-trade__action {
+      color: var(--j-vip-brown);
+      font-weight: 700;
+    }
+
     .asset-table-meta .tag {
       max-width: 86px;
       flex: 0 0 auto;
@@ -1534,9 +1870,8 @@
 
     #inferredPositions .ranked-asset-cell {
       display: grid;
-      grid-template-columns: 22px minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
       align-items: start;
-      column-gap: 8px;
     }
 
     .asset-table-rank {
@@ -1584,6 +1919,42 @@
       border-color: rgba(213, 73, 65, 0.25);
       background: var(--j-red-soft);
       color: var(--j-red);
+    }
+
+    .tag.status-new {
+      border-color: rgba(154, 24, 38, 0.28);
+      background: #8f1d2c;
+      color: #fff;
+    }
+
+    .tag.status-add {
+      border-color: rgba(213, 73, 65, 0.24);
+      background: #fff0f0;
+      color: #d54941;
+    }
+
+    .tag.status-hold {
+      border-color: rgba(244, 202, 129, 0.42);
+      background: #fff8e8;
+      color: #815723;
+    }
+
+    .tag.status-reduce {
+      border-color: rgba(42, 157, 105, 0.22);
+      background: #eefaf4;
+      color: #17895f;
+    }
+
+    .tag.status-clear {
+      border-color: rgba(13, 94, 64, 0.28);
+      background: #0f6b4d;
+      color: #fff;
+    }
+
+    .tag.status-probable-new {
+      border-color: rgba(188, 43, 52, 0.26);
+      background: #ffe3e2;
+      color: #b92d35;
     }
 
     .tag.buy {
@@ -2037,6 +2408,16 @@
     .select-sheet-option.is-selected .select-sheet-check {
       border-color: #5a82e6;
       background: #5a82e6;
+    }
+
+    .select-sheet-modal[data-select-id="homeViewSelect"] .select-sheet-option.is-selected {
+      background: #fff3d6;
+      color: #8a5d26;
+    }
+
+    .select-sheet-modal[data-select-id="homeViewSelect"] .select-sheet-option.is-selected .select-sheet-check {
+      border-color: #8a5d26;
+      background: #8a5d26;
     }
 
     .select-sheet-option.is-selected .select-sheet-check::after {
@@ -2863,6 +3244,7 @@
 
     .theme-section {
       margin-top: 26px;
+      margin-bottom: 26px;
     }
 
     .theme-section-divider {
@@ -2875,9 +3257,9 @@
 
     .theme-section-title h2 {
       font-family: var(--font-ui);
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
-      line-height: 28px;
+      line-height: 25px;
     }
 
     .theme-section .theme-chart {
@@ -2895,32 +3277,40 @@
     }
 
     .theme-section .theme-legend {
-      width: 100%;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      justify-items: stretch;
-      column-gap: 0;
-      row-gap: 10px;
+      width: 382px;
+      max-width: 382px;
+      height: 42px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .theme-section .legend-line {
+      width: 382px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 27px;
     }
 
     .theme-section .legend-row {
-      grid-template-columns: 9px max-content;
-      gap: 6px;
-      width: 100%;
+      display: inline-grid;
+      grid-template-columns: 14px minmax(0, max-content);
+      align-items: center;
+      gap: 4px;
+      flex: 0 0 auto;
+      width: max-content;
+      height: 17px;
       justify-content: start;
       font-size: 12px;
-      line-height: 18px;
-    }
-
-    .theme-section .legend-row:nth-child(3n + 2) {
-      justify-content: center;
-    }
-
-    .theme-section .legend-row:nth-child(3n) {
-      justify-content: end;
+      line-height: 17px;
     }
 
     .page.is-detail-page .vip-hero,
-    .page.is-detail-page .section-switch {
+    .page.is-detail-page .section-switch,
+    .page.is-detail-page .theme-metric-tabs {
       display: none;
     }
 
@@ -3018,83 +3408,256 @@
     }
 
     .selected-asset-summary .asset-detail-kpis {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 5px;
+      width: 100%;
+      height: 150px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px;
+      gap: 12px;
+      background: #fff;
+      border-radius: 2px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .asset-kpi-top-row {
+      width: 100%;
+      min-height: 50px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 34px;
     }
 
     .selected-asset-summary .asset-kpi {
-      min-height: 62px;
+      min-width: 0;
+      min-height: 0;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1px;
-      padding: 6px 5px;
-      border: 0.5px solid var(--j-border);
-      border-radius: 2px;
-      background: #fffaf3;
-      text-align: center;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 6px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      text-align: left;
       box-shadow: none;
     }
 
-    .selected-asset-summary .asset-kpi--buy {
-      border-color: rgba(225, 68, 84, 0.18);
-      background: var(--j-red-soft);
+    .asset-kpi-top-row .asset-kpi {
+      flex: 0 0 auto;
     }
 
-    .selected-asset-summary .asset-kpi--sell {
-      border-color: rgba(73, 170, 118, 0.18);
-      background: var(--j-green-soft);
+    .asset-kpi-top-row .asset-kpi:first-child {
+      width: 115px;
     }
 
-    .selected-asset-summary .asset-kpi span {
-      color: var(--j-text-secondary);
-      font-family: var(--font-ui);
-      font-size: 11px;
-      font-weight: 400;
-      line-height: 16px;
-      margin-bottom: 0;
+    .asset-kpi-top-row .asset-kpi:nth-child(2) {
+      width: 56px;
     }
 
-    .selected-asset-summary .asset-kpi strong {
-      min-width: 0;
+    .asset-kpi-total-row {
+      width: 100%;
+      height: 28px;
       display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: center;
+      align-items: flex-end;
+      justify-content: space-between;
       gap: 2px;
-      color: var(--j-text-strong);
+      color: #000;
       font-family: var(--font-ui);
-      font-size: 15px;
-      font-weight: 800;
-      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .asset-kpi-total-row__title {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: flex-end;
+      gap: 2px;
+      width: 201px;
+      height: 25px;
+    }
+
+    .asset-kpi-total-row__label {
+      width: 126px;
+      height: 25px;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 25px;
       text-align: center;
+    }
+
+    .asset-kpi-total-row__period {
+      width: 73px;
+      height: 17px;
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 17px;
+    }
+
+    .asset-kpi-total-row__value {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: flex-end;
+      gap: 2px;
+      height: 28px;
+    }
+
+    .asset-kpi-total-row__value .j-finance-number {
+      font-family: var(--font-number);
+      color: rgba(0, 0, 0, 0.9);
+      font-size: 26px;
+      font-weight: 600;
+      line-height: 28px;
+    }
+
+    .asset-kpi-total-row__value .j-finance-unit {
+      font-family: var(--font-ui);
+      color: #000;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 25px;
+    }
+
+    .asset-kpi-period-inline {
+      flex: 0 0 auto;
+      color: rgba(0, 0, 0, 0.6);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 17px;
+      white-space: nowrap;
+    }
+
+    .selected-asset-summary .asset-kpi span,
+    .asset-kpi-line-label {
+      color: #000;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+
+    .selected-asset-summary .asset-kpi strong,
+    .asset-kpi-line-value {
+      min-width: 0;
+      display: inline-flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      gap: 1px;
+      color: #000;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      text-align: left;
+      white-space: nowrap;
     }
 
     .selected-asset-summary .asset-kpi strong .j-finance-number {
       font-family: var(--font-number);
-      font-size: 20px;
-      font-weight: 800;
+      font-size: 22px;
+      font-weight: 600;
       line-height: 24px;
     }
 
     .selected-asset-summary .asset-kpi strong .j-finance-unit {
       font-family: var(--font-ui);
-      font-size: 11px;
-      font-weight: 500;
-      line-height: 16px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
     }
 
-    .selected-asset-summary .asset-kpi--buy strong,
-    .selected-asset-summary .asset-kpi--buy strong .j-finance-number,
-    .selected-asset-summary .asset-kpi--buy strong .j-finance-unit {
+    .asset-kpi-flow {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 6px;
+    }
+
+    .asset-kpi-line {
+      width: 100%;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px;
+      border-radius: 2px;
+    }
+
+    .asset-kpi-line--buy {
+      background: #fff5f5;
+    }
+
+    .asset-kpi-line--sell {
+      background: #ebf9f3;
+    }
+
+    .asset-kpi-line-group {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .asset-kpi-line-group:first-child {
+      flex: 1 1 auto;
+    }
+
+    .asset-kpi-line-group:last-child {
+      flex: 0 0 auto;
+    }
+
+    .asset-kpi-line-label {
+      font-weight: 500;
+    }
+
+    .asset-kpi-line-value .j-finance-number {
+      font-family: var(--font-number);
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 17px;
+    }
+
+    .asset-kpi-line-value .j-finance-unit {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+    }
+
+    .asset-kpi-line-divider {
+      width: 0;
+      height: 14px;
+      flex: 0 0 auto;
+      border-left: 0.5px solid rgba(0, 0, 0, 0.11);
+    }
+
+    .asset-kpi-line--buy .asset-kpi-line-value,
+    .asset-kpi-line--buy .asset-kpi-line-value .j-finance-number,
+    .asset-kpi-line--buy .asset-kpi-line-value .j-finance-unit {
       color: var(--j-red);
     }
 
-    .selected-asset-summary .asset-kpi--sell strong,
-    .selected-asset-summary .asset-kpi--sell strong .j-finance-number,
-    .selected-asset-summary .asset-kpi--sell strong .j-finance-unit {
+    .asset-kpi-line--sell .asset-kpi-line-value,
+    .asset-kpi-line--sell .asset-kpi-line-value .j-finance-number,
+    .asset-kpi-line--sell .asset-kpi-line-value .j-finance-unit {
       color: #17895f;
+    }
+
+    .asset-chain-sticky {
+      position: sticky;
+      top: 88px;
+      z-index: 45;
+      margin: 0;
+      padding: 0 0 8px;
+      background: #fff;
     }
 
     .asset-chain-head {
@@ -3129,6 +3692,183 @@
       line-height: 18px;
       text-align: right;
       white-space: nowrap;
+    }
+
+    .asset-chain-summary {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      height: 28px;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2px;
+      padding: 0;
+      margin: 18px 0 10px;
+      color: #000;
+      font-family: var(--font-ui);
+      white-space: nowrap;
+    }
+
+    .asset-chain-summary__main {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: flex-end;
+      gap: 2px;
+      width: 269px;
+      height: 28px;
+    }
+
+    .asset-chain-summary__label {
+      flex: 0 0 auto;
+      width: 126px;
+      height: 25px;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 25px;
+      text-align: center;
+    }
+
+    .asset-chain-summary__money {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: flex-end;
+      gap: 2px;
+      height: 28px;
+    }
+
+    .asset-chain-summary__money .j-finance-number {
+      font-family: var(--font-number);
+      color: #8a5d26;
+      font-size: 26px;
+      font-weight: 600;
+      line-height: 28px;
+    }
+
+    .asset-chain-summary__money .j-finance-unit {
+      font-family: var(--font-ui);
+      color: #000;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 25px;
+    }
+
+    .asset-chain-summary__meta {
+      flex: 0 0 auto;
+      width: 80px;
+      height: 17px;
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 17px;
+    }
+
+    .asset-timeline-sort {
+      width: 100%;
+      max-width: 382px;
+      height: 22px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0;
+      padding: 0;
+      margin: 0 0 8px;
+    }
+
+    .asset-timeline-sort button {
+      width: 33.333%;
+      height: 22px;
+      min-width: 0;
+      display: flex;
+      flex: 1 1 0;
+      align-items: center;
+      gap: 4px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      font-family: "PingFang SC", var(--font-ui);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 17px;
+      padding: 0;
+      text-align: left;
+    }
+
+    .asset-timeline-sort button:nth-child(1) {
+      justify-content: flex-start;
+    }
+
+    .asset-timeline-sort button:nth-child(2) {
+      justify-content: center;
+    }
+
+    .asset-timeline-sort button:nth-child(3) {
+      justify-content: flex-end;
+    }
+
+    .asset-timeline-sort button.is-active {
+      color: rgba(0, 0, 0, 0.72);
+      font-weight: 400;
+    }
+
+    .asset-sort-label {
+      flex: 0 0 auto;
+      width: 48px;
+      height: 17px;
+      line-height: 17px;
+    }
+
+    .asset-sort-caret {
+      width: 18px;
+      height: 22px;
+      display: flex;
+      flex: 0 0 18px;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      color: currentColor;
+    }
+
+    .asset-sort-caret span {
+      cursor: pointer;
+    }
+
+    .asset-sort-caret__up,
+    .asset-sort-caret__down {
+      width: 0;
+      height: 0;
+      margin-left: 4px;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+    }
+
+    .asset-sort-caret__up {
+      margin-bottom: 2px;
+      border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+    }
+
+    .asset-sort-caret__down {
+      border-top: 5px solid rgba(0, 0, 0, 0.5);
+    }
+
+    .asset-timeline-sort button.is-active[data-sort-dir="asc"] .asset-sort-caret__up {
+      border-bottom-color: rgba(0, 0, 0, 0.72);
+    }
+
+    .asset-timeline-sort button.is-active[data-sort-dir="asc"] .asset-sort-caret__down {
+      border-top-color: rgba(0, 0, 0, 0.22);
+    }
+
+    .asset-timeline-sort button.is-active[data-sort-dir="desc"] .asset-sort-caret__up {
+      border-bottom-color: rgba(0, 0, 0, 0.22);
+    }
+
+    .asset-timeline-sort button.is-active[data-sort-dir="desc"] .asset-sort-caret__down {
+      border-top-color: rgba(0, 0, 0, 0.72);
     }
 
     .timeline {
@@ -3272,14 +4012,22 @@
     <main>
       <header class="topbar vip-hero">
         <div class="vip-hero-copy">
-          <h1>特朗普交易披露追踪</h1>
+          <h1>特朗普交易跟踪</h1>
           <div class="j-breadcrumb" aria-label="页面来源">
             <span class="j-breadcrumb__item">金十数据</span>
             <span class="j-breadcrumb__separator">›</span>
             <span class="j-breadcrumb__item">特朗普</span>
             <span class="j-search-icon" aria-hidden="true"></span>
           </div>
-          <div class="hero-updated">更新时间：2026-08-25</div>
+          <div class="section-switch" aria-label="内容切换">
+            <select class="native-select-hidden" id="homeViewSelect" aria-label="选择内容" onchange="switchHomeView(this.value)" aria-hidden="true" tabindex="-1">
+              <option value="holdings">交易排行榜</option>
+              <option value="asset">最新交易披露</option>
+            </select>
+            <button class="home-view-trigger" type="button" onclick="openSelectSheet('homeViewSelect')" aria-haspopup="dialog">
+              <span id="homeViewSelectText">交易排行榜</span>
+            </button>
+          </div>
         </div>
         <div class="vip-hero-art" aria-hidden="true">
           <img class="vip-hero-art__item vip-hero-art__profile" src="../assets/trump-hero-profile.png" alt="">
@@ -3288,35 +4036,42 @@
         </div>
       </header>
 
-      <div class="section-switch" aria-label="内容切换">
-        <button class="is-active" data-view="holdings" type="button" onclick="switchHomeView('holdings')">持仓与占比</button>
-        <button data-view="asset" type="button" onclick="switchHomeView('asset')">资产交易详情</button>
+      <h2 class="home-rank-title home-section" data-home-view="holdings">
+        <span class="home-rank-title__ornament" aria-hidden="true"></span>
+        <span class="home-rank-title__copy"><span>特朗普交易排行榜</span><span class="section-title-meta">2026-08-25最新披露</span></span>
+        <span class="home-rank-title__ornament home-rank-title__ornament--right" aria-hidden="true"></span>
+      </h2>
+
+      <div class="theme-metric-tabs home-section" data-home-view="holdings" aria-label="投资主题统计维度">
+        <button data-theme-mode="holding" type="button" onclick="setThemeMetricMode('holding')">持仓规模</button>
+        <button class="is-active" data-theme-mode="frequency" type="button" onclick="setThemeMetricMode('frequency')">高频交易</button>
+        <button data-theme-mode="buy" type="button" onclick="setThemeMetricMode('buy')">买入规模</button>
+        <button data-theme-mode="sell" type="button" onclick="setThemeMetricMode('sell')">卖出规模</button>
       </div>
+
+      <section class="theme-section home-section" id="themeSection" data-home-view="holdings">
+        <div class="theme-section-title">
+          <div class="module-title-with-help">
+            <h2 id="themeMetricTitle">各投资主题交易次数统计</h2>
+          </div>
+          <button class="section-mini-action" type="button" onclick="showInferredDetails()">查看更多</button>
+        </div>
+        <div class="theme-chart" id="conceptSummary"></div>
+      </section>
 
       <section class="grid hero-grid home-section" id="topHoldingsSection" data-home-view="holdings">
         <div class="panel holdings-hero">
           <div class="panel-head">
             <div>
               <div class="module-title-with-help">
-                <h2>前十大推算持仓</h2>
+                <h2 id="topHoldingsTitle">特朗普高频交易TOP 10</h2>
               </div>
             </div>
-            <button class="section-mini-action" type="button" onclick="showInferredDetails()">查看全部</button>
           </div>
           <div class="top-holdings">
             <div class="holding-cards holding-rank-list" id="topHoldings"></div>
           </div>
         </div>
-      </section>
-
-      <section class="theme-section home-section" id="themeSection" data-home-view="holdings">
-        <div class="theme-section-divider" aria-hidden="true"></div>
-        <div class="theme-section-title">
-          <div class="module-title-with-help">
-            <h2>投资主题占比</h2>
-          </div>
-        </div>
-        <div class="theme-chart" id="conceptSummary"></div>
       </section>
 
       <section class="panel table-panel hidden full-section" id="allHoldings">
@@ -3358,9 +4113,12 @@
 
       <section class="panel table-panel hidden full-section" id="inferredPositions">
         <div class="panel-head">
-          <div><h2>推算持仓状态</h2><p>基于年度基准快照与后续交易流水，仅表示披露口径下的可识别状态。</p></div>
+        <div><h2>各资产交易状态</h2></div>
           <div class="tools inferred-tools">
-            <input class="search" id="inferredSearch" placeholder="搜索资产、代码或主题">
+            <label class="search-field" aria-label="代码搜索">
+              <input class="search" id="inferredSearch" placeholder="代码搜索">
+              <span class="j-search-icon" aria-hidden="true"></span>
+            </label>
             <select class="select native-select-hidden" id="inferredConcept" onchange="applyInferredFilters(true)" aria-hidden="true" tabindex="-1">
               <option value="">全部主题</option>
             </select>
@@ -3369,26 +4127,12 @@
               <option value="">全部状态</option>
             </select>
             <button class="select select-trigger" id="inferredStatusTrigger" type="button" onclick="openSelectSheet('inferredStatus')" aria-haspopup="dialog"><span id="inferredStatusText">全部状态</span><span class="select-chevron" aria-hidden="true"></span></button>
-            <select class="select native-select-hidden" id="inferredSort" onchange="applyInferredFilters(true)" aria-hidden="true" tabindex="-1">
-              <option value="exposure_desc">披露规模排序</option>
-              <option value="baseline_desc">基准估算排序</option>
-              <option value="purchase_desc">买入估算排序</option>
-              <option value="sale_desc">卖出估算排序</option>
-              <option value="recent_desc">最近交易排序</option>
-              <option value="asset_asc">资产名称顺序</option>
-            </select>
-            <button class="select select-trigger" id="inferredSortTrigger" type="button" onclick="openSelectSheet('inferredSort')" aria-haspopup="dialog"><span id="inferredSortText">披露规模排序</span><span class="select-chevron" aria-hidden="true"></span></button>
           </div>
         </div>
         <div class="table-note" id="inferredSummary" hidden>加载推算持仓数据中...</div>
         <div class="table-wrap">
           <table>
-            <thead><tr>
-              <th><span class="inferred-th-content">资产</span></th>
-              <th class="numeric sortable" onclick="setInferredSort('exposure_desc')"><span class="inferred-th-content">披露规模估算 <button class="hint inferred-th-help" type="button" aria-label="披露规模估算说明" onclick="event.stopPropagation(); openHelp('exposure')"></button><span class="table-sort-icon" aria-hidden="true"></span></span></th>
-              <th class="sortable" onclick="setInferredSort('recent_desc')"><span class="inferred-th-content">最近交易 <span class="table-sort-icon" aria-hidden="true"></span></span></th>
-              <th><span class="inferred-th-content">推算状态 <button class="hint inferred-th-help" type="button" aria-label="推算状态说明" onclick="event.stopPropagation(); openHelp('status')"></button></span></th>
-            </tr></thead>
+            <thead><tr id="inferredHeaderRow"></tr></thead>
             <tbody id="inferredRows"></tbody>
           </table>
         </div>
@@ -3399,7 +4143,7 @@
 
       <section class="panel table-panel home-section hidden" id="transactions" data-home-view="asset">
         <div class="panel-head">
-          <div><h2>最新披露交易</h2></div>
+          <div><h2>最新披露交易 <span class="section-title-meta">披露时间：2026-08-25</span></h2></div>
         </div>
         <div class="trade-date-filter" aria-label="交易日筛选">
           <label class="trade-date-field">
@@ -3431,7 +4175,7 @@
 
       <section class="panel table-panel hidden full-section" id="assetDetails">
         <div class="panel-head">
-          <div><h2 id="assetDetailTitle">资产交易详情</h2><p id="assetDetailSubtitle" hidden>默认展示首个资产，可搜索或点击卡片切换交易披露链。</p></div>
+          <div><h2 id="assetDetailTitle">最新交易披露</h2><p id="assetDetailSubtitle" hidden>默认展示首个资产，可搜索或点击卡片切换交易披露链。</p></div>
           <div class="tools"><span class="pill" id="assetDetailBadge">等待选择资产</span></div>
         </div>
         <div id="assetDetailBody" class="empty">请点击首页持仓卡片、推算持仓表或交易记录中的资产名称。</div>
@@ -3529,7 +4273,13 @@
     let assetTimelineVisibleLimit = ASSET_TIMELINE_INITIAL_LIMIT;
     let allAnnualTrades = [];
     let selectedAssetKey = '';
+    let selectedAssetTrades = [];
     let assetPickerQuery = '';
+    let themeMetricMode = 'frequency';
+    let inferredDetailMetricMode = 'frequency';
+    let assetTimelineSortMode = 'date';
+    let assetTimelineSortDirection = 'desc';
+    let inferredSortMode = 'home';
     const HELP_TEXT = {
       baseline: {
         title: '基准区间估算',
@@ -3674,11 +4424,10 @@
       return value || '';
     }
     function setActiveNav(key) {
-      document.querySelectorAll('.section-switch button[data-view]').forEach(btn => {
-        btn.classList.toggle('is-active', btn.dataset.view === key);
-      });
+      const select = document.getElementById('homeViewSelect');
+      if (select && key) select.value = key;
     }
-    function setDetailPageMode(enabled, title = '推算持仓状态') {
+    function setDetailPageMode(enabled, title = '特朗普持仓') {
       document.querySelector('.page')?.classList.toggle('is-detail-page', enabled);
       const navTitle = document.querySelector('.j-nav-fixed__title');
       if (navTitle) navTitle.textContent = enabled ? title : '特朗普';
@@ -3711,17 +4460,78 @@
     function switchHomeView(view) {
       showHomeSection(view, view);
     }
+    function setThemeMetricMode(mode) {
+      themeMetricMode = mode;
+      closeRankHelpTips();
+      document.querySelectorAll('.theme-metric-tabs button[data-theme-mode]').forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.themeMode === mode);
+      });
+      renderConceptSummary(allInferredPositions);
+      renderTopHoldings(allInferredPositions);
+    }
+    function rankHelpPopover() {
+      let popover = document.getElementById('rankHelpPopover');
+      if (!popover) {
+        popover = document.createElement('div');
+        popover.id = 'rankHelpPopover';
+        popover.className = 'rank-help-popover';
+        popover.setAttribute('role', 'tooltip');
+        popover.textContent = '按2026年至今披露记录条数排序';
+        document.body.appendChild(popover);
+      }
+      return popover;
+    }
+    function showRankHelpTip(tip) {
+      const popover = rankHelpPopover();
+      const rect = tip.getBoundingClientRect();
+      const pageRect = tip.closest('.page')?.getBoundingClientRect();
+      const boundsLeft = pageRect ? pageRect.left + 16 : 8;
+      const boundsRight = pageRect ? pageRect.right - 16 : window.innerWidth - 8;
+      const popoverWidth = 240;
+      const preferredLeft = rect.left + rect.width / 2 - 26;
+      const left = Math.max(boundsLeft, Math.min(boundsRight - popoverWidth, preferredLeft));
+      const arrowLeft = Math.max(12, Math.min(popoverWidth - 26, rect.left + rect.width / 2 - left - 7));
+      const top = Math.max(8, Math.min(window.innerHeight - 45, rect.bottom + 8));
+      popover.style.left = `${left}px`;
+      popover.style.top = `${top}px`;
+      popover.style.setProperty('--rank-help-arrow-left', `${arrowLeft}px`);
+      popover.classList.add('is-visible');
+    }
+    function closeRankHelpTips(except = null) {
+      document.querySelectorAll('.rank-help-tip.is-open').forEach(tip => {
+        if (tip !== except) {
+          tip.classList.remove('is-open');
+          tip.setAttribute('aria-expanded', 'false');
+        }
+      });
+      if (!except) {
+        document.getElementById('rankHelpPopover')?.classList.remove('is-visible');
+      }
+    }
     function confidenceClass(value) {
       const text = String(value || '');
       if (text.includes('高')) return 'status-high';
       if (text.includes('中')) return 'status-mid';
       return 'status-low';
     }
-    function statusClass(value) {
+    function normalizeInferredStatus(value) {
       const text = String(value || '');
-      if (text.includes('确认') || text.includes('增持') || text.includes('可能持有')) return 'status-high';
-      if (text.includes('减持') || text.includes('不确定') || text.includes('状态不明')) return 'status-mid';
-      return 'status-low';
+      if (text.includes('疑似新进')) return '疑似新进';
+      if (text.includes('清仓')) return '疑似清仓';
+      if (text.includes('减持') || text.includes('卖出')) return '减持';
+      if (text.includes('新进')) return '新进';
+      if (text.includes('仍持有') || text.includes('可能持有')) return '仍持有';
+      if (text.includes('增持')) return '增持';
+      return '疑似新进';
+    }
+    function statusClass(value) {
+      const status = normalizeInferredStatus(value);
+      if (status === '新进') return 'status-new';
+      if (status === '增持') return 'status-add';
+      if (status === '仍持有') return 'status-hold';
+      if (status === '减持') return 'status-reduce';
+      if (status === '疑似清仓') return 'status-clear';
+      return 'status-probable-new';
     }
 
     function openHelp(key) {
@@ -3903,11 +4713,11 @@
       applyTradeDateFilters();
     }
 
-    const CUSTOM_SELECT_IDS = ['inferredConcept', 'inferredStatus', 'inferredSort'];
+    const CUSTOM_SELECT_IDS = ['homeViewSelect', 'inferredConcept', 'inferredStatus'];
     const CUSTOM_SELECT_TITLES = {
+      homeViewSelect: '选择内容',
       inferredConcept: '选择主题',
-      inferredStatus: '选择状态',
-      inferredSort: '排序方式'
+      inferredStatus: '选择状态'
     };
 
     function syncSelectTrigger(id) {
@@ -3929,6 +4739,7 @@
       if (!select || !modal || !list || !title) return;
       closeHelp();
       closeTradeDatePicker();
+      modal.dataset.selectId = id;
       title.textContent = CUSTOM_SELECT_TITLES[id] || '请选择';
       list.innerHTML = [...select.options].map(option => {
         const selected = option.value === select.value;
@@ -3958,6 +4769,7 @@
       select.value = value;
       syncSelectTrigger(id);
       closeSelectSheet();
+      if (id === 'homeViewSelect') switchHomeView(value);
       if (id.startsWith('inferred')) applyInferredFilters(true);
     }
 
@@ -4128,14 +4940,63 @@
       return res.json();
     }
 
+    function homeMetricConfig() {
+      return {
+        holding: {
+          title: '特朗普持仓规模TOP 10',
+          value: inferredExposure,
+          formatHtml: fmtMoneyHtml,
+          axisBase: 10000,
+          minBar: 3
+        },
+        frequency: {
+          title: '特朗普高频交易TOP 10',
+          value: row => Number(row.transaction_count || 0),
+          formatHtml: value => `<span class="j-finance-number">${esc(fmt(value))}</span><span class="j-finance-unit">次</span>`,
+          axisBase: 1,
+          minBar: 3
+        },
+        buy: {
+          title: '特朗普买入规模TOP 10',
+          value: row => Number(row.purchase_midpoint || 0),
+          formatHtml: fmtMoneyHtml,
+          axisBase: 10000,
+          minBar: 3
+        },
+        sell: {
+          title: '特朗普卖出规模TOP 10',
+          value: row => Number(row.sale_midpoint || 0),
+          formatHtml: fmtMoneyHtml,
+          axisBase: 10000,
+          minBar: 3
+        }
+      }[themeMetricMode] || {
+        title: '特朗普高频交易TOP 10',
+        value: row => Number(row.transaction_count || 0),
+        formatHtml: value => `<span class="j-finance-number">${esc(fmt(value))}</span><span class="j-finance-unit">次</span>`,
+        axisBase: 1,
+        minBar: 3
+      };
+    }
+
     function renderTopHoldings(rows) {
+      const config = homeMetricConfig();
+      const title = document.getElementById('topHoldingsTitle');
+      if (title) {
+        const help = themeMetricMode === 'holding'
+          ? ''
+          : '<button class="rank-help-tip" type="button" aria-label="按2026年至今披露记录条数排序" aria-expanded="false"></button>';
+        title.innerHTML = `${esc(config.title)}${help}`;
+      }
       const topRows = [...rows]
-        .sort((a, b) => inferredExposure(b) - inferredExposure(a))
+        .map(row => ({ row, value: Number(config.value(row) || 0) }))
+        .filter(item => item.value > 0)
+        .sort((a, b) => b.value - a.value || inferredExposure(b.row) - inferredExposure(a.row))
         .slice(0, 10);
-      const maxExposure = Math.max(...topRows.map(row => inferredExposure(row)), 1);
-      const maxWan = maxExposure / 10000;
-      const stepWan = niceHoldingAxisStep(maxWan);
-      const axisMaxWan = stepWan * Math.ceil(maxWan / stepWan);
+      const maxValue = Math.max(...topRows.map(item => item.value), 1);
+      const axisValue = maxValue / config.axisBase;
+      const stepWan = niceHoldingAxisStep(axisValue);
+      const axisMaxWan = stepWan * Math.ceil(axisValue / stepWan);
       const ticks = [];
       for (let tick = 0; tick <= axisMaxWan + stepWan / 2; tick += stepWan) ticks.push(tick);
       const labelTicks = ticks.filter(tick => tick > 0);
@@ -4144,9 +5005,8 @@
         document.getElementById('topHoldings').innerHTML = '<div class="empty">暂无推算持仓数据。</div>';
         return;
       }
-      const rowsHtml = topRows.map((row, index) => {
-        const exposure = inferredExposure(row);
-        const share = exposure / maxExposure * 100;
+      const rowsHtml = topRows.map(({ row, value }, index) => {
+        const share = value / maxValue * 100;
         const barColor = topColors[index] || '#9F6B41';
         const valueColor = topColors[index] || '#9F6B41';
         const indexColor = topColors[index] || '#A6A6A6';
@@ -4164,7 +5024,7 @@
             </span>
             <span class="holding-rank-bar-track">
               <span class="holding-rank-bar" style="width:${Math.max(3, Math.min(100, share))}%"></span>
-              <span class="holding-rank-value">${fmtMoneyHtml(exposure)}</span>
+              <span class="holding-rank-value">${config.formatHtml(value)}</span>
             </span>
           </div>
       `;
@@ -4176,7 +5036,7 @@
               ${ticks.map(tick => `<span style="left:${(tick / axisMaxWan) * 100}%"></span>`).join('')}
             </span>
             <span class="holding-rank-axis-labels">
-              ${labelTicks.map(tick => `<span style="left:${(tick / axisMaxWan) * 100}%">${formatHoldingAxisTick(tick)}</span>`).join('')}
+              ${labelTicks.map(tick => `<span style="left:${(tick / axisMaxWan) * 100}%">${config.axisBase === 1 ? fmt(tick) : formatHoldingAxisTick(tick)}</span>`).join('')}
             </span>
           </span>
         </div>
@@ -4187,20 +5047,78 @@
 
     function renderConceptSummary(positions) {
       const target = document.getElementById('conceptSummary');
-      if (!positions.length) {
+      const configMap = {
+        holding: {
+          title: '各投资主题持仓规模统计',
+          totalLabel: '持仓合计',
+          format: fmtMoney,
+          formatHtml: fmtMoneyHtml,
+          accept: () => true,
+          value: row => inferredExposure(row)
+        },
+        frequency: {
+          title: '各投资主题交易次数统计',
+          totalLabel: '2026年至今披露交易记录',
+          format: value => `${fmt(value)} 条`,
+          formatHtml: value => `<span class="j-finance-number">${esc(fmt(value))}</span><span class="j-finance-unit">条</span>`,
+          accept: () => true,
+          value: () => 1
+        },
+        buy: {
+          title: '各投资主题买入规模统计',
+          totalLabel: '2026年至今买入合计',
+          format: fmtMoney,
+          formatHtml: fmtMoneyHtml,
+          accept: row => String(row.transaction_type || '').toLowerCase().includes('purchase'),
+          value: amountMid
+        },
+        sell: {
+          title: '各投资主题卖出规模统计',
+          totalLabel: '2026年至今卖出合计',
+          format: fmtMoney,
+          formatHtml: fmtMoneyHtml,
+          accept: row => String(row.transaction_type || '').toLowerCase().includes('sale'),
+          value: amountMid
+        }
+      };
+      const config = configMap[themeMetricMode] || configMap.frequency;
+      const title = document.getElementById('themeMetricTitle');
+      if (title) title.textContent = config.title;
+      if (!positions.length && !allTrades.length) {
         target.innerHTML = '<div class="empty">暂无可聚合主题。</div>';
         return;
       }
       const conceptTotals = new Map();
-      positions.forEach(row => {
-        const concept = row.concept || '其他主题';
-        const exposure = inferredExposure(row);
-        if (exposure <= 0) return;
-        conceptTotals.set(concept, (conceptTotals.get(concept) || 0) + exposure);
-      });
+      if (themeMetricMode === 'holding') {
+        positions.forEach(row => {
+          const value = Number(config.value(row) || 0);
+          if (value <= 0) return;
+          const concept = row.concept || row.asset_category || '其他主题';
+          conceptTotals.set(concept, (conceptTotals.get(concept) || 0) + value);
+        });
+      } else if (allTrades.length) {
+        allTrades.forEach(row => {
+          if (!config.accept(row)) return;
+          const value = Number(config.value(row) || 0);
+          if (value <= 0) return;
+          const concept = row.concept || row.asset_category || '其他主题';
+          conceptTotals.set(concept, (conceptTotals.get(concept) || 0) + value);
+        });
+      } else {
+        positions.forEach(row => {
+          const concept = row.concept || row.asset_category || '其他主题';
+          const exposure = inferredExposure(row);
+          if (exposure <= 0) return;
+          conceptTotals.set(concept, (conceptTotals.get(concept) || 0) + exposure);
+        });
+      }
       const rows = [...conceptTotals.entries()]
         .map(([concept, midpoint_volume]) => ({ concept, midpoint_volume }))
         .sort((a, b) => b.midpoint_volume - a.midpoint_volume);
+      if (!rows.length) {
+        target.innerHTML = '<div class="empty">暂无该维度下的主题统计。</div>';
+        return;
+      }
       const palette = [
         'rgba(255, 105, 24, 0.86)',
         'rgba(255, 213, 97, 0.94)',
@@ -4232,17 +5150,21 @@
         const gap = visible.length > 1 ? 3 : 0;
         const dash = `${Math.max(0, arc - gap)} ${circumference}`;
         const pct = Math.round(row.value / total * 100);
-        const tip = `${row.label}：${fmtMoney(row.value)} · ${pct}%`;
+        const tip = `${row.label}：${config.format(row.value)} · ${pct}%`;
         const segment = `<circle class="donut-ring-segment" cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${row.color}" stroke-width="${stroke}" stroke-dasharray="${dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})" data-tip="${esc(tip)}" tabindex="0" onpointerenter="showDonutTooltip(event)" onpointermove="moveDonutTooltip(event)" onpointerleave="hideDonutTooltip(event)" onfocus="showDonutTooltip(event)" onblur="hideDonutTooltip(event)" onclick="showDonutTooltip(event)"></circle>`;
         offset += arc;
         return segment;
       }).join('');
-      const legend = visible.map(row => {
+      const legendItems = visible.map(row => {
         return `<div class="legend-row">
           <i class="legend-dot" style="background:${row.color}"></i>
           <strong title="${esc(row.label)}">${esc(row.label)}</strong>
         </div>`;
-      }).join('');
+      });
+      const legend = [legendItems.slice(0, 4), legendItems.slice(4, 8)]
+        .filter(group => group.length)
+        .map(group => `<div class="legend-line">${group.join('')}</div>`)
+        .join('');
       target.innerHTML = `
         <div class="donut-wrap">
           <div class="donut-visual">
@@ -4253,7 +5175,7 @@
             <span class="donut-avatar" aria-hidden="true"><img src="../assets/trump-donut-portrait.png" alt="" loading="lazy"></span>
             <span class="donut-tooltip" role="status" aria-live="polite"></span>
           </div>
-          <div class="donut-total"><strong>${fmtMoneyHtml(total)}</strong>估算合计</div>
+          <div class="donut-total"><strong>${config.formatHtml(total)}</strong>${esc(config.totalLabel)}</div>
         </div>
         <div class="theme-legend">${legend}</div>
       `;
@@ -4446,6 +5368,59 @@
       return dateValue(b) - dateValue(a) || filedDateValue(b) - filedDateValue(a);
     }
 
+    function tradeActionRank(row, target) {
+      const text = String(row.transaction_type || '').toLowerCase();
+      return text.includes(target) ? 0 : 1;
+    }
+
+    function assetTimelineSort(a, b) {
+      const direction = assetTimelineSortDirection === 'asc' ? 1 : -1;
+      const byDate = dateValue(a) - dateValue(b) || amountMid(b) - amountMid(a);
+      if (assetTimelineSortMode === 'buy') {
+        return tradeActionRank(a, 'purchase') - tradeActionRank(b, 'purchase')
+          || direction * (amountMid(a) - amountMid(b))
+          || byDate;
+      }
+      if (assetTimelineSortMode === 'sell') {
+        return tradeActionRank(a, 'sale') - tradeActionRank(b, 'sale')
+          || direction * (amountMid(a) - amountMid(b))
+          || byDate;
+      }
+      return direction * byDate;
+    }
+
+    function assetTimelineSortControls() {
+      const options = [
+        ['date', '交易日期'],
+        ['buy', '买入规模'],
+        ['sell', '卖出规模']
+      ];
+      return `<div class="asset-timeline-sort" aria-label="交易披露链排序">
+        ${options.map(([value, label]) => {
+          const active = assetTimelineSortMode === value;
+          const dir = active ? assetTimelineSortDirection : '';
+          const ariaSort = active ? (dir === 'asc' ? '升序' : '降序') : '未排序';
+          return `<button class="${active ? 'is-active' : ''}" data-sort-dir="${esc(dir)}" type="button" onclick="setAssetTimelineSort('${value}')" aria-label="${esc(`${label}${ariaSort}`)}"><span class="asset-sort-label">${esc(label)}</span><span class="asset-sort-caret" aria-hidden="true"><span class="asset-sort-caret__up" onclick="setAssetTimelineSort('${value}', 'asc', event)"></span><span class="asset-sort-caret__down" onclick="setAssetTimelineSort('${value}', 'desc', event)"></span></span></button>`;
+        }).join('')}
+      </div>`;
+    }
+
+    function setAssetTimelineSort(mode, direction = '', event = null) {
+      if (event) event.stopPropagation();
+      if (direction === 'asc' || direction === 'desc') {
+        assetTimelineSortMode = mode;
+        assetTimelineSortDirection = direction;
+      } else if (assetTimelineSortMode === mode) {
+        assetTimelineSortDirection = assetTimelineSortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        assetTimelineSortMode = mode;
+        assetTimelineSortDirection = 'desc';
+      }
+      const position = findPositionByKey(selectedAssetKey, '', '');
+      if (!position) return;
+      renderAssetDetail(position, selectedAssetTrades, { resetTimeline: false });
+    }
+
     function inferredDateValue(row) {
       const parts = String(row.last_trade_date || '').split('/');
       if (parts.length === 3) {
@@ -4560,20 +5535,84 @@
       renderHoldings(rows);
     }
 
+    function inferredMetricConfigs() {
+      return {
+        holding: {
+          key: 'holding',
+          label: '持仓规模',
+          defaultSort: 'desc',
+          value: row => Number(inferredExposure(row) || 0),
+          html: row => esc(fmtOptionalMoney(inferredExposure(row)))
+        },
+        frequency: {
+          key: 'frequency',
+          label: '2026年至今|交易次数',
+          defaultSort: 'desc',
+          value: row => Number(row.transaction_count || 0),
+          html: row => esc(fmt(row.transaction_count || 0))
+        },
+        buy: {
+          key: 'buy',
+          label: '2026年至今|买入规模',
+          defaultSort: 'desc',
+          value: row => Number(row.purchase_midpoint || 0),
+          html: row => esc(fmtOptionalMoney(row.purchase_midpoint))
+        },
+        sell: {
+          key: 'sell',
+          label: '2026年至今|卖出规模',
+          defaultSort: 'desc',
+          value: row => Number(row.sale_midpoint || 0),
+          html: row => esc(fmtOptionalMoney(row.sale_midpoint))
+        }
+      };
+    }
+
+    function inferredMetricColumns() {
+      const configs = inferredMetricConfigs();
+      const primary = configs[inferredDetailMetricMode] || configs.frequency;
+      return [primary, ...['holding', 'frequency', 'buy', 'sell'].filter(key => key !== primary.key).map(key => configs[key])];
+    }
+
+    function renderInferredHeader() {
+      const header = document.getElementById('inferredHeaderRow');
+      if (!header) return;
+      const metricHeaders = inferredMetricColumns().map(column => {
+        const parts = column.label.split('|');
+        const labelHtml = parts.length === 2
+          ? `<span class="inferred-th-content inferred-th-content--stack"><span class="inferred-th-label-stack"><span>${esc(parts[0])}</span><span>${esc(parts[1])}</span></span><span class="table-sort-icon" aria-hidden="true"></span></span>`
+          : `<span class="inferred-th-content">${esc(column.label)} <span class="table-sort-icon" aria-hidden="true"></span></span>`;
+        return `<th class="numeric sortable" onclick="setInferredMetricSort('${esc(column.key)}')">${labelHtml}</th>`;
+      }).join('');
+      header.innerHTML = `
+        <th class="sortable" onclick="setInferredSort('asset_asc')"><span class="inferred-th-content">资产 <span class="table-sort-icon" aria-hidden="true"></span></span></th>
+        ${metricHeaders}
+        <th class="sortable" onclick="setInferredSort('recent_desc')"><span class="inferred-th-content">最近交易 <span class="table-sort-icon" aria-hidden="true"></span></span></th>
+      `;
+    }
+
     function renderInferredPositions(rows) {
       const total = allInferredPositions.length;
       const visibleRows = rows.slice(0, inferredVisibleLimit);
       const summary = document.getElementById('inferredSummary');
+      const metricColumns = inferredMetricColumns();
+      renderInferredHeader();
       if (summary) {
         summary.textContent = rows.length
           ? `当前显示 ${fmt(visibleRows.length)} / ${fmt(total)} 项。`
           : `当前筛选无匹配结果。总计 ${fmt(total)} 项推算资产。`;
       }
-      document.getElementById('inferredRows').innerHTML = visibleRows.length ? visibleRows.map((row, index) => `
+      document.getElementById('inferredRows').innerHTML = visibleRows.length ? visibleRows.map((row, index) => {
+        const latestAction = row.last_trade_type ? translateAction(row.last_trade_type) : '';
+        const latestDate = row.last_trade_date ? formatTradeDate(row.last_trade_date) : '';
+        const displayStatus = normalizeInferredStatus(row.inferred_status);
+        const latestTradeMeta = latestAction || latestDate
+          ? `<span class="inferred-latest-trade__meta">${latestAction ? `<span class="inferred-latest-trade__action">${esc(latestAction)}</span>` : ''}<span>${esc(latestDate || '—')}</span></span>`
+          : '<span class="inferred-latest-trade__meta">—</span>';
+        return `
         <tr>
           <td class="name trade-asset-cell">
             <span class="ranked-asset-cell">
-              <span class="asset-table-rank">${String(index + 1).padStart(2, '0')}</span>
               <span class="asset-table-main">
                 ${assetLink(row, assetDisplayName(row))}
                 <span class="asset-table-meta">
@@ -4583,11 +5622,16 @@
               </span>
             </span>
           </td>
-          <td class="numeric">${fmtOptionalMoney(inferredExposure(row))}</td>
-          <td>${esc(row.last_trade_type ? translateAction(row.last_trade_type) + ' ' + row.last_trade_date : '—')}</td>
-          <td><span class="tag ${statusClass(row.inferred_status)}" title="披露口径推算状态，不等于实际账户持仓。">${esc(row.inferred_status)}</span></td>
+          ${metricColumns.map(column => `<td class="numeric">${column.html(row)}</td>`).join('')}
+          <td>
+            <span class="inferred-latest-trade">
+              <span class="tag ${statusClass(displayStatus)}" title="披露口径推算状态，不等于实际账户持仓。">${esc(displayStatus)}</span>
+              ${latestTradeMeta}
+            </span>
+          </td>
         </tr>
-      `).join('') : '<tr><td colspan="4" class="empty">暂无推算结果。</td></tr>';
+      `;
+      }).join('') : '<tr><td colspan="6" class="empty">暂无推算结果。</td></tr>';
       const actions = document.querySelector('.inferred-load-actions');
       const loadMore = document.getElementById('inferredLoadMore');
       const hasMore = rows.length > visibleRows.length;
@@ -4598,28 +5642,13 @@
       }
     }
 
-    function inferredRowHtml(row) {
-      return `<tr>
-        <td class="name trade-asset-cell">
-          ${assetLink(row, assetDisplayName(row))}
-          <span class="asset-table-meta">
-            <span class="asset-table-code">${esc(row.ticker || '—')}</span>
-            <span class="asset-table-tags"><span class="tag">${esc(row.concept || row.asset_category || '其他')}</span></span>
-          </span>
-        </td>
-        <td class="numeric">${fmtOptionalMoney(inferredExposure(row))}</td>
-        <td>${esc(row.last_trade_type ? translateAction(row.last_trade_type) + ' ' + row.last_trade_date : '—')}</td>
-        <td><span class="tag ${statusClass(row.inferred_status)}" title="披露口径推算状态，不等于实际账户持仓。">${esc(row.inferred_status)}</span></td>
-      </tr>`;
-    }
-
     function populateInferredFilters(rows) {
       const conceptSelect = document.getElementById('inferredConcept');
       const statusSelect = document.getElementById('inferredStatus');
       const currentConcept = conceptSelect.value;
       const currentStatus = statusSelect.value;
       const concepts = [...new Set(rows.map(row => row.concept || row.asset_category || '其他'))].sort((a, b) => a.localeCompare(b, 'zh-Hans-CN'));
-      const statuses = [...new Set(rows.map(row => row.inferred_status || '状态不明'))];
+      const statuses = ['新进', '增持', '仍持有', '减持', '疑似清仓', '疑似新进'];
       conceptSelect.innerHTML = '<option value="">全部主题</option>' + concepts.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
       statusSelect.innerHTML = '<option value="">全部状态</option>' + statuses.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
       conceptSelect.value = concepts.includes(currentConcept) ? currentConcept : '';
@@ -4628,10 +5657,27 @@
     }
 
     function setInferredSort(value) {
-      const select = document.getElementById('inferredSort');
-      select.value = value;
-      syncSelectTrigger('inferredSort');
+      const match = String(value).match(/^(.+)_(asc|desc)$/);
+      if (match && inferredSortMode === value) {
+        inferredSortMode = `${match[1]}_${match[2] === 'asc' ? 'desc' : 'asc'}`;
+      } else {
+        inferredSortMode = value;
+      }
       applyInferredFilters(true);
+    }
+
+    function setInferredMetricSort(key) {
+      const configs = inferredMetricConfigs();
+      const config = configs[key] || configs.frequency;
+      const descMode = `metric_${config.key}_desc`;
+      const ascMode = `metric_${config.key}_asc`;
+      inferredSortMode = inferredSortMode === descMode ? ascMode : descMode;
+      applyInferredFilters(true);
+    }
+
+    function inferredStatusMatches(rowStatus, filter) {
+      if (!filter) return true;
+      return normalizeInferredStatus(rowStatus) === filter;
     }
 
     function applyInferredFilters(resetLimit = false) {
@@ -4639,23 +5685,36 @@
       const query = document.getElementById('inferredSearch').value.trim().toUpperCase();
       const concept = document.getElementById('inferredConcept').value;
       const status = document.getElementById('inferredStatus').value;
-      const sort = document.getElementById('inferredSort').value;
+      const sort = inferredSortMode;
       let rows = allInferredPositions.filter(row => {
         const rowConcept = row.concept || row.asset_category || '其他';
         if (concept && rowConcept !== concept) return false;
-        if (status && (row.inferred_status || '状态不明') !== status) return false;
+        if (!inferredStatusMatches(row.inferred_status, status)) return false;
         if (query) {
-          const haystack = [row.asset_name, row.ticker, rowConcept, row.inferred_status].join(' ').toUpperCase();
+          const haystack = [row.ticker].join(' ').toUpperCase();
           if (!haystack.includes(query)) return false;
         }
         return true;
       });
       rows.sort((a, b) => {
-        if (sort === 'baseline_desc') return Number(b.baseline_midpoint || 0) - Number(a.baseline_midpoint || 0);
+        const metricSort = String(sort).match(/^metric_(holding|frequency|buy|sell)_(asc|desc)$/);
+        if (metricSort) {
+          const metric = inferredMetricConfigs()[metricSort[1]];
+          const direction = metricSort[2] === 'asc' ? 1 : -1;
+          return direction * (Number(metric.value(a) || 0) - Number(metric.value(b) || 0)) || inferredExposure(b) - inferredExposure(a);
+        }
+        if (sort === 'home') {
+          const primaryMetric = inferredMetricConfigs()[inferredDetailMetricMode] || inferredMetricConfigs().frequency;
+          return Number(primaryMetric.value(b) || 0) - Number(primaryMetric.value(a) || 0) || inferredExposure(b) - inferredExposure(a);
+        }
         if (sort === 'purchase_desc') return Number(b.purchase_midpoint || 0) - Number(a.purchase_midpoint || 0);
+        if (sort === 'purchase_asc') return Number(a.purchase_midpoint || 0) - Number(b.purchase_midpoint || 0);
         if (sort === 'sale_desc') return Number(b.sale_midpoint || 0) - Number(a.sale_midpoint || 0);
+        if (sort === 'sale_asc') return Number(a.sale_midpoint || 0) - Number(b.sale_midpoint || 0);
         if (sort === 'recent_desc') return inferredDateValue(b) - inferredDateValue(a);
-        if (sort === 'asset_asc') return String(a.asset_name || '').localeCompare(String(b.asset_name || ''), 'zh-Hans-CN');
+        if (sort === 'recent_asc') return inferredDateValue(a) - inferredDateValue(b);
+        if (sort === 'asset_asc') return String(a.ticker || '').localeCompare(String(b.ticker || ''), 'en-US') || String(a.asset_name || '').localeCompare(String(b.asset_name || ''), 'zh-Hans-CN');
+        if (sort === 'asset_desc') return String(b.ticker || '').localeCompare(String(a.ticker || ''), 'en-US') || String(b.asset_name || '').localeCompare(String(a.asset_name || ''), 'zh-Hans-CN');
         return inferredExposure(b) - inferredExposure(a);
       });
       renderInferredPositions(rows);
@@ -4700,7 +5759,6 @@
       const sells = Number(position.sale_midpoint || 0);
       const latest = position.last_trade_type ? `${translateAction(position.last_trade_type)} ${position.last_trade_date || ''}` : '';
       const parts = [];
-      if (Number(position.baseline_midpoint || 0) > 0) parts.push(`年报基准估算 ${fmtMoney(position.baseline_midpoint)}`);
       if (buys > 0) parts.push(`后续买入估算 ${fmtMoney(buys)}`);
       if (sells > 0) parts.push(`后续卖出估算 ${fmtMoney(sells)}`);
       if (latest) parts.push(`最近交易为${latest}`);
@@ -4754,7 +5812,7 @@
       assetPickerQuery = String(filterText || '');
       const rows = assetPickerRows(filterText);
       const visibleRows = selectedAssetKey ? rows.filter(row => detailKey(row) !== selectedAssetKey) : rows;
-      document.getElementById('assetDetailTitle').textContent = '资产交易详情';
+      document.getElementById('assetDetailTitle').textContent = '最新交易披露';
       document.getElementById('assetDetailSubtitle').textContent = '默认展示首个资产，可搜索或点击卡片切换交易披露链。';
       document.getElementById('assetDetailBadge').textContent = selectedAssetKey ? '已选择资产' : rows.length ? '默认第一项' : '暂无资产';
       document.getElementById('assetDetailBody').innerHTML = `
@@ -4788,15 +5846,56 @@
       const exposure = inferredExposure(position);
       const displayName = assetDisplayName(position) || position.asset_name || '资产详情';
       const ticker = String(position.ticker || '').trim().toUpperCase();
+      const buyCount = trades.filter(row => String(row.transaction_type || '').toLowerCase().includes('purchase')).length;
+      const sellCount = trades.filter(row => String(row.transaction_type || '').toLowerCase().includes('sale')).length;
+      const countHtml = value => `<span class="j-finance-number">${esc(fmt(value))}</span><span class="j-finance-unit">次</span>`;
       return `
         <div class="asset-detail-overview selected-asset-summary">
           <h3 class="selected-asset-title">${assetTitleLogoHtml(position)}<span class="selected-asset-name">${esc(displayName)}</span>${ticker ? `<span class="selected-asset-code">${esc(ticker)}</span>` : ''}</h3>
           <div class="asset-detail-kpis">
-            <div class="asset-kpi"><span>推算披露规模</span><strong>${fmtMoneyHtml(exposure)}</strong></div>
-            <div class="asset-kpi"><span>年报基准估算</span><strong>${fmtOptionalMoneyHtml(position.baseline_midpoint)}</strong></div>
-            <div class="asset-kpi asset-kpi--buy"><span>买入区间估算</span><strong>${fmtOptionalMoneyHtml(position.purchase_midpoint)}</strong></div>
-            <div class="asset-kpi asset-kpi--sell"><span>卖出区间估算</span><strong>${fmtOptionalMoneyHtml(position.sale_midpoint)}</strong></div>
+            <div class="asset-kpi-total-row">
+              <span class="asset-kpi-total-row__title">
+                <span class="asset-kpi-total-row__label">特朗普累计交易</span>
+                <span class="asset-kpi-total-row__period">(2026年至今)</span>
+              </span>
+              <strong class="asset-kpi-total-row__value">${countHtml(trades.length)}</strong>
+            </div>
+            <div class="asset-kpi-flow">
+              <div class="asset-kpi-line asset-kpi-line--buy">
+                <div class="asset-kpi-line-group">
+                  <span class="asset-kpi-line-label">买入规模估算</span>
+                  <strong class="asset-kpi-line-value">${fmtOptionalMoneyHtml(position.purchase_midpoint)}</strong>
+                </div>
+                <span class="asset-kpi-line-divider" aria-hidden="true"></span>
+                <div class="asset-kpi-line-group">
+                  <span class="asset-kpi-line-label">买入次数</span>
+                  <strong class="asset-kpi-line-value">${countHtml(buyCount)}</strong>
+                </div>
+              </div>
+              <div class="asset-kpi-line asset-kpi-line--sell">
+                <div class="asset-kpi-line-group">
+                  <span class="asset-kpi-line-label">卖出规模估算</span>
+                  <strong class="asset-kpi-line-value">${fmtOptionalMoneyHtml(position.sale_midpoint)}</strong>
+                </div>
+                <span class="asset-kpi-line-divider" aria-hidden="true"></span>
+                <div class="asset-kpi-line-group">
+                  <span class="asset-kpi-line-label">卖出次数</span>
+                  <strong class="asset-kpi-line-value">${countHtml(sellCount)}</strong>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>`;
+    }
+
+    function assetChainSummaryHtml(position) {
+      return `
+        <div class="asset-chain-summary">
+          <span class="asset-chain-summary__main">
+            <span class="asset-chain-summary__label">特朗普持仓估算</span>
+            <strong class="asset-chain-summary__money">${fmtMoneyHtml(inferredExposure(position))}</strong>
+          </span>
+          <span class="asset-chain-summary__meta">(截至最新披露)</span>
         </div>`;
     }
 
@@ -4829,7 +5928,7 @@
       if (!trades.length) {
         return '<div class="no-chain">当前资产有推算持仓信息，但没有匹配到可展示交易链。常见原因包括：该资产只出现在年度持仓披露中、基金代码未出现在交易流水字段中，或原始披露名称与标准化名称差异较大。</div>';
       }
-      const sortedTrades = [...trades].sort(assetTradeSort);
+      const sortedTrades = [...trades].sort(assetTimelineSort);
       const visibleTrades = sortedTrades.slice(0, visibleLimit);
       const timeline = `<div class="timeline">${visibleTrades.map(row => {
         const kind = String(row.transaction_type || '').toLowerCase();
@@ -4855,7 +5954,8 @@
     function renderAssetDetail(position, trades, options = {}) {
       if (options.resetTimeline !== false) assetTimelineVisibleLimit = ASSET_TIMELINE_INITIAL_LIMIT;
       selectedAssetKey = detailKey(position);
-      document.getElementById('assetDetailTitle').textContent = '资产交易详情';
+      selectedAssetTrades = [...trades];
+      document.getElementById('assetDetailTitle').textContent = '最新交易披露';
       document.getElementById('assetDetailSubtitle').textContent = [
         `当前资产：${position.asset_name || '未命名资产'}`,
         position.ticker || '',
@@ -4867,9 +5967,13 @@
       const target = document.getElementById('assetDetailBody');
       target.innerHTML = `
         ${selectedAssetOverviewHtml(position, trades)}
-        <div class="asset-chain-head">
-          <h3>交易披露链</h3>
-          <div class="timeline-amount-label">买入/卖出区间估算(美元)</div>
+        ${assetChainSummaryHtml(position)}
+        <div class="asset-chain-sticky">
+          <div class="asset-chain-head">
+            <h3>交易链</h3>
+            <div class="timeline-amount-label">买入/卖出区间（美元）</div>
+          </div>
+          ${assetTimelineSortControls()}
         </div>
         ${timelineHtml(trades, assetTimelineVisibleLimit)}
       `;
@@ -4883,14 +5987,14 @@
       if (shouldActivate) {
         setActiveNav('asset');
         hideHomeSections();
-        setDetailPageMode(true, '资产交易详情');
+        setDetailPageMode(true, '最新交易披露');
         document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
         document.getElementById('assetDetails').classList.remove('hidden');
       } else {
         document.getElementById('assetDetails').classList.add('hidden');
       }
       const section = document.getElementById('assetDetails');
-      document.getElementById('assetDetailTitle').textContent = '资产交易详情';
+      document.getElementById('assetDetailTitle').textContent = '最新交易披露';
       document.getElementById('assetDetailSubtitle').textContent = fallbackName ? `正在加载 ${fallbackName} 的披露链路...` : '正在加载该资产的披露链路...';
       document.getElementById('assetDetailBadge').textContent = fallbackTicker || '加载中';
       const target = document.getElementById('assetDetailBody');
@@ -4902,7 +6006,7 @@
         const trades = await fetchAssetTrades(position, fallbackName, fallbackTicker);
         renderAssetDetail(position, trades);
       } catch (err) {
-        document.getElementById('assetDetailSubtitle').textContent = '资产交易详情读取失败';
+        document.getElementById('assetDetailSubtitle').textContent = '最新交易披露读取失败';
         document.getElementById('assetDetailBadge').textContent = '加载失败';
         const errorTarget = document.getElementById('assetDetailBody');
         errorTarget.innerHTML = `<div class="empty">暂时无法读取该资产的交易链路：${esc(err.message || err)}</div>`;
@@ -4963,7 +6067,9 @@
     async function showInferredDetails() {
       setActiveNav('holdings');
       hideHomeSections();
-      setDetailPageMode(true, '推算持仓状态');
+      inferredDetailMetricMode = themeMetricMode;
+      inferredSortMode = 'home';
+      setDetailPageMode(true, '特朗普持仓');
       document.querySelectorAll('.full-section').forEach(section => section.classList.add('hidden'));
       document.getElementById('inferredPositions').classList.remove('hidden');
       inferredVisibleLimit = INFERRED_INITIAL_LIMIT;
@@ -5023,7 +6129,7 @@
         renderTopHoldings(allInferredPositions);
         populateInferredFilters(allInferredPositions);
         document.getElementById('inferredSummary').textContent = '点击“查看更多”后加载完整列表。';
-        document.getElementById('inferredRows').innerHTML = '<tr><td colspan="4" class="empty">完整推算持仓列表暂未展开。</td></tr>';
+        document.getElementById('inferredRows').innerHTML = '<tr><td colspan="6" class="empty">完整推算持仓列表暂未展开。</td></tr>';
         document.querySelector('.inferred-load-actions')?.classList.add('hidden');
         try {
           const fetchedTrades = await api('/api/transactions?limit=5000&state=parsed&public=1');
@@ -5032,6 +6138,7 @@
           allTrades = data.recent_transactions || [];
         }
         setupDefaultTradeDateRange(allTrades);
+        renderConceptSummary(allInferredPositions);
         renderTrades(allTrades);
       } catch (err) {
         setStatus(false, '静态数据加载失败');
@@ -5045,11 +6152,31 @@
     });
     document.getElementById('inferredSearch').addEventListener('input', () => applyInferredFilters(true));
     document.getElementById('inferredSearch').addEventListener('keydown', e => { if (e.key === 'Enter') applyInferredFilters(true); });
+    document.addEventListener('click', e => {
+      const tip = e.target.closest('.rank-help-tip');
+      if (tip) {
+        e.preventDefault();
+        e.stopPropagation();
+        const nextOpen = !tip.classList.contains('is-open');
+        closeRankHelpTips(tip);
+        tip.classList.toggle('is-open', nextOpen);
+        tip.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+        if (nextOpen) {
+          showRankHelpTip(tip);
+        } else {
+          document.getElementById('rankHelpPopover')?.classList.remove('is-visible');
+        }
+      } else {
+        closeRankHelpTips();
+      }
+    });
+    window.addEventListener('scroll', () => closeRankHelpTips(), { passive: true });
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
         closeHelp();
         closeTradeDatePicker();
         closeSelectSheet();
+        closeRankHelpTips();
       }
     });
     init();
