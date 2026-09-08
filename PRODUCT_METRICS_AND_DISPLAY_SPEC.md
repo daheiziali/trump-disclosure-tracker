@@ -592,7 +592,8 @@ possible_exit_date          最近一次疑似清仓信号对应交易日
 
 ```text
 last_period_action = 卖出
-且 sale_midpoint_to_last_sell >= 80% * identifiable_position_base
+且 identifiable_position_base > 0
+且 sale_midpoint_to_last_sell / identifiable_position_base >= 80%
 ```
 
 可识别持仓基础建议定义为：
@@ -609,15 +610,44 @@ identifiable_position_base = 年报基准区间中点 + 近一年累计买入金
 sale_midpoint_to_last_sell = 近一年累计卖出金额区间中点合计
 ```
 
-阈值建议：
+阈值分层：
 
 ```text
-80%
+卖出比例 < 50%：
+    状态 = 减持
+    后端 clearance_confidence = normal_reduce
+
+50% <= 卖出比例 < 80%：
+    状态 = 减持
+    后端 clearance_confidence = large_reduce
+
+80% <= 卖出比例 < 100%：
+    状态 = 疑似清仓
+    后端 clearance_confidence = possible_clearance
+
+卖出比例 >= 100%：
+    状态 = 疑似清仓
+    后端 clearance_confidence = strong_possible_clearance
 ```
 
 原因：
 
-OGE 只披露金额区间，不披露股数和成交价格。使用 80% 作为疑似阈值，比 100% 更适合区间估算和价格波动场景。
+OGE 只披露金额区间，不披露股数、成交价格和真实账户余额。因此系统不能输出「确认清仓」，只能输出「疑似清仓」。
+
+80% 作为用户端状态阈值的理由：
+
+- 低于 50% 通常更接近普通减持，不应夸大为退出信号。
+- 50%-80% 已经是大额卖出，但仍可能只是降低仓位，应继续显示「减持」，后端保留大额减持标签。
+- 80% 以上说明累计卖出规模已接近此前可识别持仓基础，在 OGE 区间披露限制下，可以作为疑似退出信号。
+- 100% 以上说明按区间中点估算已覆盖可识别持仓基础，但仍不能确认真实清仓，所以仍显示「疑似清仓」，只在后端提高置信度。
+
+必要限制：
+
+```text
+如果 identifiable_position_base <= 0，不允许判断为疑似清仓。
+如果最近一次近一年交易不是卖出，不允许判断为疑似清仓。
+如果疑似清仓之后又出现买入，且最近一次近一年交易为买入，应进入「疑似新进」判断。
+```
 
 ### 10.5 疑似新进
 
@@ -755,7 +785,8 @@ last_period_action = last_period_trade.action
     status = 疑似新进
 
 否则如果 last_period_action = 卖出
-且 sale_midpoint_to_last_sell >= 80% * identifiable_position_base:
+且 identifiable_position_base > 0
+且 sale_midpoint_to_last_sell / identifiable_position_base >= 0.8:
     status = 疑似清仓
 
 否则如果 baseline = 0
@@ -782,8 +813,12 @@ last_period_action = last_period_trade.action
 ```text
 1. 按交易日升序遍历该资产全部可识别交易链。
 2. 动态累计买入和卖出金额区间中点。
-3. 当某个卖出节点满足「卖出累计 >= 80% * 当时可识别持仓基础」时，标记该节点为疑似清仓信号。
-4. 如果该疑似清仓信号之后又出现买入，且近一年内最近一次交易为买入，则当前状态为疑似新进。
+3. 每遇到一个卖出节点，先确认当时 identifiable_position_base > 0。
+4. 计算 sell_ratio = 截至该卖出节点的累计卖出区间中点 / 当时可识别持仓基础。
+5. 当 sell_ratio >= 0.8 时，标记该节点为疑似清仓信号。
+6. 当 sell_ratio >= 1.0 时，仍只标记为疑似清仓，但后端 clearance_confidence = strong_possible_clearance。
+7. 如果 sell_ratio 在 0.5 到 0.8 之间，用户端仍显示「减持」，后端可标记 clearance_confidence = large_reduce。
+8. 如果该疑似清仓信号之后又出现买入，且近一年内最近一次交易为买入，则当前状态为疑似新进。
 ```
 
 边界处理：
@@ -791,6 +826,7 @@ last_period_action = last_period_trade.action
 - 没有近一年交易且年报基准大于 0，状态为「仍持有」。
 - 没有近一年交易且年报基准等于 0，不进入用户端主要资产列表，除非该资产需要在历史交易链中被检索。
 - 缺少交易日的记录不参与状态判断，进入复核后台。
+- 没有可识别持仓基础的资产，即使最近一次是卖出，也不允许直接判断为「疑似清仓」，应优先落入「减持」或进入后台复核。
 - 用户端不输出「状态不明」。
 
 ## 11. 状态说明文案
