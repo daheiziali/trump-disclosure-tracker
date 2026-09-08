@@ -1426,8 +1426,8 @@
     }
 
     #inferredPositions .table-wrap table {
-      width: 860px;
-      min-width: 860px;
+      width: 930px;
+      min-width: 930px;
       border-collapse: separate;
       border-spacing: 0;
       table-layout: fixed;
@@ -1518,13 +1518,22 @@
 
     #inferredPositions .table-wrap th:nth-child(6),
     #inferredPositions .table-wrap td:nth-child(6) {
-      width: 180px;
-      min-width: 180px;
-      max-width: 180px;
+      width: 112px;
+      min-width: 112px;
+      max-width: 112px;
       text-align: center;
     }
 
-    #inferredPositions .table-wrap th:nth-child(6) .inferred-th-content {
+    #inferredPositions .table-wrap th:nth-child(7),
+    #inferredPositions .table-wrap td:nth-child(7) {
+      width: 138px;
+      min-width: 138px;
+      max-width: 138px;
+      text-align: center;
+    }
+
+    #inferredPositions .table-wrap th:nth-child(6) .inferred-th-content,
+    #inferredPositions .table-wrap th:nth-child(7) .inferred-th-content {
       justify-content: center;
     }
 
@@ -4298,8 +4307,8 @@
         body: '来自后续交易披露中标记为卖出的金额区间。页面将这些区间取中点后汇总，用于表示后续披露中的累计卖出规模，不代表精确成交金额或剩余持仓。'
       },
       status: {
-        title: '推算状态',
-        body: '根据年度基准、后续买入和卖出之间的关系生成的披露口径结论，例如“可能持有”“增持或仍持有”“减持或清仓不确定”。它不是券商账户里的实时持仓状态。'
+        title: '持仓状态',
+        body: '根据年度基准和交易链计算，每项资产只显示一个状态：新进、增持、减持、疑似清仓、疑似新进或仍持有。列表保留最近交易日期，但不额外显示买入/卖出动作文字。'
       },
       confidence: {
         title: '置信度',
@@ -4514,15 +4523,26 @@
       if (text.includes('中')) return 'status-mid';
       return 'status-low';
     }
-    function normalizeInferredStatus(value) {
+    function inferredLatestAction(row) {
+      const type = String(row?.last_trade_type || '').toLowerCase();
+      if (type.includes('purchase') || type.includes('buy') || type.includes('买入')) return '买入';
+      if (type.includes('sale') || type.includes('sell') || type.includes('卖出')) return '卖出';
+      return '';
+    }
+    function normalizeInferredStatus(value, row = null) {
       const text = String(value || '');
+      const canonicalStatus = String(row?.current_status || '');
+      const latestAction = inferredLatestAction(row);
+      if (['新进', '增持', '减持', '疑似清仓', '疑似新进', '仍持有'].includes(canonicalStatus)) return canonicalStatus;
+      if (latestAction === '买入') return text.includes('疑似新进') ? '疑似新进' : text === '新进' ? '新进' : '增持';
+      if (latestAction === '卖出') return text.includes('清仓') ? '疑似清仓' : '减持';
       if (text.includes('疑似新进')) return '疑似新进';
       if (text.includes('清仓')) return '疑似清仓';
       if (text.includes('减持') || text.includes('卖出')) return '减持';
-      if (text.includes('新进')) return '新进';
-      if (text.includes('仍持有') || text.includes('可能持有')) return '仍持有';
+      if (text === '新进') return '新进';
       if (text.includes('增持')) return '增持';
-      return '疑似新进';
+      if (text.includes('仍持有') || text.includes('可能持有') || text.includes('确认持有') || Number(row?.baseline_midpoint || 0) > 0) return '仍持有';
+      return '';
     }
     function statusClass(value) {
       const status = normalizeInferredStatus(value);
@@ -4531,7 +4551,8 @@
       if (status === '仍持有') return 'status-hold';
       if (status === '减持') return 'status-reduce';
       if (status === '疑似清仓') return 'status-clear';
-      return 'status-probable-new';
+      if (status === '疑似新进') return 'status-probable-new';
+      return '';
     }
 
     function openHelp(key) {
@@ -5587,7 +5608,8 @@
       header.innerHTML = `
         <th class="sortable" onclick="setInferredSort('asset_asc')"><span class="inferred-th-content">资产 <span class="table-sort-icon" aria-hidden="true"></span></span></th>
         ${metricHeaders}
-        <th class="sortable" onclick="setInferredSort('recent_desc')"><span class="inferred-th-content">最近交易 <span class="table-sort-icon" aria-hidden="true"></span></span></th>
+        <th><span class="inferred-th-content">持仓状态</span></th>
+        <th class="sortable" onclick="setInferredSort('recent_desc')"><span class="inferred-th-content">最近交易日期 <span class="table-sort-icon" aria-hidden="true"></span></span></th>
       `;
     }
 
@@ -5603,12 +5625,8 @@
           : `当前筛选无匹配结果。总计 ${fmt(total)} 项推算资产。`;
       }
       document.getElementById('inferredRows').innerHTML = visibleRows.length ? visibleRows.map((row, index) => {
-        const latestAction = row.last_trade_type ? translateAction(row.last_trade_type) : '';
-        const latestDate = row.last_trade_date ? formatTradeDate(row.last_trade_date) : '';
-        const displayStatus = normalizeInferredStatus(row.inferred_status);
-        const latestTradeMeta = latestAction || latestDate
-          ? `<span class="inferred-latest-trade__meta">${latestAction ? `<span class="inferred-latest-trade__action">${esc(latestAction)}</span>` : ''}<span>${esc(latestDate || '—')}</span></span>`
-          : '<span class="inferred-latest-trade__meta">—</span>';
+        const displayStatus = normalizeInferredStatus(row.current_status || row.inferred_status, row);
+        const latestDate = row.last_period_trade_date || row.last_trade_date;
         return `
         <tr>
           <td class="name trade-asset-cell">
@@ -5623,15 +5641,11 @@
             </span>
           </td>
           ${metricColumns.map(column => `<td class="numeric">${column.html(row)}</td>`).join('')}
-          <td>
-            <span class="inferred-latest-trade">
-              <span class="tag ${statusClass(displayStatus)}" title="披露口径推算状态，不等于实际账户持仓。">${esc(displayStatus)}</span>
-              ${latestTradeMeta}
-            </span>
-          </td>
+          <td><span class="tag ${statusClass(displayStatus)}" title="披露口径下的唯一持仓状态。">${esc(displayStatus || '—')}</span></td>
+          <td>${esc(latestDate ? formatTradeDate(latestDate) : '—')}</td>
         </tr>
       `;
-      }).join('') : '<tr><td colspan="6" class="empty">暂无推算结果。</td></tr>';
+      }).join('') : '<tr><td colspan="7" class="empty">暂无推算结果。</td></tr>';
       const actions = document.querySelector('.inferred-load-actions');
       const loadMore = document.getElementById('inferredLoadMore');
       const hasMore = rows.length > visibleRows.length;
@@ -5648,7 +5662,7 @@
       const currentConcept = conceptSelect.value;
       const currentStatus = statusSelect.value;
       const concepts = [...new Set(rows.map(row => row.concept || row.asset_category || '其他'))].sort((a, b) => a.localeCompare(b, 'zh-Hans-CN'));
-      const statuses = ['新进', '增持', '仍持有', '减持', '疑似清仓', '疑似新进'];
+      const statuses = ['新进', '增持', '减持', '疑似清仓', '疑似新进', '仍持有'];
       conceptSelect.innerHTML = '<option value="">全部主题</option>' + concepts.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
       statusSelect.innerHTML = '<option value="">全部状态</option>' + statuses.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
       conceptSelect.value = concepts.includes(currentConcept) ? currentConcept : '';
@@ -5675,9 +5689,9 @@
       applyInferredFilters(true);
     }
 
-    function inferredStatusMatches(rowStatus, filter) {
+    function inferredStatusMatches(row, filter) {
       if (!filter) return true;
-      return normalizeInferredStatus(rowStatus) === filter;
+      return normalizeInferredStatus(row.current_status || row.inferred_status, row) === filter;
     }
 
     function applyInferredFilters(resetLimit = false) {
@@ -5689,7 +5703,7 @@
       let rows = allInferredPositions.filter(row => {
         const rowConcept = row.concept || row.asset_category || '其他';
         if (concept && rowConcept !== concept) return false;
-        if (!inferredStatusMatches(row.inferred_status, status)) return false;
+        if (!inferredStatusMatches(row, status)) return false;
         if (query) {
           const haystack = [row.ticker].join(' ').toUpperCase();
           if (!haystack.includes(query)) return false;
@@ -5780,7 +5794,7 @@
       return [...allInferredPositions]
         .filter(row => {
           if (!query) return true;
-          const haystack = [row.asset_name, row.ticker, row.concept, row.asset_category, row.inferred_status].join(' ').toUpperCase();
+          const haystack = [row.asset_name, row.ticker, row.concept, row.asset_category, normalizeInferredStatus(row.current_status || row.inferred_status, row)].join(' ').toUpperCase();
           return haystack.includes(query);
         })
         .sort((a, b) => inferredExposure(b) - inferredExposure(a))
@@ -5788,12 +5802,13 @@
     }
 
     function assetChoiceHtml(row, index) {
+      const displayStatus = normalizeInferredStatus(row.current_status || row.inferred_status, row);
       return `
         <button class="asset-choice" ${assetDataAttrs(row)} onclick="selectAssetFromElement(this)">
           <span class="asset-choice-code">${esc(row.ticker ? String(row.ticker).slice(0, 2) : String(index + 1).padStart(2, '0'))}</span>
           <strong>${esc(row.asset_name || '未命名资产')}</strong>
           <span class="asset-choice-meta">
-            <span>${esc([row.ticker || row.asset_category || '', row.inferred_status || ''].filter(Boolean).join(' · '))}</span>
+            <span>${esc([row.ticker || row.asset_category || '', displayStatus].filter(Boolean).join(' · '))}</span>
             <span class="asset-choice-money">${fmtMoneyHtml(inferredExposure(row))}</span>
           </span>
         </button>`;
@@ -6129,7 +6144,7 @@
         renderTopHoldings(allInferredPositions);
         populateInferredFilters(allInferredPositions);
         document.getElementById('inferredSummary').textContent = '点击“查看更多”后加载完整列表。';
-        document.getElementById('inferredRows').innerHTML = '<tr><td colspan="6" class="empty">完整推算持仓列表暂未展开。</td></tr>';
+        document.getElementById('inferredRows').innerHTML = '<tr><td colspan="7" class="empty">完整推算持仓列表暂未展开。</td></tr>';
         document.querySelector('.inferred-load-actions')?.classList.add('hidden');
         try {
           const fetchedTrades = await api('/api/transactions?limit=5000&state=parsed&public=1');
